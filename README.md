@@ -1,12 +1,17 @@
-# Rocket.Chat #
+# Rocket.Chat activity for Moodle #
 
-TODO Describe the plugin shortly here.
+This plugin allows teachers to push students from Moodle into a dedicated Rocket.Chat channel.
 
-TODO Provide more detailed description here.
+## Main feature
+Adding this activity to a Moodle course will create a channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel. The list of members will then be kept up to date.
+
+## Installation
+1. Copy the Rocket.Chat plugin to the `mod` directory of your Moodle instance: `git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTORY/mod/rocketchat`
+2. Visit the notifications page to complete the installation process
 
 ## License ##
 
-2020 ESUP-Portail {@link https://www.esup-portail.org/}
+2020 ESUP-Portail (https://www.esup-portail.org)
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
