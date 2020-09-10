@@ -47,18 +47,19 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         // Genral Section.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        // Adding a name field not the channel name but the displayname
-        $mform->addElement('text', 'displayname', get_string('displayname', 'mod_rocketchat'), array('size' => '64'));
+        // Adding a name field not the channel name but the name
+        $mform->addElement('text', 'name', get_string('name', 'mod_rocketchat'), array('size' => '255'));
 
         // Strip name if necessary
         if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('displayname', PARAM_TEXT);
+            $mform->setType('name', PARAM_TEXT);
         } else {
-            $mform->setType('displayname', PARAM_CLEANHTML);
+            $mform->setType('name', PARAM_CLEANHTML);
         }
 
-        $mform->addRule('displayname', null, 'required', null, 'client');
-        $mform->addRule('displayname', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+
         $this->standard_intro_elements();
 
         // Do not add availibility at the moment.
