@@ -24,20 +24,51 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Handle the user_enrolment_created event.
- *
- * @param object $event The event object.
- */
-function user_enrolment_created($event) {
-    return;
-}
+class mod_rocketchat_tools{
+    public static function rocketchat_group_name($cmid, $course){
+        global $CFG, $SITE;
+        $formatarguments = new stdClass();
+        $formatarguments->moodleshortname =  $SITE->shortname;
+        $formatarguments->moodlefullnamename =  $SITE->fullname;
+        $formatarguments->moodleid =  sha1($CFG->wwwroot);
+        $formatarguments->moduleid =  $cmid;
+        $formatarguments->modulemoodleid =  sha1($SITE->shortname.'_'.$cmid);
+        $formatarguments->courseid =  $course->id;
+        $formatarguments->courseshortname =  $course->shortname;
+        $formatarguments->coursefullname =  $course->fullname;
+        $groupnameformat = get_config('mod_rocketchat', 'groupnametoformat');
+        $groupnameformat = is_null($groupnameformat) ? '{$a->moodleid}_{$a->courseshortname}_{$a->moduleid}' : $groupnameformat;
+        return self::format_string($groupnameformat,$formatarguments);
+    }
 
-/**
- * Handle the user_enrolment_deleted event.
- *
- * @param object $event The event object.
- */
-function user_enrolment_deleted($event) {
-    return;
+
+
+    public static function format_string($string, $a) {
+        if ($a !== null) {
+            // Process array's and objects (except lang_strings).
+            if (is_array($a) or (is_object($a) && !($a instanceof lang_string))) {
+                $a = (array)$a;
+                $search = array();
+                $replace = array();
+                foreach ($a as $key => $value) {
+                    if (is_int($key)) {
+                        // We do not support numeric keys - sorry!
+                        continue;
+                    }
+                    if (is_array($value) or (is_object($value) && !($value instanceof lang_string))) {
+                        // We support just string or lang_string as value.
+                        continue;
+                    }
+                    $search[]  = '{$a->'.$key.'}';
+                    $replace[] = (string)$value;
+                }
+                if ($search) {
+                    $string = str_replace($search, $replace, $string);
+                }
+            } else {
+                $string = str_replace('{$a}', (string)$a, $string);
+            }
+        }
+        return $string;
+    }
 }

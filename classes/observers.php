@@ -13,22 +13,42 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Code that is executed before the tables and data are dropped during the plugin uninstallation.
- *
+ * observers file
  * @package     mod_rocketchat
- * @category    upgrade
+ * @category    event
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author Céline Pervès <cperves@unistra.fr>
  */
+
+namespace mod_rocketchat;
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Custom uninstallation procedure.
- */
-function xmldb_rocketchat_uninstall() {
+class observers {
+    public static function course_deleted(\core\event\course_deleted $event) {
 
-    return true;
+    }
+
+    public static function user_enrolment_created(\core\event\course_deleted $event) {
+
+    }
+
+    public static function user_enrolment_deleted(\core\event\course_deleted $event) {
+
+    }
+
+    public static function module_updated(\core\event\course_deleted $event) {
+
+    }
+
+    public static function module_deleted(\core\event\course_deleted $event) {
+
+    }
+
+    public static function user_deleted(\core\event\course_deleted $event) {
+
+    }
+
 }

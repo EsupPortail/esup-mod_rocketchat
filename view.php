@@ -29,18 +29,18 @@ require_once(__DIR__.'/lib.php');
 $id = optional_param('id', 0, PARAM_INT);
 
 // ... module instance id.
-$r  = optional_param('r', 0, PARAM_INT);
+$n  = optional_param('r', 0, PARAM_INT);
 
 if ($id) {
     $cm             = get_coursemodule_from_id('rocketchat', $id, 0, false, MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('rocketchat', array('id' => $cm->instance), '*', MUST_EXIST);
-} else if ($r) {
+} else if ($n) {
     $moduleinstance = $DB->get_record('rocketchat', array('id' => $n), '*', MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('rocketchat', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {
-    print_error(get_string('missingidandcmid', 'mod_rocketchat'));
+    print_error('missingparam'); // do not traduce error
 }
 
 require_login($course, true, $cm);
@@ -60,6 +60,10 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
+$config = get_config('mod_rocketchat');
 echo $OUTPUT->header();
+// Construct link
+
+echo $OUTPUT->action_link();
 
 echo $OUTPUT->footer();

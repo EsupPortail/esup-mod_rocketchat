@@ -30,6 +30,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  * Module instance settings form.
  *
  * @package    mod_rocketchat
+ * @author
  * @copyright  2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -42,34 +43,29 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         global $CFG;
 
         $mform = $this->_form;
-
-        // Adding the "general" fieldset, where all the common settings are shown.
+        //TODO add capability for creating RocketChat room
+        // Genral Section.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('rocketchatname', 'mod_rocketchat'), array('size' => '64'));
+        // Adding a name field not the channel name but the displayname
+        $mform->addElement('text', 'displayname', get_string('displayname', 'mod_rocketchat'), array('size' => '64'));
 
+        // Strip name if necessary
         if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('name', PARAM_TEXT);
+            $mform->setType('displayname', PARAM_TEXT);
         } else {
-            $mform->setType('name', PARAM_CLEANHTML);
+            $mform->setType('displayname', PARAM_CLEANHTML);
         }
 
-        $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        $mform->addHelpButton('name', 'rocketchatname', 'mod_rocketchat');
+        $mform->addRule('displayname', null, 'required', null, 'client');
+        $mform->addRule('displayname', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        $this->standard_intro_elements();
 
-        // Adding the standard "intro" and "introformat" fields.
-        if ($CFG->branch >= 29) {
-            $this->standard_intro_elements();
-        } else {
-            $this->add_intro_editor();
-        }
-
-        // Adding the rest of mod_rocketchat settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        $mform->addElement('static', 'label1', 'rocketchatsettings', get_string('rocketchatsettings', 'mod_rocketchat'));
-        $mform->addElement('header', 'rocketchatfieldset', get_string('rocketchatfieldset', 'mod_rocketchat'));
+        // Do not add availibility at the moment.
+        /*
+        $mform->addElement('header', 'availability', get_string('availability', 'assign'));
+        $mform->setExpanded('availability', true);
+         */
 
         // Add standard elements.
         $this->standard_coursemodule_elements();

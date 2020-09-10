@@ -1,0 +1,15 @@
+{
+  "name": "esup-portail/esup-mod_rocketchat",
+  "description": "Rocket.Chat Moodle module.",
+  "minimum-stability": "dev",
+  "require": {
+    "esup-portail/rocket-chat-rest-client": "dev-config_adjustment",
+    "nategood/httpful": "*"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url":  "git@github.com:EsupPortail/rocket-chat-rest-client.git"
+    }
+  ]
+}

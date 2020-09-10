@@ -35,8 +35,7 @@ $capabilities = [
             'user' => CAP_ALLOW,
         ],
     ],
-
-    'mod/rocketchat:add_instance' => [
+    'mod/rocketchat:addinstance' => [
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,

@@ -52,21 +52,19 @@ echo $OUTPUT->heading($modulenameplural);
 $rocketchats = get_all_instances_in_course('rocketchat', $course);
 
 if (empty($rocketchats)) {
-    notice(get_string('nonewmodules', 'mod_rocketchat'), new moodle_url('/course/view.php', array('id' => $course->id)));
+    notice(get_string('norocketchats', 'mod_rocketchat'), new moodle_url('/course/view.php', array('id' => $course->id)));
 }
 
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
-if ($course->format == 'weeks') {
-    $table->head  = array(get_string('week'), get_string('name'));
-    $table->align = array('center', 'left');
-} else if ($course->format == 'topics') {
-    $table->head  = array(get_string('topic'), get_string('name'));
-    $table->align = array('center', 'left', 'left', 'left');
+if ($usesections) {
+    $strsectionname = get_string('sectionname', 'format_'.$course->format);
+    $table->head  = array ($strsectionname, $strname);
+    $table->align = array ('center', 'left');
 } else {
-    $table->head  = array(get_string('name'));
-    $table->align = array('left', 'left', 'left');
+    $table->head  = array ($strname);
+    $table->align = array ('left');
 }
 
 foreach ($rocketchats as $rocketchat) {

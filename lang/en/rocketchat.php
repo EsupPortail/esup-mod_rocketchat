@@ -19,11 +19,27 @@
  *
  * @package     mod_rocketchat
  * @category    string
+ * @author      Celine Pervès <cperves@unistra.fr>
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['description'] = 'Interface between Rockat.Chat and Moodle';
+$string['description'] = 'Module interfacing Rockat.Chat and Moodle';
+$string['modulename'] = 'Rocket.Chat';
+$string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
+$string['displayname'] = 'Display name (in moodle)';
+$string['instanceurl'] = 'Rocket.Chat instance url';
+$string['instanceurl_desc'] = 'Rocket.Chat instance url';
+$string['restapiroot'] = 'Rocket.Chat rest api root';
+$string['restapiroot_desc'] = 'Rocket.Chat rest api root';
+$string['apiuser'] = 'Rocketchat api user';
+$string['apiuser_desc'] = 'Rocketchat api user';
+$string['apipassword'] = 'Rocketchat api password';
+$string['apipassword_desc'] = 'Rocketchat api password';
+$string['norocketchats'] = 'No Rocket.Chat module instances.';
+$string['groupnametoformat'] = 'Formatted group name.';
+$string['groupnametoformat_desc'] = 'Formatted group name. String format %arg is possible with the following parameters moodleid, moodleshortname, moodlefullname, moduleid, modulemoodleid (unique whitin all your possible moodle),  courseid, courseshortname, coursefullname';
+

@@ -21,6 +21,7 @@
  * @category    event
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author Céline Pervès <cperves@unistra.fr>
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -28,15 +29,35 @@ defined('MOODLE_INTERNAL') || die();
 // For more information about the Events API, please visit:
 // https://docs.moodle.org/dev/Event_2
 
+//TODO see this in next version
+$observers = array();
+/*
 $observers = array(
 
     array(
-        'eventname' => 'user_enrolment_created',
-        'callback' => 'user_enrolment_created',
+        'eventname' => '\core\event\course_deleted',
+        'callback' => 'mod_rocketchat\observers::course_deleted',
+    ),
+    array(
+        'eventname' => '\core\event\user_enrolment_created',
+        'callback' => 'mod_rocketchat\observers::user_enrolment_created',
     ),
 
     array(
-        'eventname' => 'user_enrolment_deleted',
-        'callback' => 'user_enrolment_deleted',
+        'eventname' => '\core\event\user_enrolment_deleted',
+        'callback' => 'mod_rocketchat\observers::user_enrolment_deleted',
     ),
-);
+    array(
+        'eventname' => '\core\event\module_updated',
+        'callback' => 'mod_rocketchat\observers::module_updated',
+    ),
+    array(
+        'eventname' => '\core\event\module_deleted',
+        'callback' => 'mod_rocketchat\observers::module_deleted',
+    ),
+    array(
+        'eventname' => '\core\event\user_deleted',
+        'callback' => 'mod_rocketchat\observers::module_deleted',
+    ),
+
+);*/

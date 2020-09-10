@@ -24,6 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot. '/mod/rocketchat/locallib.php');
+use \mod_rocketchat\api\manager\rocket_chat_api_manager;
+
 /**
  * Return if the plugin supports $feature.
  *
@@ -31,14 +34,25 @@ defined('MOODLE_INTERNAL') || die();
  * @return true | null True if the feature is supported, null otherwise.
  */
 function rocketchat_supports($feature) {
-    switch ($feature) {
-        case FEATURE_MOD_INTRO:
-            return true;
-        case FEATURE_BACKUP_MOODLE2:
-            return true;
-        default:
-            return null;
+    if (!$feature) {
+        return null;
     }
+    // TODO check each feature groups and backup
+    $features = array(
+        (string) FEATURE_IDNUMBER => true,
+        (string) FEATURE_GROUPS => true,
+        (string) FEATURE_GROUPINGS => true,
+        (string) FEATURE_MOD_INTRO => true,
+        (string) FEATURE_BACKUP_MOODLE2 => false, //TODO
+        (string) FEATURE_COMPLETION_TRACKS_VIEWS => true,
+        (string) FEATURE_GRADE_HAS_GRADE => false,
+        (string) FEATURE_GRADE_OUTCOMES => false,
+        (string) FEATURE_SHOW_DESCRIPTION => true,
+    );
+    if (isset($features[(string) $feature])) {
+        return $features[$feature];
+    }
+    return null;
 }
 
 /**
@@ -53,12 +67,20 @@ function rocketchat_supports($feature) {
  * @return int The id of the newly inserted record.
  */
 function rocketchat_add_instance($moduleinstance, $mform = null) {
-    global $DB;
+    global $DB, $CFG;
 
     $moduleinstance->timecreated = time();
-
+    $moduleinstance->timemodified = $moduleinstance->timecreated;
+    $cmid       = $moduleinstance->coursemodule;
+    $course = $DB->get_record('course', array('id' => $moduleinstance->course));
+    $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
+    $rocketchatapimanager = new rocket_chat_api_manager();
+    $moduleinstance->rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
+    if(is_null($moduleinstance->rocketchatid)){
+        print_error('an error occured while creating Rocket.Chat group');
+    }
     $id = $DB->insert_record('rocketchat', $moduleinstance);
-
+    // TODO update calendar here when calendar considerations will be implemented
     return $id;
 }
 
