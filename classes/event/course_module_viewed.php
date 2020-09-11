@@ -13,19 +13,25 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Plugin version and other meta-data are defined here.
- *
+ * observers file
  * @package     mod_rocketchat
+ * @category    event
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author Céline Pervès <cperves@unistra.fr>
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_rocketchat\event;
 
-$plugin->component = 'mod_rocketchat';
-$plugin->release = '0.1.0';
-$plugin->version = 2020091100;
-$plugin->requires = 2018050800;
-$plugin->maturity = MATURITY_ALPHA;
+class course_module_viewed extends \core\event\course_module_viewed {
+
+    /**
+     * Initialize the event
+     */
+    protected function init() {
+        $this->data['objecttable'] = 'rocketchat';
+        parent::init();
+    }
+
+}

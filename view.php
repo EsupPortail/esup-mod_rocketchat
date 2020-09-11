@@ -24,6 +24,7 @@
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
+require_once(__DIR__.'/classes/api/manager/rocket_chat_api_manager.php');
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
@@ -62,8 +63,20 @@ $PAGE->set_context($modulecontext);
 
 $config = get_config('mod_rocketchat');
 echo $OUTPUT->header();
-// Construct link
+$rocketchatapiconfig = new \mod_rocketchat\api\manager\rocket_chat_api_config();
+$link = $rocketchatapiconfig->get_instanceurl() . '/group/' . $moduleinstance->rocketchatname;
 
-echo $OUTPUT->action_link();
+switch ($moduleinstance->displaytype) {
+    case mod_rocketchat_tools::DISPLAY_POPUP:
+        echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'), new popup_action('click', $link, 'joinrocketchat', array('height' => $moduleinstance->popupheight, 'width' => $moduleinstance->popupwidth)));
+        break;
+    case mod_rocketchat_tools::DISPLAY_CURRENT:
+        echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'));
+        break;
+    default:
+        // DISPLAY_NEW and default case;
+        echo html_writer::link($link, get_string('joinrocketchat', 'mod_rocketchat'), array('onclick' => 'this.target="_blank";'));
+        break;
+}
 
 echo $OUTPUT->footer();

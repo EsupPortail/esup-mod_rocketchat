@@ -22,12 +22,16 @@
  * @author Céline Pervès <cperves@unistra.fr>
  */
 
-namespace mod_rocketchat;
+namespace mod_rocketchat\observer;
 
 defined('MOODLE_INTERNAL') || die();
 
 class observers {
     public static function course_deleted(\core\event\course_deleted $event) {
+
+    }
+
+    public static function course_module_viewed(\core\event\course_deleted $event) {
 
     }
 

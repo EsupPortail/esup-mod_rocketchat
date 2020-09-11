@@ -62,6 +62,15 @@ class mod_rocketchat_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements();
 
+        $options = mod_rocketchat_tools::get_display_options();
+
+        $mform->addElement('select', 'displaytype', get_string('displaytype', 'mod_rocketchat'),
+            $options);
+
+        $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'mod_rocketchat'),
+            $options);
+        $mform->addElement('text', 'popupheight', get_string('popuppopupheight', 'mod_rocketchat'),
+            400);
         // Do not add availibility at the moment.
         /*
         $mform->addElement('header', 'availability', get_string('availability', 'assign'));
@@ -74,4 +83,6 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         // Add standard buttons.
         $this->add_action_buttons();
     }
+
+
 }

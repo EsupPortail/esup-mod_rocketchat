@@ -24,7 +24,27 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class mod_rocketchat_tools{
+class mod_rocketchat_tools {
+    /** Display new window */
+    const DISPLAY_NEW = 1;
+    /** Display in curent window */
+    const DISPLAY_CURRENT = 2;
+    /** Display i popup */
+    const DISPLAY_POPUP =  3;
+
+    /**
+     * @param array $options
+     * @return array
+     * @throws coding_exception
+     */
+    public static function get_display_options(){
+        $options = array();
+        $options[mod_rocketchat_tools::DISPLAY_NEW] = get_string('displaynew', 'mod_rocketchat');
+        $options[mod_rocketchat_tools::DISPLAY_CURRENT] = get_string('displaycurrent', 'mod_rocketchat');
+        $options[mod_rocketchat_tools::DISPLAY_POPUP] = get_string('displaypopup', 'mod_rocketchat');
+        return $options;
+    }
+
     public static function rocketchat_group_name($cmid, $course){
         global $CFG, $SITE;
         $formatarguments = new stdClass();

@@ -43,4 +43,11 @@ $string['apipassword_desc'] = 'Rocketchat api password';
 $string['norocketchats'] = 'No Rocket.Chat module instances.';
 $string['groupnametoformat'] = 'Formatted group name.';
 $string['groupnametoformat_desc'] = 'Formatted group name. String format %arg is possible with the following parameters moodleid, moodleshortname, moodlefullname, moduleid, modulemoodleid (unique whitin all your possible moodle),  courseid, courseshortname, coursefullname';
+$string['joinrocketchat'] = 'Join rocket chat session';
+$string['displaytype'] = 'Display type';
+$string['displaynew'] = 'Display in new window';
+$string['displaypopup'] = 'Display in popup window';
+$string['displaycurrent'] = 'Display in current window';
+$string['pluginadministration'] = 'Rocket.Chat administration';
+
 
