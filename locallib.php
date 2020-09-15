@@ -29,11 +29,22 @@ class mod_rocketchat_tools {
     const DISPLAY_NEW = 1;
     /** Display in curent window */
     const DISPLAY_CURRENT = 2;
-    /** Display i popup */
+    /** Display in popup */
     const DISPLAY_POPUP =  3;
+    /** Close and archive remote Rocket.Chat group */
+    const DELETION_ARCHIVE = 1;
+    /** Hard delete remote Rocket.Chat group */
+    const DELETION_HARD = 2;
 
+
+    public static function get_deletion_options(){
+        $deletionoptions = array();
+        $deletionoptions[self::DELETION_ARCHIVE] = get_string('deletion_archive', 'mod_rocketchat');
+        $deletionoptions[self::DELETION_HARD] = get_string('deletion_hard', 'mod_rocketchat');
+        return $deletionoptions;
+    }
     /**
-     * @param array $options
+     * Construct display options.
      * @return array
      * @throws coding_exception
      */
@@ -43,6 +54,11 @@ class mod_rocketchat_tools {
         $options[mod_rocketchat_tools::DISPLAY_CURRENT] = get_string('displaycurrent', 'mod_rocketchat');
         $options[mod_rocketchat_tools::DISPLAY_POPUP] = get_string('displaypopup', 'mod_rocketchat');
         return $options;
+    }
+
+    public static function get_roles_options(){
+        global $DB;
+        return $DB->get_records('role',array(), 'shortname asc');
     }
 
     public static function rocketchat_group_name($cmid, $course){

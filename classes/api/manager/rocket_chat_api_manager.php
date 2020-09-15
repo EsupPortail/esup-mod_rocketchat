@@ -86,6 +86,30 @@ class rocket_chat_api_manager{
         return $group->id;
     }
 
+    public function delete_rocketchat_group($id){
+        $identifier = new \stdClass();
+        $identifier->_id = $id;
+        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+        return $group->delete();
+    }
+
+    public function archive_rocketchat_group($id){
+        $identifier = new \stdClass();
+        $identifier->_id = $id;
+        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+        return $group->archive();
+    }
+
+    public function unarchive_rocketchat_group($id){
+        $identifier = new \stdClass();
+        $identifier->id = $id;
+        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+        return $group->unarchive();
+    }
+
     public function __destruct() {
         //$this->close_connection();
     }

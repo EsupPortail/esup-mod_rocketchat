@@ -19,6 +19,8 @@
         <FIELD NAME="displaytype" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="display type"/>
         <FIELD NAME="popupheight" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="popup height"/>
         <FIELD NAME="popupwidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="popup width"/>
+        <FIELD NAME="moderatorroles" TYPE="char" LENGTH="255" SEQUENCE="false" COMMENT="Moodle roles in course that will be Rocket.Chat moderators."/>
+        <FIELD NAME="userroles" TYPE="char" LENGTH="255" SEQUENCE="false" COMMENT="Moodle roles in course that will be Rocket.Chat user (with normal rights)."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

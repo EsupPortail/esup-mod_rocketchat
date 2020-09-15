@@ -112,10 +112,23 @@ function rocketchat_update_instance($moduleinstance, $mform = null) {
  */
 function rocketchat_delete_instance($id) {
     global $DB;
-
-    $exists = $DB->get_record('rocketchat', array('id' => $id));
-    if (!$exists) {
+    $rocketchat = $DB->get_record('rocketchat', array('id' => $id));
+    if (!$rocketchat) {
         return false;
+    }
+    // Treat remote Rocket.Chat remote private group depending of
+    $deletionmode = get_config('mod_rocketchat','deletionmode');
+    $rocketchatapimanager = new rocket_chat_api_manager();
+    switch($deletionmode){
+        case mod_rocketchat_tools::DELETION_ARCHIVE :
+            $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
+            break;
+        case mod_rocketchat_tools::DELETION_HARD :
+            $rocketchatapimanager->delete_rocketchat_group($rocketchat->rocketchatid);
+            break;
+        default:
+            print_error('Rocket.Chat deletion mode not taken in charge : '.$deletionmode);
+            break;
     }
 
     $DB->delete_records('rocketchat', array('id' => $id));

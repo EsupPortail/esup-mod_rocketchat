@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configtext(
@@ -69,6 +70,37 @@ if ($ADMIN->fulltree) {
             get_string('groupnametoformat', 'mod_rocketchat'),
             get_string('groupnametoformat_desc', 'mod_rocketchat'),
             '{$a->moodleid}_{$a->courseshortname}_{$a->moduleid}'
+        )
+    );
+    $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
+    $editingteachers = get_archetype_roles('editingteacher');
+    $student = get_archetype_roles('student');
+    $settings->add(
+        new admin_setting_configmultiselect('mod_rocketchat/defaultmoderatorroles',
+            get_string('defaultmoderatorroles', 'mod_rocketchat'),
+            get_string('defaultmoderatorroles_desc', 'mod_rocketchat'),
+            array_keys($editingteachers),
+            $rolesoptions
+        )
+    );
+
+    $settings->add(
+        new admin_setting_configmultiselect('mod_rocketchat/defaultuserroles',
+            get_string('defaultuserroles', 'mod_rocketchat'),
+            get_string('defaultuserroles_desc', 'mod_rocketchat'),
+            array_keys($student),
+            $rolesoptions
+        )
+    );
+
+
+    $deletionoptions = mod_rocketchat_tools::get_deletion_options();
+    $settings->add(
+        new admin_setting_configselect('mod_rocketchat/deletionmode',
+            get_string('deletionmode', 'mod_rocketchat'),
+            get_string('deletionmode_desc', 'mod_rocketchat'),
+            mod_rocketchat_tools::DELETION_ARCHIVE,
+            $deletionoptions
         )
     );
 

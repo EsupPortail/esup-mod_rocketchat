@@ -48,6 +48,21 @@ $string['displaytype'] = 'Display type';
 $string['displaynew'] = 'Display in new window';
 $string['displaypopup'] = 'Display in popup window';
 $string['displaycurrent'] = 'Display in current window';
+$string['popupheight'] = 'Popup height';
+$string['popupwidth'] = 'Popup width';
 $string['pluginadministration'] = 'Rocket.Chat administration';
+$string['deletionmode'] = 'Rocket.Chat remote private group deletion mode';
+$string['deletionmode_desc'] = 'Rocket.Chat remote private group deletion mode. Deletion hard  : hard delete Rocket.Chat, archive : archive remote Rocket.Chat private group';
+$string['deletion_archive'] = 'Archive remote Rocket.Chat group';
+$string['deletion_hard'] = 'Hard delete remote Rocket.Chat group';
+$string['defaultmoderatorroles'] = 'Rocket.Chat moderators.';
+$string['moderatorroles'] = 'Moodle roles in course that will be Rocket.Chat moderators';
+$string['defaultmoderatorroles_desc'] = 'Moodle roles in course that will be Rocket.Chat moderators.';
+$string['defaultuserroles'] = 'Rocket.Chat users.';
+$string['userroles'] = 'Moodle roles in course that will be Rocket.Chat users (with normal user rights)';
+$string['defaultuserroles_desc'] = 'Moodle roles in course that will be Rocket.Chat users (with normal user rights).';
+$string['mod_rocketchat:addinstance'] = 'Ajouter une instance de module Rocket.Chat';
+$string['mod_rocketchat:view'] = 'Voir les instances du module Rocket.Chat';
+$string['mod_rocketchat:candefineroles'] = 'Peut définir les roles à propager pour les inscirptions aux groupes privés Rocket.Chat';
 
 
