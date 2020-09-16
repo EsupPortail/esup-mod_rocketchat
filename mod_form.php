@@ -114,6 +114,11 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
+    public function data_postprocessing($data) {
+        $data->moderatorroles = implode(',', $data->moderatorroles);
+        $data->userroles = implode(',', $data->userroles);
+
+    }
 
 
 }

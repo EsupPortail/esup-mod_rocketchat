@@ -107,4 +107,11 @@ class mod_rocketchat_tools {
         }
         return $string;
     }
+
+    public static function get_rocketchat_module_instances($courseid) {
+        global $DB;
+        $sql = 'select cm.*, r.rocketchatname, r.rocketchatid, r.moderatorroles, r.userroles  from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance where m.name=:rocketchat and cm.course=:courseid';
+        $moduleinstances = $DB->get_records_sql($sql , array('courseid' => $courseid, 'rocketchat' => 'rocketchat'));
+        return $moduleinstances;
+    }
 }

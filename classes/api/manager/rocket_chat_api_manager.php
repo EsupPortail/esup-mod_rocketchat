@@ -61,10 +61,13 @@ class rocket_chat_api_manager{
             $this->rocketchatapiconfig->get_restapiroot());
     }
 
-    public function get_rocketchat_group_object($groupid){
+    public function get_rocketchat_group_object($groupid, $groupname=''){
         $group = new \stdClass();
-        $group->id = $groupid;
-        return new \RocketChat\Group($group, array(),$this->rocketchatapiconfig->get_instanceurl(),
+        $group->_id = $groupid;
+        if(!empty($groupname)){
+            $group->name = $groupname;
+        }
+        return new \RocketChat\Group($group, array(),array(),$this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
     }
 
@@ -108,6 +111,14 @@ class rocket_chat_api_manager{
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         return $group->unarchive();
+    }
+
+    public function invite_user_to_group($groupid, $username){
+        $group = $this->get_rocketchat_group_object($groupid);
+        $identifier = new \stdClass();
+        $identifier->username = $username;
+        $user = $group->user_info($identifier);
+        $group->invite($user->_id);
     }
 
     public function __destruct() {

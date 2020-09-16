@@ -92,8 +92,6 @@ if ($ADMIN->fulltree) {
             $rolesoptions
         )
     );
-
-
     $deletionoptions = mod_rocketchat_tools::get_deletion_options();
     $settings->add(
         new admin_setting_configselect('mod_rocketchat/deletionmode',
@@ -103,5 +101,4 @@ if ($ADMIN->fulltree) {
             $deletionoptions
         )
     );
-
 }

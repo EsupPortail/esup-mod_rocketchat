@@ -30,34 +30,20 @@ defined('MOODLE_INTERNAL') || die();
 // https://docs.moodle.org/dev/Event_2
 
 //TODO see this in next version
-$observers = array();
-/*
+
 $observers = array(
 
     array(
-        'eventname' => '\core\event\course_deleted',
-        'callback' => 'mod_rocketchat\observers::course_deleted',
+        'eventname' => '\core\event\role_assigned',
+        'callback' => '\mod_rocketchat\observers::role_assigned',
     ),
     array(
-        'eventname' => '\core\event\user_enrolment_created',
-        'callback' => 'mod_rocketchat\observers::user_enrolment_created',
-    ),
-
-    array(
-        'eventname' => '\core\event\user_enrolment_deleted',
-        'callback' => 'mod_rocketchat\observers::user_enrolment_deleted',
-    ),
-    array(
-        'eventname' => '\core\event\module_updated',
-        'callback' => 'mod_rocketchat\observers::module_updated',
-    ),
-    array(
-        'eventname' => '\core\event\module_deleted',
-        'callback' => 'mod_rocketchat\observers::module_deleted',
+        'eventname' => '\core\event\role_unassigned',
+        'callback' => '\mod_rocketchat\observers::role_unassigned',
     ),
     array(
         'eventname' => '\core\event\user_deleted',
-        'callback' => 'mod_rocketchat\observers::module_deleted',
+        'callback' => '\mod_rocketchat\observers::module_deleted',
     ),
 
-);*/
+);
