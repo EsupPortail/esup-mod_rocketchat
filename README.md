@@ -13,10 +13,22 @@ Use composer to manage your dependencies and download :
 ```bash
 composer require esup-portail/rocket-chat-rest-client
 ```
+Or you can install the Rocket.Chat Web service in the mod folder, see below.
 
 ### Moodle plugin
-1. Copy the Rocket.Chat plugin to the `mod` directory of your Moodle instance: `git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTORY/mod/rocketchat`
-2. Visit the notifications page to complete the installation process
+1. Copy the Rocket.Chat plugin to the `mod` directory of your Moodle instance:
+
+```bash
+git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTORY/mod/rocketchat
+```
+
+2. Install the Rocket.Chat Web service:
+```bash
+cd MOODLE_ROOT_DIRECTORY/mod/rocketchat
+curl -s http://getcomposer.org/installer | php
+php composer.phar update
+```
+3. Visit the notifications page to complete the installation process
 
 ## License ##
 
