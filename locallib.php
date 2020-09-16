@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use \mod_rocketchat\api\manager\rocket_chat_api_manager;
+
 class mod_rocketchat_tools {
     /** Display new window */
     const DISPLAY_NEW = 1;
@@ -116,7 +118,30 @@ class mod_rocketchat_tools {
         return $moduleinstances;
     }
 
-    public static function enrol_all_concerned_users_to_rocketchat_group(){
+    public static function enrol_all_concerned_users_to_rocketchat_group($rocketchatmoduleinstance){
+        $courseid = $rocketchatmoduleinstance->course;
+        $coursecontext = context_course::instance($courseid);
+        $users = get_enrolled_users($coursecontext);
+        $rocketchatapimanager = new rocket_chat_api_manager();
+        foreach($users as $user){
+            $moderatorroleids = explode(',',$rocketchatmoduleinstance->moderatorroles);
+            $ismoderator = false;
+            foreach($moderatorroleids as $moderatorroleid){
+                if (user_has_role_assignment($user->id, $moderatorroleid, $coursecontext->id)){
+                    $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid,
+                        $rocketchatmoduleinstance->rocketchatname, $user);
+                }
+            }
+            if(!$ismoderator){
+                $userroleids = explode(',',$rocketchatmoduleinstance->userroles);
+                foreach($userroleids as $userroleid){
+                    if (user_has_role_assignment($user->id, $userroleid, $coursecontext->id)){
+                        $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid,
+                            $rocketchatmoduleinstance->rocketchatname, $user);
+                    }
+                }
+            }
+        }
 
     }
 }
