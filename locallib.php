@@ -19,6 +19,7 @@
  *
  * @package     mod_rocketchat
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -113,5 +114,9 @@ class mod_rocketchat_tools {
         $sql = 'select cm.*, r.rocketchatname, r.rocketchatid, r.moderatorroles, r.userroles  from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance where m.name=:rocketchat and cm.course=:courseid';
         $moduleinstances = $DB->get_records_sql($sql , array('courseid' => $courseid, 'rocketchat' => 'rocketchat'));
         return $moduleinstances;
+    }
+
+    public static function enrol_all_concerned_users_to_rocketchat_group(){
+
     }
 }

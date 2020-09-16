@@ -19,6 +19,7 @@
  *
  * @package     mod_rocketchat
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -113,12 +114,57 @@ class rocket_chat_api_manager{
         return $group->unarchive();
     }
 
-    public function invite_user_to_group($groupid, $username){
-        $group = $this->get_rocketchat_group_object($groupid);
+    public function enrol_user_to_group($groupid,$groupname, $moodleuser, &$user=null){
         $identifier = new \stdClass();
-        $identifier->username = $username;
+        $identifier->username = $moodleuser->username;
+        $group = $this->get_rocketchat_group_object($groupid,$groupname);
         $user = $group->user_info($identifier);
-        $group->invite($user->_id);
+        $return = $group->invite($user->_id);
+        if(!$return){
+            debugging("User $moodleuser->username not added as user to remote Rocket.Chat group",
+                DEBUG_MINIMAL);
+        }
+        return $return ? $group : false;
+    }
+
+    public function enrol_moderator_to_group($groupid,$groupname, $moodleuser){
+        $identifier = new \stdClass();
+        $identifier->username = $moodleuser->username;
+        $user = null;
+        $group = $this->enrol_user_to_group($groupid, $groupname, $moodleuser,$user);
+        if($group) {
+            $group->addModerator($user->_id);
+        }else{
+            debugging("User $moodleuser->username not added as moderator to remote Rocket.Chat group",
+                DEBUG_MINIMAL);
+        }
+    }
+
+    public function unenrol_user_from_group($groupid,$groupname, $moodleuser){
+        $identifier = new \stdClass();
+        $identifier->username = $moodleuser->username;
+        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+        $user = $group->user_info($identifier);
+        $return = $group->kick($user->_id);
+        if (!$return) {
+        debugging("User $user->username not removed as user from remote Rocket.Chat group",
+        DEBUG_MINIMAL);
+        }
+        return $return ? $group : false;
+    }
+
+    public function unenrol_moderator_from_group($groupid,$groupname, $moodleuser){
+        $identifier = new \stdClass();
+        $identifier->username = $moodleuser->username;
+        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+        $user = $group->user_info($identifier);
+        $return = $group->removeModerator($user->_id);
+        if (!$return) {
+            debugging("User $user->username not removed as moderator from remote Rocket.Chat group",
+                DEBUG_MINIMAL);
+        }
+        $return2 = $this->unenrol_user_from_group($groupid, $groupname, $moodleuser);
+        return $return && $return2;
     }
 
     public function __destruct() {

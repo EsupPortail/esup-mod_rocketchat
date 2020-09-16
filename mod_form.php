@@ -19,6 +19,7 @@
  *
  * @package     mod_rocketchat
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

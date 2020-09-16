@@ -16,8 +16,9 @@
 /**
  * observers file
  * @package     mod_rocketchat
- * @category    event
+ * @category    observer
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author Céline Pervès <cperves@unistra.fr>
  */
@@ -37,9 +38,8 @@ class observers {
         $context = $event->get_context();
         $userid = $event->relateduserid;
         $moodleuser = $DB->get_record('user', array('id' => $userid));
-        $identifier = new \stdClass();
-        $identifier->username = $moodleuser->username;
         $roleid = $event->objectid;
+        $rocketchatapimanager = new rocket_chat_api_manager();
         if($context->contextlevel == CONTEXT_COURSE && is_enrolled($context, $userid)) {
             $courseid = $context->instanceid;
             //search for rocketchat module instances concerned
@@ -47,32 +47,16 @@ class observers {
             foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
                 $ismoderator = false;
                 if(in_array($roleid, explode(',',$rocketchatmoduleinstance->moderatorroles))) {
-                    $rocketchatapimanager = new rocket_chat_api_manager();
-                    $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatmoduleinstance->rocketchatid,
-                        $rocketchatmoduleinstance->rocketchatname);
-                    $user = $group->user_info($identifier);
-                    $return = $group->invite($user->_id);
-                    if($return){
-                        $return =
-                            $group->addModerator($user->_id); //TODO take in charge user for multiplatform purpose
-                    }
-                    if (!$return) {
-                        debugging("User $moodleuser->username not added as moderator to remote Rocket.Chat group",
-                            DEBUG_MINIMAL);
-                    }
+                    $return =
+                        $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid,
+                            $rocketchatmoduleinstance->rocketchatname,
+                            $moodleuser);
                     $ismoderator = true;
                 }
                 if (!$ismoderator) {
                     if(in_array($roleid, explode(',',$rocketchatmoduleinstance->userroles))){
-                        $rocketchatapimanager = new rocket_chat_api_manager();
-                        $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatmoduleinstance->rocketchatid,
-                            $rocketchatmoduleinstance->rocketchatname);
-                        $user = $group->user_info($identifier);
-                        $return = $group->invite($user->_id);
-                        if (!$return) {
-                            debugging("User $moodleuser->username not added as user to remote Rocket.Chat group",
-                                DEBUG_MINIMAL);
-                        }
+                        $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid,
+                            $rocketchatmoduleinstance->rocketchatname, $moodleuser);
                     }
                 }
 
@@ -94,27 +78,12 @@ class observers {
             foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
                 $rocketchatapimanager = new rocket_chat_api_manager();
                 if(in_array($roleid, explode(',',$rocketchatmoduleinstance->moderatorroles))) {
-                    $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatmoduleinstance->rocketchatid,
-                        $rocketchatmoduleinstance->rocketchatname);
-                    $user = $group->user_info($identifier);
-                    $return = $group->removeModerator($user->_id); //TODO take in charge user for multiplatform purpose
-                    if($return){
-                        $return = $group->kick($user->_id);
-                    }
-                    if (!$return) {
-                        debugging("User $user->username not removed as moderator to remote Rocket.Chat group",
-                            DEBUG_MINIMAL);
-                    }
+                    $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid,
+                        $rocketchatmoduleinstance->rocketchatname, $moodleuser);
                 }
                 if(in_array($roleid, explode(',',$rocketchatmoduleinstance->userroles))) {
-                    $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatmoduleinstance->rocketchatid,
-                        $rocketchatmoduleinstance->rocketchatname);
-                    $user = $group->user_info($identifier);
-                    $return = $group->kick($user->_id); //TODO take in charge user for multiplatform purpose
-                    if (!$return) {
-                        debugging("User $user->username not kicked as user to remote Rocket.Chat group",
-                            DEBUG_MINIMAL);
-                    }
+                    $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid,
+                        $rocketchatmoduleinstance->rocketchatname, $moodleuser);
                 }
             }
         }
