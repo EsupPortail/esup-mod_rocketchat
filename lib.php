@@ -68,8 +68,7 @@ function rocketchat_supports($feature) {
  * @return int The id of the newly inserted record.
  */
 function rocketchat_add_instance($moduleinstance, $mform = null) {
-    global $DB, $CFG;
-
+    global $DB;
     $moduleinstance->timecreated = time();
     $moduleinstance->timemodified = $moduleinstance->timecreated;
     $cmid       = $moduleinstance->coursemodule;

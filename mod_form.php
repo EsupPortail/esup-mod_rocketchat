@@ -84,23 +84,29 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                 'noteq', mod_rocketchat_tools::DISPLAY_POPUP);
         }
 
+        $readonly = !has_capability('mod/rocketchat:candefineroles', $this->get_context());
         $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
-        $moderatorroles = $mform->addElement('select', 'moderatorroles',
+
+        $moderatorroles = $mform->addElement('select', 'moderatorroles'.($readonly? 'ro':''),
             get_string('moderatorroles', 'mod_rocketchat'),
             $rolesoptions);
         $moderatorroles->setMultiple(true);
-        $mform->setDefault('moderatorroles',get_config('mod_rocketchat','defaultmoderatorroles'));
 
-        $userroles = $mform->addElement('select', 'userroles',
+        $userroles = $mform->addElement('select', 'userroles'.($readonly? 'ro':''),
             get_string('userroles', 'mod_rocketchat'),
             $rolesoptions);
         $userroles->setMultiple(true);
 
-        $mform->setDefault('userroles',get_config('mod_rocketchat','defaultuserroles'));
-        if(!has_capability('mod/rocketchat:candefineroles', $this->get_context())) {
+        if($readonly) {
             $moderatorroles->setAttributes(array('disabled' => 'true'));
             $userroles->setAttributes(array('disabled' => 'true'));
+            $mform->addElement('hidden', 'moderatorroles');
+            $mform->addElement('hidden', 'userroles');
         }
+        $mform->setDefault('moderatorroles',get_config('mod_rocketchat','defaultmoderatorroles'));
+        $mform->setDefault('userroles',get_config('mod_rocketchat','defaultuserroles'));
+        $mform->setType('moderatorroles', PARAM_RAW);
+        $mform->setType('userroles', PARAM_RAW);
 
         // Do not add availibility at the moment.
         /*
@@ -116,8 +122,8 @@ class mod_rocketchat_mod_form extends moodleform_mod {
     }
 
     public function data_postprocessing($data) {
-        $data->moderatorroles = implode(',', $data->moderatorroles);
-        $data->userroles = implode(',', $data->userroles);
+        $data->moderatorroles = is_array($data->moderatorroles)? implode(',', $data->moderatorroles): $data->moderatorroles;
+        $data->userroles = is_array($data->userroles) ? implode(',', $data->userroles) : $data->userroles;
 
     }
 
