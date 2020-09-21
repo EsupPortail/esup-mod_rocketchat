@@ -127,6 +127,75 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertTrue($this->rocketchatapimanager->delete_user($moodleuser->username));
     }
 
+    public function test_enrol_unenrol_user_to_group_with_user_creation() {
+        set_config('create_user_account_if_not_exists',1, 'mod_rocketchat');
+        $this->initiate_environment_and_connection();
+        $groupname = 'moodletestgroup'.time();
+        $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
+        $this->assertNotEmpty($groupid);
+
+        $domainmail = get_config('mod_rocketchat', 'domainmail');
+        $moodleusermoderator = new stdClass();
+        $moodleusermoderator->username = 'usertestMod'.time();
+        $moodleusermoderator->firstname = 'moodleusertestModF';
+        $moodleusermoderator->lastname = 'moodleusertestModL';
+        $moodleusermoderator->email = $moodleusermoderator->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
+
+        $moodleuser = new stdClass();
+        $moodleuser->username = 'usertest'.time();
+        $moodleuser->firstname = 'moodleusertestF';
+        $moodleuser->lastname = 'moodleusertestL';
+        $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
+
+        $this->assertNotEmpty($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $groupname,$moodleusermoderator));
+        $this->assertNotEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $groupname,$moodleuser));
+
+        $members = $this->rocketchatapimanager->get_group_members($groupid, $groupname);
+        $this->assertTrue(is_array($members));
+        $this->assertCount(3, $members); // Adminuser included into group.
+
+        $this->rocketchatapimanager->unenrol_moderator_from_group($groupid, $groupname, $moodleusermoderator);
+        $this->rocketchatapimanager->unenrol_user_from_group($groupid, $groupname, $moodleuser);
+
+        $members = $this->rocketchatapimanager->get_group_members($groupid, $groupname);
+        $this->assertTrue(is_array($members));
+        $this->assertCount(1, $members); // Adminuser included into group.
+
+        $this->rocketchatapimanager->delete_rocketchat_group($groupid);
+
+        $this->assertTrue($this->rocketchatapimanager->delete_user($moodleusermoderator->username));
+        $this->assertTrue($this->rocketchatapimanager->delete_user($moodleuser->username));
+    }
+
+    public function test_enrol_unenrol_user_to_group_with_user_creation_not_allowed() {
+        set_config('create_user_account_if_not_exists',0, 'mod_rocketchat');
+        $this->initiate_environment_and_connection();
+        $groupname = 'moodletestgroup'.time();
+        $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
+        $this->assertNotEmpty($groupid);
+
+        $domainmail = get_config('mod_rocketchat', 'domainmail');
+        $moodleusermoderator = new stdClass();
+        $moodleusermoderator->username = 'usertestMod'.time();
+        $moodleusermoderator->firstname = 'moodleusertestModF';
+        $moodleusermoderator->lastname = 'moodleusertestModL';
+        $moodleusermoderator->email = $moodleusermoderator->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
+
+        $moodleuser = new stdClass();
+        $moodleuser->username = 'usertest'.time();
+        $moodleuser->firstname = 'moodleusertestF';
+        $moodleuser->lastname = 'moodleusertestL';
+        $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
+
+        $this->assertEmpty($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $groupname,$moodleusermoderator));
+        $this->assertEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $groupname,$moodleuser));
+
+        $members = $this->rocketchatapimanager->get_group_members($groupid, $groupname);
+        $this->assertTrue(is_array($members));
+        $this->assertCount(1, $members); // Adminuser included into group.
+        $this->rocketchatapimanager->delete_rocketchat_group($groupid);
+    }
+
 
     private function load_rocketchat_test_config(){
         global $CFG;
