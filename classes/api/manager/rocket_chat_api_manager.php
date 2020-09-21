@@ -123,13 +123,13 @@ class rocket_chat_api_manager{
         $group = $this->get_rocketchat_group_object($groupid,$groupname);
         if($createusermode){
             $user = $this->create_user_if_not_exists($moodleuser);
-            if(!user){
+            if(!$user){
                 debugging("User $user->username not exists in Rocket.Chat and was not succesfully created.", DEBUG_MINIMAL);
             }
         } else {
             $user = $group->user_info($identifier);
             if(!$user){
-                debugging("User $user->username not exists in Rocket.Chat", DEBUG_DEVELOPER);
+                debugging("User $moodleuser->username not exists in Rocket.Chat", DEBUG_DEVELOPER);
             }
         }
         if(!$user){
