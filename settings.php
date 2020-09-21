@@ -102,4 +102,11 @@ if ($ADMIN->fulltree) {
             $deletionoptions
         )
     );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/create_user_account_if_not_exists',
+            get_string('create_user_account_if_not_exists','mod_rocketchat'),
+            get_string('create_user_account_if_not_exists_desc','mod_rocketchat'),
+            1
+        )
+    );
 }

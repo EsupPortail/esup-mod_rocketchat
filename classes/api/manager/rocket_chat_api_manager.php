@@ -91,9 +91,10 @@ class rocket_chat_api_manager{
         return $group->id;
     }
 
-    public function delete_rocketchat_group($id){
+    public function delete_rocketchat_group($id, $groupname=''){
         $identifier = new \stdClass();
         $identifier->_id = $id;
+        $identifier->name = $groupname;
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         return $group->delete();
@@ -116,10 +117,24 @@ class rocket_chat_api_manager{
     }
 
     public function enrol_user_to_group($groupid,$groupname, $moodleuser, &$user=null){
+        $createusermode = get_config('mod_rocketchat', 'create_user_account_if_not_exists');
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid,$groupname);
-        $user = $group->user_info($identifier);
+        if($createusermode){
+            $user = $this->create_user_if_not_exists($moodleuser);
+            if(!user){
+                debugging("User $user->username not exists in Rocket.Chat and was not succesfully created.", DEBUG_MINIMAL);
+            }
+        } else {
+            $user = $group->user_info($identifier);
+            if(!$user){
+                debugging("User $user->username not exists in Rocket.Chat", DEBUG_DEVELOPER);
+            }
+        }
+        if(!$user){
+            return false;
+        }
         $return = $group->invite($user->_id);
         if(!$return){
             debugging("User $moodleuser->username not added as user to remote Rocket.Chat group",
@@ -134,18 +149,33 @@ class rocket_chat_api_manager{
         $user = null;
         $group = $this->enrol_user_to_group($groupid, $groupname, $moodleuser,$user);
         if($group) {
-            $group->addModerator($user->_id);
+            return $group->addModerator($user->_id);
         }else{
             debugging("User $moodleuser->username not added as moderator to remote Rocket.Chat group",
                 DEBUG_MINIMAL);
         }
+        return false;
     }
 
     public function unenrol_user_from_group($groupid,$groupname, $moodleuser){
+        $createusermode = get_config('mod_rocketchat', 'create_user_account_if_not_exists');
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid,$groupname);
-        $user = $group->user_info($identifier);
+        if($createusermode){
+            $user = $this->create_user_if_not_exists($moodleuser);
+            if(!$user){
+                debugging("User $user->username not exists in Rocket.Chat and was not succesfully created.", DEBUG_MINIMAL);
+            }
+        } else {
+            $user = $group->user_info($identifier);
+            if(!$user){
+                debugging("User $user->username not exists in Rocket.Chat", DEBUG_DEVELOPER);
+            }
+        }
+        if(!$user){
+            return false;
+        }
         $return = $group->kick($user->_id);
         if (!$return) {
         debugging("User $user->username not removed as user from remote Rocket.Chat group",
@@ -176,6 +206,11 @@ class rocket_chat_api_manager{
         $rocketchatuserinfos->password = generate_password();
         $user = $this->adminuser->create($rocketchatuserinfos);
         return $user;
+    }
+
+    public function get_group_members($groupid, $groupname){
+        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+        return $group->members();
     }
 
     public function delete_user($moodleusername){
