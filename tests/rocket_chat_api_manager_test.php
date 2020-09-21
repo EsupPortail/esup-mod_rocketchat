@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * local_digital_training_account_services tests.
+ * mod_rocketchat rest api manager tests.
  *
  * @package    local_digital_training_account_services
- * @copyright  2020 Université de Strasbourg {@link https://unistra.fr}
- * @author  Céline Pervès <cperves@unistra.fr>
+ * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
