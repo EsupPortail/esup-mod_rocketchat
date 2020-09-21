@@ -190,6 +190,8 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertEmpty($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $groupname,$moodleusermoderator));
         $this->assertEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $groupname,$moodleuser));
 
+        $this->resetDebugging(); //to prevent debug error display and so test failing
+
         $members = $this->rocketchatapimanager->get_group_members($groupid, $groupname);
         $this->assertTrue(is_array($members));
         $this->assertCount(1, $members); // Adminuser included into group.
