@@ -64,5 +64,5 @@ $string['defaultuserroles_desc'] = 'Moodle roles in course that will be Rocket.C
 $string['mod_rocketchat:addinstance'] = 'Ajouter une instance de module Rocket.Chat';
 $string['mod_rocketchat:view'] = 'Voir les instances du module Rocket.Chat';
 $string['mod_rocketchat:candefineroles'] = 'Peut définir les roles à propager pour les inscirptions aux groupes privés Rocket.Chat';
-
+$string['rocketchat_nickname'] = '{$a->firstname} {$a->lastname}';
 

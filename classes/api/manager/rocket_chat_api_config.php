@@ -70,7 +70,7 @@ class rocket_chat_api_config {
             if(empty($config->apiuser)){
                 print_error('RocketChat api password is empty');
             }
-            if(empty($config->apiuser)){
+            if(empty($config->apipassword)){
                 print_error('RocketChat api password is empty');
             }
             $this->instanceurl = $config->instanceurl;
