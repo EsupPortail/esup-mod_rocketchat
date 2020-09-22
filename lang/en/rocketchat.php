@@ -30,7 +30,7 @@ $string['description'] = 'Module interfacing Rockat.Chat and Moodle';
 $string['modulename'] = 'Rocket.Chat';
 $string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
-$string['name'] = 'instance name (in moodle)';
+$string['name'] = 'instance name (in the course)';
 $string['rocketchatname'] = 'Group name (in Rocket.Chat)';
 $string['instanceurl'] = 'Rocket.Chat instance URL';
 $string['instanceurl_desc'] = 'Rocket.Chat instance URL (ex: https://rocketchat.univ.fr)';
@@ -67,4 +67,3 @@ $string['mod_rocketchat:candefineroles'] = 'Peut définir les roles à propager 
 $string['rocketchat_nickname'] = '{$a->firstname} {$a->lastname}';
 $string['create_user_account_if_not_exists'] = 'while enrolling user, create Rocket.Chat corresponding user account(username) if not exists.';
 $string['create_user_account_if_not_exists_desc'] = 'while enrolling user, create Rocket.Chat corresponding user account(username) if not exists.';
-
