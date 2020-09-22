@@ -30,6 +30,19 @@ php composer.phar update
 ```
 3. Visit the notifications page to complete the installation process
 
+## Unit tests
+* to run unit tests that involved Rocket.Chat remote server just create a config-test.php file into the module rocketchat root dorectory
+* fill in with following parameters
+```php
+<?php
+set_config('instanceurl','https://rocketchat-server_url','mod_rocketchat');
+set_config('restapiroot','/api/v1/','mod_rocketchat');
+set_config('apiuser','your_user_on_rocket.chat','mod_rocketchat');
+set_config('apipassword','#############','mod_rocketchat');
+// fake config test to avoird email domain troubles
+set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Optional argument.line.
+
+```
 ## License ##
 
 2020 ESUP-Portail (https://www.esup-portail.org)
