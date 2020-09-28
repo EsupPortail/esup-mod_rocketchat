@@ -65,5 +65,5 @@ $string['mod_rocketchat:addinstance'] = 'Add a Rocket.Chat module instance';
 $string['mod_rocketchat:view'] = 'View the Rocket.Chat module instances';
 $string['mod_rocketchat:candefineroles'] = 'Peut définir les roles à propager pour les inscirptions aux groupes privés Rocket.Chat';
 $string['rocketchat_nickname'] = '{$a->firstname} {$a->lastname}';
-$string['create_user_account_if_not_exists'] = 'while enrolling user, create Rocket.Chat corresponding user account(username) if not exists.';
-$string['create_user_account_if_not_exists_desc'] = 'while enrolling user, create Rocket.Chat corresponding user account(username) if not exists.';
+$string['create_user_account_if_not_exists'] = 'Create Rocket.Chat user account.';
+$string['create_user_account_if_not_exists_desc'] = 'While enrolling user, create Rocket.Chat corresponding user account (username) if not exists';
