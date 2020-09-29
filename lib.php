@@ -128,13 +128,3 @@ function rocketchat_delete_instance($id) {
 
     return true;
 }
-/*
-function mod_rocketchat_pre_course_module_delete($cm) {
-    global $DB;
-    if (\tool_recyclebin\course_bin::is_enabled()) {
-        // Archive
-        $rocketchatapimanager = new rocket_chat_api_manager();
-        $rocketchat = $DB->get_record('rocketchat', array('id' => $cm->instance));
-        $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
-    }
-}*/
