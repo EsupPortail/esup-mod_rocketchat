@@ -100,13 +100,18 @@ class observers {
     public static function course_bin_item_created(\tool_recyclebin\event\course_bin_item_created $event){
         global $DB;
         $cminfos = $event->other;
-        $rocketchat = $DB->get_record('rocketchat', array('id' => $cminfos['instanceid']));
-        //insert intem into association table
-        $record = new \stdClass();
-        $record->cmid = $cminfos['cmid'];
-        $record->rocketchatid = $rocketchat-> rocketchatid;
-        $record->binid = $event->objectid;
-        $DB->insert_record('rocketchatxrecyclebin', $record);
+        // Check that this is a Rocket.Chat module instance
+        $rocketchatmodule = $DB->get_record_sql('select * from {course_modules} cm inner join {modules} m on m.id=cm.module where cm.id=:cmid',
+            array('cmid' => $cminfos['cmid']));
+        if($rocketchatmodule){
+            $rocketchat = $DB->get_record('rocketchat', array('id' => $cminfos['instanceid']));
+            //insert intem into association table
+            $record = new \stdClass();
+            $record->cmid = $cminfos['cmid'];
+            $record->rocketchatid = $rocketchat-> rocketchatid;
+            $record->binid = $event->objectid;
+            $DB->insert_record('rocketchatxrecyclebin', $record);
+        }
     }
 
     public static function course_bin_item_deleted(\tool_recyclebin\event\course_bin_item_deleted $event){
