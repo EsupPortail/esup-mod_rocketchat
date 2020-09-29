@@ -60,7 +60,7 @@ class restore_rocketchat_activity_task extends restore_activity_task {
     static public function define_decode_contents() {
         $contents = array();
 
-        // Define the contents.
+        $contents[] = new restore_decode_content('rocketchat', array('intro'), 'rocketchat.xml');
 
         return $contents;
     }
@@ -73,7 +73,8 @@ class restore_rocketchat_activity_task extends restore_activity_task {
     static public function define_decode_rules() {
         $rules = array();
 
-        // Define the rules.
+        $rules[] = new restore_decode_rule('ROCKETCHATVIEWBYID', '/mod/rocketchat/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('ROCKETCHATINDEX', '/mod/rocketchat/index.php?id=$1', 'course');
 
         return $rules;
     }
@@ -88,7 +89,23 @@ class restore_rocketchat_activity_task extends restore_activity_task {
     static public function define_restore_log_rules() {
         $rules = array();
 
-        // Define the rules.
+        $rules[] = new restore_log_rule('rocketchat', 'add', 'view.php?id={course_module}', '{rocketchat}');
+        $rules[] = new restore_log_rule('rocketchat', 'update', 'view.php?id={course_module}', '{rocketchat}');
+        $rules[] = new restore_log_rule('rocketchat', 'view', 'view.php?id={course_module}', '{rocketchat}');
+
+        return $rules;
+    }
+
+    /**
+     * Define the restore log rules that will be applied
+     * by the {@link restore_logs_processor} when restoring
+     * course logs. It must return one array
+     * of {@link restore_log_rule} objects
+     */
+    static public function define_restore_log_rules_for_course() {
+        $rules = array();
+
+        $rules[] = new restore_log_rule('rocketchat', 'view all', 'index.php?id={course}', null);
 
         return $rules;
     }

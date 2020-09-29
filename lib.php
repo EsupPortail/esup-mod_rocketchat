@@ -44,7 +44,7 @@ function rocketchat_supports($feature) {
         (string) FEATURE_GROUPS => true,
         (string) FEATURE_GROUPINGS => true,
         (string) FEATURE_MOD_INTRO => true,
-        (string) FEATURE_BACKUP_MOODLE2 => false, //TODO
+        (string) FEATURE_BACKUP_MOODLE2 => true, //TODO
         (string) FEATURE_COMPLETION_TRACKS_VIEWS => true,
         (string) FEATURE_GRADE_HAS_GRADE => false,
         (string) FEATURE_GRADE_OUTCOMES => false,
@@ -118,21 +118,23 @@ function rocketchat_delete_instance($id) {
         return false;
     }
     // Treat remote Rocket.Chat remote private group depending of
-    $deletionmode = get_config('mod_rocketchat','deletionmode');
     $rocketchatapimanager = new rocket_chat_api_manager();
-    switch($deletionmode){
-        case mod_rocketchat_tools::DELETION_ARCHIVE :
-            $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
-            break;
-        case mod_rocketchat_tools::DELETION_HARD :
-            $rocketchatapimanager->delete_rocketchat_group($rocketchat->rocketchatid);
-            break;
-        default:
-            print_error('Rocket.Chat deletion mode not taken in charge : '.$deletionmode);
-            break;
+    if (\tool_recyclebin\course_bin::is_enabled()) {
+        $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
+    }else{
+        $rocketchatapimanager->delete_rocketchat_group($rocketchat->rocketchatid);
     }
-
     $DB->delete_records('rocketchat', array('id' => $id));
 
     return true;
 }
+/*
+function mod_rocketchat_pre_course_module_delete($cm) {
+    global $DB;
+    if (\tool_recyclebin\course_bin::is_enabled()) {
+        // Archive
+        $rocketchatapimanager = new rocket_chat_api_manager();
+        $rocketchat = $DB->get_record('rocketchat', array('id' => $cm->instance));
+        $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
+    }
+}*/

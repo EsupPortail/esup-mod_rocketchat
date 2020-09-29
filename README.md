@@ -29,6 +29,11 @@ curl -s http://getcomposer.org/installer | php
 php composer.phar update
 ```
 3. Visit the notifications page to complete the installation process
+## Settings
+* recyclebin_patch check this if patch is applied to core moodle file admin/tool/recyclebin/classes/course_bin.php
+* patch is available in patch subdirectory
+* you can apply it with patch command
+
 
 ## Unit tests
 * to run unit tests that involved Rocket.Chat remote server just create a config-test.php file into the module rocketchat root dorectory

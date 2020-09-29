@@ -14,17 +14,31 @@
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of when the instance was last modified."/>
         <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Activity description."/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The format of the intro field."/>
-        <FIELD NAME="rocketchatid" TYPE="char" LENGTH="24" NOTNULL="true"/>
+        <FIELD NAME="rocketchatid" TYPE="char" LENGTH="24" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="rocketchatname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name for Rocket.Chat instance"/>
         <FIELD NAME="displaytype" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="display type"/>
         <FIELD NAME="popupheight" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="popup height"/>
         <FIELD NAME="popupwidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="popup width"/>
-        <FIELD NAME="moderatorroles" TYPE="char" LENGTH="255" SEQUENCE="false" COMMENT="Moodle roles in course that will be Rocket.Chat moderators."/>
-        <FIELD NAME="userroles" TYPE="char" LENGTH="255" SEQUENCE="false" COMMENT="Moodle roles in course that will be Rocket.Chat user (with normal rights)."/>
+        <FIELD NAME="moderatorroles" TYPE="char" LENGTH="255" SEQUENCE="false" NOTNULL="false" COMMENT="Moodle roles in course that will be Rocket.Chat moderators."/>
+        <FIELD NAME="userroles" TYPE="char" LENGTH="255" SEQUENCE="false" NOTNULL="false" COMMENT="Moodle roles in course that will be Rocket.Chat user (with normal rights)."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="fk_course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="uniquerocketchatid" UNIQUE="true" FIELDS="rocketchatid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="rocketchatxrecyclebin" COMMENT="joining table use to delete remote Rocket.Chat private groups">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="binid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="recycletool_course id"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="old cmid while put into recyclebin"/>
+        <FIELD NAME="rocketchatid" TYPE="char" LENGTH="24" NOTNULL="true"  SEQUENCE="false" COMMENT="remote Rocket.Chat id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="uniquerocketchatid" UNIQUE="true" FIELDS="rocketchatid"/>

@@ -34,18 +34,7 @@ class mod_rocketchat_tools {
     const DISPLAY_CURRENT = 2;
     /** Display in popup */
     const DISPLAY_POPUP =  3;
-    /** Close and archive remote Rocket.Chat group */
-    const DELETION_ARCHIVE = 1;
-    /** Hard delete remote Rocket.Chat group */
-    const DELETION_HARD = 2;
 
-
-    public static function get_deletion_options(){
-        $deletionoptions = array();
-        $deletionoptions[self::DELETION_ARCHIVE] = get_string('deletion_archive', 'mod_rocketchat');
-        $deletionoptions[self::DELETION_HARD] = get_string('deletion_hard', 'mod_rocketchat');
-        return $deletionoptions;
-    }
     /**
      * Construct display options.
      * @return array

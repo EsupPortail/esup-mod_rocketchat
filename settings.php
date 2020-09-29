@@ -93,19 +93,18 @@ if ($ADMIN->fulltree) {
             $rolesoptions
         )
     );
-    $deletionoptions = mod_rocketchat_tools::get_deletion_options();
-    $settings->add(
-        new admin_setting_configselect('mod_rocketchat/deletionmode',
-            get_string('deletionmode', 'mod_rocketchat'),
-            get_string('deletionmode_desc', 'mod_rocketchat'),
-            mod_rocketchat_tools::DELETION_ARCHIVE,
-            $deletionoptions
-        )
-    );
+
     $settings->add(
         new admin_setting_configcheckbox('mod_rocketchat/create_user_account_if_not_exists',
             get_string('create_user_account_if_not_exists','mod_rocketchat'),
             get_string('create_user_account_if_not_exists_desc','mod_rocketchat'),
+            1
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/recyclebin_patch',
+            get_string('recyclebin_patch','mod_rocketchat'),
+            get_string('recyclebin_patch_desc','mod_rocketchat'),
             1
         )
     );

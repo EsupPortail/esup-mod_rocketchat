@@ -97,4 +97,31 @@ class observers {
 
     }
 
+    public static function course_bin_item_created(\tool_recyclebin\event\course_bin_item_created $event){
+        global $DB;
+        $cminfos = $event->other;
+        $rocketchat = $DB->get_record('rocketchat', array('id' => $cminfos['instanceid']));
+        //insert intem into association table
+        $record = new \stdClass();
+        $record->cmid = $cminfos['cmid'];
+        $record->rocketchatid = $rocketchat-> rocketchatid;
+        $record->binid = $event->objectid;
+        $DB->insert_record('rocketchatxrecyclebin', $record);
+    }
+
+    public static function course_bin_item_deleted(\tool_recyclebin\event\course_bin_item_deleted $event){
+        global $DB;
+        $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
+        if($rocketchatrecyclebin){
+            $rocketchatapimanager = new rocket_chat_api_manager();
+            $rocketchatapimanager->delete_rocketchat_group($rocketchatrecyclebin->rocketchatid);
+            $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
+        }
+    }
+
+    public static function course_bin_item_restored(tool_recyclebin\event\course_bin_item_restored $event) {
+        global $DB;
+        $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
+        $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
+    }
 }

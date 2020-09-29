@@ -43,7 +43,7 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
 
-        $paths[] = new restore_path_element('rocketchat', '');
+        $paths[] = new restore_path_element('rocketchat', '/activity/rocketchat');
 
         return $this->prepare_activity_structure($paths);
     }
@@ -54,13 +54,30 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
      * @param array $data Parsed element data.
      */
     protected function process_rocketchat($data) {
-        return;
+        global $DB;
+        $data = (object)$data;
+        $oldid = $data->id;
+        $data->course = $this->get_courseid();
+
+        if (empty($data->timecreated)) {
+            $data->timecreated = time();
+        }
+
+        if (empty($data->timemodified)) {
+            $data->timemodified = time();
+        }
+
+        // Create the rocketchat instance.
+        $newitemid = $DB->insert_record('rocketchat', $data);
+        $this->apply_activity_instance($newitemid);
     }
 
     /**
      * Defines post-execution actions.
      */
     protected function after_execute() {
+        // Add rocketchat related files
+        $this->add_related_files('mod_rocketchat', 'intro', null);
         return;
     }
 }

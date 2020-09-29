@@ -35,31 +35,15 @@ defined('MOODLE_INTERNAL') || die();
 class backup_rocketchat_activity_structure_step extends backup_activity_structure_step {
 
     /**
-     * Defines the structure of the resulting xml file.
+     * Defines the backup structure of the module
      *
-     * @return backup_nested_element The structure wrapped by the common 'activity' element.
+     * @return backup_nested_element
      */
     protected function define_structure() {
-        $userinfo = $this->get_setting_value('userinfo');
 
-        // Replace with the attributes and final elements that the element will handle.
-        $attributes = null;
-        $final_elements = null;
-        $root = new backup_nested_element('mod_rocketchat', $attributes, $final_elements);
-
-        // Replace with the attributes and final elements that the element will handle.
-        $attributes = null;
-        $final_elements = null;
-        $rocketchat = new backup_nested_element('rocketchat', $attributes, $final_elements);
-
-        // Build the tree with these elements with $root as the root of the backup tree.
-
-        // Define the source tables for the elements.
-
-        // Define id annotations.
-
-        // Define file annotations.
-
-        return $this->prepare_activity_structure($root);
+        $rocketchat = new backup_nested_element('rocketchat', array('id'), array('name', 'intro', 'introformat', 'timecreated', 'timemodified', 'rocketchatid', 'rocketchatname', 'displaytype', 'popupheight', 'popupwith', 'moderatorroles', 'userroles'));
+        $rocketchat->set_source_table('rocketchat', array('id' => backup::VAR_ACTIVITYID));
+        $rocketchat->annotate_files('mod_rocketchat', 'intro', null);
+        return $this->prepare_activity_structure($rocketchat);
     }
 }
