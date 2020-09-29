@@ -124,4 +124,56 @@ class observer_testcase extends advanced_testcase{
         $rocketchatmanager->delete_user($user->username);
 
     }
+
+    public function test_restoration_with_recyclebin() {
+        global $DB;
+        // We want the category bin to be enabled.
+        set_config('coursebinenable', 1, 'tool_recyclebin');
+        set_config('coursebinexpiry',1,'tool_recyclebin');
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $username = 'moodleusertest'.time();
+        $user = $generator->create_user(array('username' => $username, 'firstname' => $username, 'lastname' => $username));
+        $student = $DB->get_record('role', array('shortname' => 'student'));
+        $generator->enrol_user($user->id, $course->id, $student->id);
+        // TODO if possible, try to create a mock that take in charge inner new rocket_chat_api_manager() call
+        //set a groupname for tests
+        set_config('groupnametoformat',
+            'moodleunittest_{$a->courseshortname}_{$a->moduleid}_'.time(),
+            'mod_rocketchat');
+        $groupname = mod_rocketchat_tools::rocketchat_group_name(0, $course);
+        $rocketchat = $generator->create_module('rocketchat',
+            array('course' => $course->id, 'groupname' => $groupname));
+        course_delete_module($rocketchat->cmid, true);
+        // Now, run the course module deletion adhoc task.
+        phpunit_util::run_all_adhoc_tasks();
+        $rocketchatmanager = new rocket_chat_api_manager();
+        $group = $rocketchatmanager->get_rocketchat_group_object($rocketchat->rocketchatid, '');
+        $this->assertNotEmpty($group);
+        $groupinfo = $group->info();
+        $this->assertNotEmpty($groupinfo);
+        $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $rocketchat->rocketchatid));
+        $this->assertNotEmpty($rocketchatxrecyclebin);
+        $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $rocketchat->id));
+        $this->assertEmpty($rocketchatrecord);
+        //time to restore from recycle bin
+        ob_start();
+        // Try restoring.
+        $recyclebin = new \tool_recyclebin\course_bin($course->id);
+        foreach ($recyclebin->get_items() as $item) {
+            $recyclebin->restore_item($item);
+        }
+        ob_get_contents();
+        ob_end_clean();
+        $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $rocketchat->rocketchatid));
+        $this->assertEmpty($rocketchatxrecyclebin);
+        $rocketchatmanager = new rocket_chat_api_manager();
+        $group = $rocketchatmanager->get_rocketchat_group_object($rocketchat->rocketchatid, '');
+        $this->assertNotEmpty($group);
+        $groupinfo = $group->info();
+        $this->assertNotEmpty($groupinfo);
+        //clean Rocket.Chat
+        $rocketchatmanager->delete_rocketchat_group($rocketchat->rocketchatid);
+        $rocketchatmanager->delete_user($user->username);
+    }
 }

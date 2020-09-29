@@ -124,7 +124,7 @@ class observers {
         }
     }
 
-    public static function course_bin_item_restored(tool_recyclebin\event\course_bin_item_restored $event) {
+    public static function course_bin_item_restored(\tool_recyclebin\event\course_bin_item_restored $event) {
         global $DB;
         $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
         $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
