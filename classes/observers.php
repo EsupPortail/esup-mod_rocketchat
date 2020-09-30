@@ -127,6 +127,9 @@ class observers {
     public static function course_bin_item_restored(\tool_recyclebin\event\course_bin_item_restored $event) {
         global $DB;
         $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
+        $rocketchatapimanager = new rocket_chat_api_manager();
+        $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatrecyclebin->rocketchatid);
+        $group->unarchive();
         $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
     }
 }
