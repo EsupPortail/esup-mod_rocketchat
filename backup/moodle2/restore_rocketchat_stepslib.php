@@ -24,6 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
 // For more information about the backup and restore process, please visit:
 // https://docs.moodle.org/dev/Backup_2.0_for_developers
@@ -41,7 +42,6 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
      */
     protected function define_structure() {
         $paths = array();
-        $userinfo = $this->get_setting_value('userinfo');
 
         $paths[] = new restore_path_element('rocketchat', '/activity/rocketchat');
 
@@ -55,8 +55,12 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
      */
     protected function process_rocketchat($data) {
         global $DB;
+        $restorewithrocketchatid = $this->task->get_setting_value('restorewithrocketchatid');
         $data = (object)$data;
         $oldid = $data->id;
+        $modulename = $this->task->get_modulename();
+
+
         $data->course = $this->get_courseid();
 
         if (empty($data->timecreated)) {
@@ -66,18 +70,35 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
         if (empty($data->timemodified)) {
             $data->timemodified = time();
         }
-
-        // Create the rocketchat instance.
         $newitemid = $DB->insert_record('rocketchat', $data);
         $this->apply_activity_instance($newitemid);
+
     }
 
     /**
      * Defines post-execution actions.
      */
     protected function after_execute() {
+        global $DB;
         // Add rocketchat related files
         $this->add_related_files('mod_rocketchat', 'intro', null);
+        $cmid = $this->get_task()->get_moduleid();
+        $instanceid = $this->get_task()->get_activityid();
+        $restorewithrocketchatid = $this->task->get_setting_value('restorewithrocketchatid');
+        if(!$restorewithrocketchatid){
+            $course = $DB->get_record('course', array('id' => $this->get_courseid()));
+            $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
+            $rocketchatapimanager = new rocket_chat_api_manager();
+            $rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
+            // Update rocketchat table
+            $rocketchat = $DB->get_record('rocketchat', array('id' => $instanceid));
+            $rocketchat->rocketchatid = $rocketchatid;
+            $rocketchat->rocketchatname = $groupname;
+            $DB->update_record('rocketchat', $rocketchat);
+
+        }
+
+
         return;
     }
 }

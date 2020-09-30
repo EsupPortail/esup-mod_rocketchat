@@ -29,4 +29,17 @@ function xmldb_rocketchat_upgrade($oldversion) {
         upgrade_mod_savepoint(true, '2020092903', 'rocketchat');
 
     }
+    if ($oldversion < 2020092904) {
+        // Define index uniquerocketchatid (unique) to be dropped form rocketchat.
+        $table = new xmldb_table('rocketchat');
+        $index = new xmldb_index('uniquerocketchatid', XMLDB_INDEX_UNIQUE, array('rocketchatid'));
+
+        // Conditionally launch drop index uniquerocketchatid.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Rocketchat savepoint reached.
+        upgrade_mod_savepoint(true, '2020092904', 'rocketchat');
+    }
 }
