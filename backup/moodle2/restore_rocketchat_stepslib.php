@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
+global $CFG;
+require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 
 // For more information about the backup and restore process, please visit:
 // https://docs.moodle.org/dev/Backup_2.0_for_developers
@@ -95,7 +97,10 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
             $rocketchat->rocketchatid = $rocketchatid;
             $rocketchat->rocketchatname = $groupname;
             $DB->update_record('rocketchat', $rocketchat);
-
+            // Need to enrol users
+            // Course information to fit ton function needs.
+            $rocketchat->course = $course->id;
+            mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($rocketchat);
         }
 
 
