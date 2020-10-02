@@ -1,0 +1,14 @@
+{
+    "name": "esup-portail/rocket-chat-rest-client",
+    "description": "Rocket Chat REST API client in PHP.",
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "nategood/httpful": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}
