@@ -34,8 +34,6 @@ use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 class observer_testcase extends advanced_testcase{
     private $course;
     private $rocketchat;
-    private $newrocketchat;
-    private $newrocketchatmodule;
     private $user;
 
     protected function setUp() {
@@ -66,9 +64,6 @@ class observer_testcase extends advanced_testcase{
         if(!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);
         }
-        if(!empty($this->newrocketchat)){
-            course_delete_module($this->newrocketchatmodule->id, true);
-        }
         $rocketchatmanager = new rocket_chat_api_manager();
         $rocketchatmanager->delete_user($this->user->username);
         ob_get_contents();
@@ -77,7 +72,6 @@ class observer_testcase extends advanced_testcase{
     }
 
     public function test_user_delete() {
-        global $DB;
         // Structure created in setUp.
         $rocketchatmanager = new rocket_chat_api_manager();
         $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
@@ -90,6 +84,21 @@ class observer_testcase extends advanced_testcase{
         $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
         $members = $rocketchatgroup->members();
         $this->assertCount(1, $members);
+    }
+
+    public function test_module_delete() {
+        // Structure created in setUp.
+        $rocketchatmanager = new rocket_chat_api_manager();
+        $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
+        $members = $rocketchatgroup->members();
+        $this->assertCount(2, $members);
+        course_delete_module($this->rocketchat->cmid);
+        $rocketchatuser = $rocketchatmanager->get_rocketchat_user_object($this->user->username);
+        $this->assertNotEmpty($rocketchatuser);
+        $this->assertNotEmpty($rocketchatuser->info());
+        $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
+        $this->assertNotEmpty($rocketchatgroup);
+        $this->assertEmpty($rocketchatgroup->info());
 
     }
 }
