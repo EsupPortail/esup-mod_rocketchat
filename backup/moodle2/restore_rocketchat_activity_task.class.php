@@ -40,10 +40,6 @@ class restore_rocketchat_activity_task extends restore_activity_task {
      * Defines particular settings that this activity can have.
      */
     protected function define_my_settings() {
-        // Need a setting to know if rocketchatid and rocketchatname will be backed up
-        $restorewithrocketchatid  = new restore_activity_generic_setting('restorewithrocketchatid', base_setting::IS_BOOLEAN, true);
-        $restorewithrocketchatid->set_ui(new backup_setting_ui_checkbox($restorewithrocketchatid, get_string('restorewithrocketchatid', 'mod_rocketchat')));
-        $this->add_setting($restorewithrocketchatid);
         return;
     }
 
@@ -111,5 +107,9 @@ class restore_rocketchat_activity_task extends restore_activity_task {
         $rules[] = new restore_log_rule('rocketchat', 'view all', 'index.php?id={course}', null);
 
         return $rules;
+    }
+
+    public function get_plan_mode(){
+        return $this->plan->get_mode();
     }
 }

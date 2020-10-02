@@ -76,22 +76,10 @@ class backup_restore_testcase extends advanced_testcase{
         parent::tearDown();
     }
 
-    public function test_backup_restore_with_rocketchatid() {
+    public function test_backup_restore() {
         global $DB;
         // backup course
-        $newcourseid = $this->backup_and_restore($this->course, true);
-        $modules = get_coursemodules_in_course('rocketchat', $newcourseid);
-        $this->assertCount(1,$modules);
-        $this->newrocketchatmodule = array_pop($modules);
-        $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
-        $this->assertEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
-        $this->assertEquals($this->rocketchat->rocketchatname, $this->newrocketchat->rocketchatname);
-    }
-
-    public function test_backup_restore_without_rocketchatid() {
-        global $DB;
-        // backup course
-        $newcourseid = $this->backup_and_restore($this->course, false);
+        $newcourseid = $this->backup_and_restore($this->course);
         $modules = get_coursemodules_in_course('rocketchat', $newcourseid);
         $this->assertCount(1,$modules);
         $this->newrocketchatmodule = array_pop($modules);
@@ -104,7 +92,7 @@ class backup_restore_testcase extends advanced_testcase{
         $this->assertNotEmpty($group->info());
     }
 
-    protected function backup_and_restore($course, $restorewithrocketchatid) {
+    protected function backup_and_restore($course) {
         global $USER, $CFG;
         // Turn off file logging, otherwise it can't delete the file (Windows).
         $CFG->backup_file_logger_level = backup::LOG_NONE;
@@ -127,14 +115,10 @@ class backup_restore_testcase extends advanced_testcase{
         $rc = new restore_controller('test-restore-course', $newcourseid,
             backup::INTERACTIVE_NO, backup::MODE_GENERAL, $USER->id,
             backup::TARGET_NEW_COURSE);
-
-        $rc->get_plan()->get_setting('restorewithrocketchatid')->set_value($restorewithrocketchatid);
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
         $rc->destroy();
 
         return $newcourseid;
     }
-
-
 }

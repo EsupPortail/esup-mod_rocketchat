@@ -62,7 +62,6 @@ class backup_rocketchat_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot,"/");
 
         // Link to the list of choices
-        // TODO if($this->get_setting_value('restorewithrocketchatid'))
         $search="/(".$base."\/mod\/rocketchat\/index.php\?id\=)([0-9]+)/";
         $content= preg_replace($search, '$@ROCKETCHATINDEX*$2@$', $content);
 

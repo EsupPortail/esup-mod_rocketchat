@@ -57,7 +57,6 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
      */
     protected function process_rocketchat($data) {
         global $DB;
-        $restorewithrocketchatid = $this->task->get_setting_value('restorewithrocketchatid');
         $data = (object)$data;
         $oldid = $data->id;
         $modulename = $this->task->get_modulename();
@@ -85,9 +84,10 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
         // Add rocketchat related files
         $this->add_related_files('mod_rocketchat', 'intro', null);
         $cmid = $this->get_task()->get_moduleid();
+        $mode = $this->get_task()->get_plan_mode();
         $instanceid = $this->get_task()->get_activityid();
-        $restorewithrocketchatid = $this->task->get_setting_value('restorewithrocketchatid');
-        if(!$restorewithrocketchatid){
+        if($mode != backup::MODE_AUTOMATED){
+            // If not a recyclebin restoration create a new remote Rocket.Chat private group
             $course = $DB->get_record('course', array('id' => $this->get_courseid()));
             $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
             $rocketchatapimanager = new rocket_chat_api_manager();
@@ -102,8 +102,6 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
             $rocketchat->course = $course->id;
             mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($rocketchat);
         }
-
-
         return;
     }
 }
