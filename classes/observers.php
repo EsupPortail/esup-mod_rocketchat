@@ -88,14 +88,6 @@ class observers {
         }
     }
 
-    public static function user_enrolment_updated(\core\event\course_deleted $event) {
-
-    }
-
-    public static function user_deleted(\core\event\course_deleted $event) {
-
-    }
-
     public static function course_bin_item_created(\tool_recyclebin\event\course_bin_item_created $event){
         global $DB;
         $cminfos = $event->other;

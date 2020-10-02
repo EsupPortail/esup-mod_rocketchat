@@ -42,10 +42,6 @@ $observers = array(
         'callback' => '\mod_rocketchat\observers::role_unassigned',
     ),
     array(
-        'eventname' => '\core\event\user_deleted',
-        'callback' => '\mod_rocketchat\observers::module_deleted',
-    ),
-    array(
         'eventname' => 'tool_recyclebin\event\course_bin_item_restored',
         'callback' => '\mod_rocketchat\observers::course_bin_item_restored',
     ),

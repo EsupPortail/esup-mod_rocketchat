@@ -77,7 +77,7 @@ class rocket_chat_api_manager{
         return new \RocketChat\User(null, null , $fields, $this->rocketchatapiconfig->get_instanceurl(), $this->rocketchatapiconfig->get_restapiroot());
     }
 
-    public function get_rocketchat_user_object($username, $password, $fields = array()){
+    public function get_rocketchat_user_object($username, $password='', $fields = array()){
         return new \RocketChat\User($username, $password , $fields, $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
     }
