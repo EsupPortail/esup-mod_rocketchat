@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * mod_rocketchat rest api manager tests.
- *
+ * mod_rocketchat backup restore tests.
+ * recycle bin tests included into observer_testcase
  * @package    local_digital_training_account_services
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @author Céline Pervès<cperves@unistra.fr>
@@ -83,6 +83,20 @@ class backup_restore_testcase extends advanced_testcase{
         $modules = get_coursemodules_in_course('rocketchat', $newcourseid);
         $this->assertCount(1,$modules);
         $this->newrocketchatmodule = array_pop($modules);
+        $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
+        $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
+        $this->assertNotEquals($this->rocketchat->rocketchatname, $this->newrocketchat->rocketchatname);
+        $rocketchatmanager = new rocket_chat_api_manager();
+        $group = $rocketchatmanager->get_rocketchat_group_object($this->newrocketchat->rocketchatid);
+        $this->assertNotEmpty($group);
+        $this->assertNotEmpty($group->info());
+    }
+
+    public function test_duplicate_module() {
+        global $DB;
+        $rocketchatmodule = get_coursemodule_from_id('rocketchat', $this->rocketchat->cmid, $this->course->id);
+        $this->newrocketchatmodule = duplicate_module($this->course, $rocketchatmodule);
+        $this->assertNotEmpty($this->newrocketchatmodule);
         $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $this->assertNotEquals($this->rocketchat->rocketchatname, $this->newrocketchat->rocketchatname);
