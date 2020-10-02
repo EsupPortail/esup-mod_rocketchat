@@ -3,7 +3,8 @@ composer.lock
 composer.phar
 config-test.php
 vendor/esup-portail/rocket-chat-rest-client/.git
-vendor/esup-portail/rocket-chat-rest-client/.gitgnore
+vendor/esup-portail/rocket-chat-rest-client/.gitignore
 vendor/nategood/httpful/.git
 vendor/nategood/httpful/.gitignore
-vendor/composer
+vendor/composer/.git
+vendor/composer/.gitignore
