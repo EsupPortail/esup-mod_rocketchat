@@ -131,6 +131,17 @@ class mod_rocketchat_tools {
                 }
             }
         }
+    }
+    public static function rocketchat_enabled() {
 
+        global $DB;
+        $module = $DB->get_record('modules', array('name' => 'rocketchat'));
+        if(!empty($module->visible)) {
+            $config = get_config('mod_rocketchat');
+            if(!empty($config->instanceurl) && !empty($config->restapiroot) && !empty($config->apiuser) && !empty($config->apipassword)){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -30,6 +30,17 @@ require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 
 class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     private $rocketchatapimanager;
+
+    public function setUp() {
+        global $DB;
+        parent::setUp();
+        // Enable rocketchat module
+        $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
+        $modulerecord->visible = 1;
+        $DB->update_record('modules', $modulerecord);
+        $this->initiate_test_environment();
+    }
+
     public function test_initiate_connection() {
         $this->initiate_test_environment();
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();

@@ -39,6 +39,10 @@ class observer_testcase extends advanced_testcase{
     protected function setUp() {
         global $CFG, $DB;
         parent::setUp();
+        // Enable rocketchat module
+        $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
+        $modulerecord->visible = 1;
+        $DB->update_record('modules', $modulerecord);
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
         $this->resetAfterTest();
         $this->setAdminUser();
