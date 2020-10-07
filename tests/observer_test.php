@@ -39,6 +39,7 @@ class observer_testcase extends advanced_testcase{
     protected function setUp() {
         global $CFG, $DB;
         parent::setUp();
+        set_config('recyclebin_patch',1,'mod_rocketchat');
         // Enable rocketchat module
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;

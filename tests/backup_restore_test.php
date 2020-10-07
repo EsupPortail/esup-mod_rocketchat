@@ -44,6 +44,7 @@ class backup_restore_testcase extends advanced_testcase{
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
         $this->resetAfterTest();
         $this->setAdminUser();
+        set_config('recyclebin_patch',1,'mod_rocketchat');
         // Enable rocketchat module
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;

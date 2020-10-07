@@ -144,4 +144,8 @@ class mod_rocketchat_tools {
         }
         return false;
     }
+
+    public static function is_patch_installed(){
+        return get_config('mod_rocketchat','recyclebin_patch');
+    }
 }
