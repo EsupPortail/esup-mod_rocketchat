@@ -128,7 +128,7 @@ class rocket_chat_api_manager{
         } else {
             $user = $group->user_info($identifier);
             if(!$user){
-                debugging("User $moodleuser->username not exists in Rocket.Chat", DEBUG_DEVELOPER);
+                debugging("User $moodleuser->username not exists in Rocket.Chat", DEBUG_NORMAL);
             }
         }
         if(!$user){
@@ -137,7 +137,7 @@ class rocket_chat_api_manager{
         $return = $group->invite($user->_id);
         if(!$return){
             debugging("User $moodleuser->username not added as user to remote Rocket.Chat group",
-                DEBUG_MINIMAL);
+                DEBUG_NORMAL);
         }
         return $return ? $group : false;
     }
@@ -151,7 +151,7 @@ class rocket_chat_api_manager{
             return $group->addModerator($user->_id);
         }else{
             debugging("User $moodleuser->username not added as moderator to remote Rocket.Chat group",
-                DEBUG_MINIMAL);
+                DEBUG_NORMAL);
         }
         return false;
     }
@@ -164,12 +164,12 @@ class rocket_chat_api_manager{
         if($createusermode){
             $user = $this->create_user_if_not_exists($moodleuser);
             if(!$user){
-                debugging("User $user->username not exists in Rocket.Chat and was not succesfully created.", DEBUG_MINIMAL);
+                debugging("User $user->username not exists in Rocket.Chat and was not succesfully created.", DEBUG_NORMAL);
             }
         } else {
             $user = $group->user_info($identifier);
             if(!$user){
-                debugging("User $user->username not exists in Rocket.Chat", DEBUG_DEVELOPER);
+                debugging("User $user->username not exists in Rocket.Chat", DEBUG_NORMAL);
             }
         }
         if(!$user){
@@ -178,7 +178,7 @@ class rocket_chat_api_manager{
         $return = $group->kick($user->_id);
         if (!$return) {
         debugging("User $user->username not removed as user from remote Rocket.Chat group",
-        DEBUG_MINIMAL);
+        DEBUG_NORMAL);
         }
         return $return ? $group : false;
     }
@@ -191,7 +191,7 @@ class rocket_chat_api_manager{
         $return = $group->removeModerator($user->_id);
         if (!$return) {
             debugging("User $user->username not removed as moderator from remote Rocket.Chat group",
-                DEBUG_MINIMAL);
+                DEBUG_NORMAL);
         }
         $return2 = $this->unenrol_user_from_group($groupid, $groupname, $moodleuser);
         return $return && $return2;
