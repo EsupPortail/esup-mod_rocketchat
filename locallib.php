@@ -148,4 +148,17 @@ class mod_rocketchat_tools {
     public static function is_patch_installed(){
         return get_config('mod_rocketchat','recyclebin_patch');
     }
+
+    public static function get_group_link($rocketchatid){
+        $rocketchatmanager = new rocket_chat_api_manager();
+        $group = $rocketchatmanager->get_rocketchat_group_object($rocketchatid);
+        if(!$group){
+            print_error('can\'t find Rocket.Chat group with id '. $rocketchatid);
+        }
+        $groupinfo = $group->info();
+        if(!$groupinfo){
+            print_error('can\'t find Rocket.Chat group info for id '. $rocketchatid);
+        }
+        return $rocketchatmanager->get_instance_url() . '/group/' .$groupinfo->group->name;
+    }
 }

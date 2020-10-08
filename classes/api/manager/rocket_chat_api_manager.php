@@ -33,6 +33,9 @@ class rocket_chat_api_manager{
     private $rocketchatapiconfig;
     private $adminuser;
 
+    public function get_instance_url(){
+        return $this->rocketchatapiconfig->get_instanceurl();
+    }
     public function get_admin_user(){
         return $this->adminuser;
     }

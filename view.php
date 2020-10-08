@@ -65,7 +65,7 @@ $PAGE->set_context($modulecontext);
 $config = get_config('mod_rocketchat');
 echo $OUTPUT->header();
 $rocketchatapiconfig = new \mod_rocketchat\api\manager\rocket_chat_api_config();
-$link = $rocketchatapiconfig->get_instanceurl() . '/group/' . $moduleinstance->rocketchatname;
+$link = mod_rocketchat_tools::get_group_link($moduleinstance->rocketchatid);
 
 switch ($moduleinstance->displaytype) {
     case mod_rocketchat_tools::DISPLAY_POPUP:
