@@ -65,3 +65,5 @@ $string['create_user_account_if_not_exists'] = 'Create Rocket.Chat user account.
 $string['create_user_account_if_not_exists_desc'] = 'while enrolling user, create Rocket.Chat corresponding user account(username) if not exists.';
 $string['recyclebin_patch'] = 'Is recyclebin moodle core patch installed?';
 $string['recyclebin_patch_desc'] = 'the mod rocketchat recyclebin patch is a patch locate in admin/tool/recyclebin/classes/course_bin.php file enabling to pass cmid and module instanceid to recyclebin item created event. It enables to delete remote Rocket.Chat groups.';
+$string['validationgroupnameregex'] = 'Rocket.Chat group validation name regular expression to remove invalid characters.';
+$string['validationgroupnameregex_desc'] = 'Moodle will replace every unauthorized caracters by _. This regexp is the exact negation of the Rocket.Chat server one concerning group name validation.';

@@ -108,4 +108,11 @@ if ($ADMIN->fulltree) {
             1
         )
     );
+    $settings->add(
+        new admin_setting_configtext('mod_rocketchat/validationgroupnameregex',
+            get_string('validationgroupnameregex', 'mod_rocketchat'),
+            get_string('validationgroupnameregex_desc','mod_rocketchat'),
+                '/[^0-9a-zA-Z-_.]/'
+        )
+    );
 }

@@ -66,6 +66,7 @@ class mod_rocketchat_tools {
         $formatarguments->coursefullname =  $course->fullname;
         $groupnameformat = get_config('mod_rocketchat', 'groupnametoformat');
         $groupnameformat = is_null($groupnameformat) ? '{$a->moodleid}_{$a->courseshortname}_{$a->moduleid}' : $groupnameformat;
+        $groupnameformat = self::sanitize_groupename($groupnameformat);
         return self::format_string($groupnameformat,$formatarguments);
     }
 
@@ -160,5 +161,16 @@ class mod_rocketchat_tools {
             print_error('can\'t find Rocket.Chat group info for id '. $rocketchatid);
         }
         return $rocketchatmanager->get_instance_url() . '/group/' .$groupinfo->group->name;
+    }
+
+    /**
+     * @param string $groupnameformat
+     * @return string|string[]|null
+     * @throws dml_exception
+     */
+    public static function sanitize_groupename($groupnameformat) {
+        $groupnameformat =
+            preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupnameformat);
+        return $groupnameformat;
     }
 }
