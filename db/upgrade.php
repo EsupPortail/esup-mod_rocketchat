@@ -42,4 +42,5 @@ function xmldb_rocketchat_upgrade($oldversion) {
         // Rocketchat savepoint reached.
         upgrade_mod_savepoint(true, '2020092904', 'rocketchat');
     }
+    return true;
 }
