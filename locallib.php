@@ -66,8 +66,8 @@ class mod_rocketchat_tools {
         $formatarguments->coursefullname =  $course->fullname;
         $groupnameformat = get_config('mod_rocketchat', 'groupnametoformat');
         $groupnameformat = is_null($groupnameformat) ? '{$a->moodleid}_{$a->courseshortname}_{$a->moduleid}' : $groupnameformat;
-        $groupnameformat = self::sanitize_groupename($groupnameformat);
-        return self::format_string($groupnameformat,$formatarguments);
+        $groupname = self::format_string($groupnameformat,$formatarguments);
+        return self::sanitize_groupname($groupname);
     }
 
 
@@ -168,9 +168,12 @@ class mod_rocketchat_tools {
      * @return string|string[]|null
      * @throws dml_exception
      */
-    public static function sanitize_groupename($groupnameformat) {
+    public static function sanitize_groupname($groupnameformat) {
         $groupnameformat =
             preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupnameformat);
+        if(empty($groupnameformat)){
+            print_error('sanitized Rocket.Chat groupname can\'t be empty');
+        }
         return $groupnameformat;
     }
 }

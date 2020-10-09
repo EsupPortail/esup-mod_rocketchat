@@ -95,7 +95,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $groupname = 'moodletestgroup '.time();
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
         $this->assertEmpty($groupid);
-        $sanitizedgroupname = mod_rocketchat_tools::sanitize_groupename($groupname);
+        $sanitizedgroupname = mod_rocketchat_tools::sanitize_groupname($groupname);
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($sanitizedgroupname);
         $this->assertNotEmpty($groupid);
         $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $sanitizedgroupname);
