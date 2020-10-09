@@ -76,7 +76,6 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
     $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
     $rocketchatapimanager = new rocket_chat_api_manager();
     $moduleinstance->rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
-    $moduleinstance->rocketchatname = $groupname;
     if(is_null($moduleinstance->rocketchatid)){
         print_error('an error occured while creating Rocket.Chat group');
     }

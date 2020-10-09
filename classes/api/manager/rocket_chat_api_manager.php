@@ -118,11 +118,11 @@ class rocket_chat_api_manager{
         return $group->unarchive();
     }
 
-    public function enrol_user_to_group($groupid,$groupname, $moodleuser, &$user=null){
+    public function enrol_user_to_group($groupid, $moodleuser, &$user=null){
         $createusermode = get_config('mod_rocketchat', 'create_user_account_if_not_exists');
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
-        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+        $group = $this->get_rocketchat_group_object($groupid);
         if($createusermode){
             $user = $this->create_user_if_not_exists($moodleuser);
             if(!$user){
@@ -145,11 +145,11 @@ class rocket_chat_api_manager{
         return $return ? $group : false;
     }
 
-    public function enrol_moderator_to_group($groupid,$groupname, $moodleuser){
+    public function enrol_moderator_to_group($groupid, $moodleuser){
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $user = null;
-        $group = $this->enrol_user_to_group($groupid, $groupname, $moodleuser,$user);
+        $group = $this->enrol_user_to_group($groupid, $moodleuser,$user);
         if($group) {
             return $group->addModerator($user->_id);
         }else{
@@ -159,11 +159,11 @@ class rocket_chat_api_manager{
         return false;
     }
 
-    public function unenrol_user_from_group($groupid,$groupname, $moodleuser){
+    public function unenrol_user_from_group($groupid, $moodleuser){
         $createusermode = get_config('mod_rocketchat', 'create_user_account_if_not_exists');
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
-        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+        $group = $this->get_rocketchat_group_object($groupid);
         if($createusermode){
             $user = $this->create_user_if_not_exists($moodleuser);
             if(!$user){
@@ -186,17 +186,17 @@ class rocket_chat_api_manager{
         return $return ? $group : false;
     }
 
-    public function unenrol_moderator_from_group($groupid,$groupname, $moodleuser){
+    public function unenrol_moderator_from_group($groupid, $moodleuser){
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
-        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+        $group = $this->get_rocketchat_group_object($groupid);
         $user = $group->user_info($identifier);
         $return = $group->removeModerator($user->_id);
         if (!$return) {
             debugging("User $user->username not removed as moderator from remote Rocket.Chat group",
                 DEBUG_NORMAL);
         }
-        $return2 = $this->unenrol_user_from_group($groupid, $groupname, $moodleuser);
+        $return2 = $this->unenrol_user_from_group($groupid, $moodleuser);
         return $return && $return2;
     }
 
@@ -210,8 +210,8 @@ class rocket_chat_api_manager{
         return $user;
     }
 
-    public function get_group_members($groupid, $groupname){
-        $group = $this->get_rocketchat_group_object($groupid,$groupname);
+    public function get_group_members($groupid, $groupname = ''){
+        $group = $this->get_rocketchat_group_object($groupid, $groupname);
         return $group->members();
     }
 

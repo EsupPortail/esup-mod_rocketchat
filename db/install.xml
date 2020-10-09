@@ -15,7 +15,6 @@
         <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Activity description."/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The format of the intro field."/>
         <FIELD NAME="rocketchatid" TYPE="char" LENGTH="24" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="rocketchatname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name for Rocket.Chat instance"/>
         <FIELD NAME="displaytype" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="display type"/>
         <FIELD NAME="popupheight" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="popup height"/>
         <FIELD NAME="popupwidth" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="popup width"/>

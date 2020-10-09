@@ -103,7 +103,7 @@ class mod_rocketchat_tools {
 
     public static function get_rocketchat_module_instances($courseid) {
         global $DB;
-        $sql = 'select cm.*, r.rocketchatname, r.rocketchatid, r.moderatorroles, r.userroles  from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance where m.name=:rocketchat and cm.course=:courseid';
+        $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles  from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance where m.name=:rocketchat and cm.course=:courseid';
         $moduleinstances = $DB->get_records_sql($sql , array('courseid' => $courseid, 'rocketchat' => 'rocketchat'));
         return $moduleinstances;
     }
@@ -118,16 +118,14 @@ class mod_rocketchat_tools {
             $ismoderator = false;
             foreach($moderatorroleids as $moderatorroleid){
                 if (user_has_role_assignment($user->id, $moderatorroleid, $coursecontext->id)){
-                    $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid,
-                        $rocketchatmoduleinstance->rocketchatname, $user);
+                    $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid, $user);
                 }
             }
             if(!$ismoderator){
                 $userroleids = explode(',',$rocketchatmoduleinstance->userroles);
                 foreach($userroleids as $userroleid){
                     if (user_has_role_assignment($user->id, $userroleid, $coursecontext->id)){
-                        $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid,
-                            $rocketchatmoduleinstance->rocketchatname, $user);
+                        $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid, $user);
                     }
                 }
             }
@@ -164,16 +162,16 @@ class mod_rocketchat_tools {
     }
 
     /**
-     * @param string $groupnameformat
+     * @param string $groupname
      * @return string|string[]|null
      * @throws dml_exception
      */
-    public static function sanitize_groupname($groupnameformat) {
-        $groupnameformat =
-            preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupnameformat);
-        if(empty($groupnameformat)){
+    public static function sanitize_groupname($groupname) {
+        $groupname =
+            preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupname);
+        if(empty($groupname)){
             print_error('sanitized Rocket.Chat groupname can\'t be empty');
         }
-        return $groupnameformat;
+        return $groupname;
     }
 }

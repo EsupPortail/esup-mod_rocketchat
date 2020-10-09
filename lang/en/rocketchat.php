@@ -31,7 +31,6 @@ $string['modulename'] = 'Rocket.Chat';
 $string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
 $string['name'] = 'instance name (in the course)';
-$string['rocketchatname'] = 'Group name (in Rocket.Chat)';
 $string['instanceurl'] = 'Rocket.Chat instance URL';
 $string['instanceurl_desc'] = 'Rocket.Chat instance URL (ex: https://rocketchat.univ.fr)';
 $string['restapiroot'] = 'Rocket.Chat REST API root';

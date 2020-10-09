@@ -90,7 +90,6 @@ class backup_restore_testcase extends advanced_testcase{
         $this->newrocketchatmodule = array_pop($modules);
         $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
-        $this->assertNotEquals($this->rocketchat->rocketchatname, $this->newrocketchat->rocketchatname);
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($this->newrocketchat->rocketchatid);
         $this->assertNotEmpty($group);
@@ -104,7 +103,6 @@ class backup_restore_testcase extends advanced_testcase{
         $this->assertNotEmpty($this->newrocketchatmodule);
         $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
-        $this->assertNotEquals($this->rocketchat->rocketchatname, $this->newrocketchat->rocketchatname);
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($this->newrocketchat->rocketchatid);
         $this->assertNotEmpty($group);

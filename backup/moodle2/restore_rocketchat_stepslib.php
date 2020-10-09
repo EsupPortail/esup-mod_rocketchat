@@ -95,7 +95,6 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
             // Update rocketchat table
             $rocketchat = $DB->get_record('rocketchat', array('id' => $instanceid));
             $rocketchat->rocketchatid = $rocketchatid;
-            $rocketchat->rocketchatname = $groupname;
             $DB->update_record('rocketchat', $rocketchat);
             // Need to enrol users
             // Course information to fit ton function needs.

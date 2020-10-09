@@ -42,5 +42,18 @@ function xmldb_rocketchat_upgrade($oldversion) {
         // Rocketchat savepoint reached.
         upgrade_mod_savepoint(true, '2020092904', 'rocketchat');
     }
+    if ($oldversion < 2020100901) {
+        // Define field rocketchatname to be dropped from rocketchat.
+        $table = new xmldb_table('rocketchat');
+        $field = new xmldb_field('rocketchatname');
+
+        // Conditionally launch drop field rocketchatname.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Rocketchat savepoint reached.
+        upgrade_mod_savepoint(true, 2020100901, 'rocketchat');
+    }
     return true;
 }

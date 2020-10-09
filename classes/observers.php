@@ -49,14 +49,12 @@ class observers {
                     if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
                         $return =
                             $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid,
-                                $rocketchatmoduleinstance->rocketchatname,
                                 $moodleuser);
                         $ismoderator = true;
                     }
                     if (!$ismoderator) {
                         if (in_array($roleid, explode(',', $rocketchatmoduleinstance->userroles))) {
-                            $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid,
-                                $rocketchatmoduleinstance->rocketchatname, $moodleuser);
+                            $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                         }
                     }
 
@@ -80,12 +78,10 @@ class observers {
                 foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
                     $rocketchatapimanager = new rocket_chat_api_manager();
                     if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
-                        $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid,
-                            $rocketchatmoduleinstance->rocketchatname, $moodleuser);
+                        $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                     }
                     if (in_array($roleid, explode(',', $rocketchatmoduleinstance->userroles))) {
-                        $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid,
-                            $rocketchatmoduleinstance->rocketchatname, $moodleuser);
+                        $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                     }
                 }
             }

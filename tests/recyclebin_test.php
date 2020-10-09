@@ -72,6 +72,7 @@ class recyclebin_testcase extends advanced_testcase{
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
         $this->assertEmpty($rocketchatrecord);
         $rocketchatmanager->delete_user($this->user->username);
+        phpunit_util::run_all_adhoc_tasks(); // Just in case of plugin taht trigger this behaviour.
         //time to empty recycle bin
         ob_start();
         $task = new \tool_recyclebin\task\cleanup_course_bin();
