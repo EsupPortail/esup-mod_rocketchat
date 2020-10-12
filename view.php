@@ -27,10 +27,9 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/api/manager/rocket_chat_api_manager.php');
 
-// Course_module ID, or
+// Course_module ID.
 $id = optional_param('id', 0, PARAM_INT);
-
-// ... module instance id.
+// Mmodule instance id.
 $n  = optional_param('r', 0, PARAM_INT);
 
 if ($id) {
@@ -42,7 +41,7 @@ if ($id) {
     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('rocketchat', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {
-    print_error('missingparam'); // do not traduce error
+    print_error('missingparam');
 }
 
 require_login($course, true, $cm);
@@ -65,19 +64,33 @@ $PAGE->set_context($modulecontext);
 $config = get_config('mod_rocketchat');
 echo $OUTPUT->header();
 $rocketchatapiconfig = new \mod_rocketchat\api\manager\rocket_chat_api_config();
-$embbeded = $moduleinstance-> embbeded;
+$embbeded = $moduleinstance->embbeded;
 $link = mod_rocketchat_tools::get_group_link($moduleinstance->rocketchatid, $embbeded);
 
 switch ($moduleinstance->displaytype) {
     case mod_rocketchat_tools::DISPLAY_POPUP:
-        echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'), new popup_action('click', $link, 'joinrocketchat', array('height' => $moduleinstance->popupheight, 'width' => $moduleinstance->popupwidth)));
+        echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'),
+            new popup_action(
+                'click',
+                $link,
+                'joinrocketchat',
+                array('height' => $moduleinstance->popupheight, 'width' => $moduleinstance->popupwidth)
+            )
+        );
         break;
     case mod_rocketchat_tools::DISPLAY_CURRENT:
-        echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'));
+        echo $OUTPUT->action_link(
+            $link,
+            get_string('joinrocketchat', 'mod_rocketchat')
+        );
         break;
     default:
-        // DISPLAY_NEW and default case;
-        echo html_writer::link($link, get_string('joinrocketchat', 'mod_rocketchat'), array('onclick' => 'this.target="_blank";'));
+        // DISPLAY_NEW and default case.
+        echo html_writer::link(
+            $link,
+            get_string('joinrocketchat', 'mod_rocketchat'),
+            array('onclick' => 'this.target="_blank";')
+        );
         break;
 }
 

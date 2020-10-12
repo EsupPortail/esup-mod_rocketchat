@@ -18,6 +18,7 @@
  * rocket chat api config class
  *
  * @package     mod_rocketchat
+ * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -48,29 +49,29 @@ class rocket_chat_api_config {
      * @return mixed
      */
     public function get_apiuser() {
-        return $this-> apiuser;
+        return $this->apiuser;
     }
 
     /**
      * @return mixed
      */
     public function get_apipassword() {
-        return $this-> apipassword;
+        return $this->apipassword;
     }
 
-    public function __construct(){
-        if(is_null($this->instanceurl)){
+    public function __construct() {
+        if (is_null($this->instanceurl)) {
             $config = get_config('mod_rocketchat');
-            if(empty($config->instanceurl)){
+            if (empty($config->instanceurl)) {
                 print_error('RocketChat instance url is empty');
             }
-            if(empty($config->restapiroot)){
+            if (empty($config->restapiroot)) {
                 print_error('RocketChat rest api root is empty');
             }
-            if(empty($config->apiuser)){
+            if (empty($config->apiuser)) {
                 print_error('RocketChat api password is empty');
             }
-            if(empty($config->apipassword)){
+            if (empty($config->apipassword)) {
                 print_error('RocketChat api password is empty');
             }
             $this->instanceurl = $config->instanceurl;

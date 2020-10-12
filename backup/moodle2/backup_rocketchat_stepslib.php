@@ -20,14 +20,11 @@
  * @package     mod_rocketchat
  * @category    backup
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-// For more information about the backup and restore process, please visit:
-// https://docs.moodle.org/dev/Backup_2.0_for_developers
-// https://docs.moodle.org/dev/Restore_2.0_for_developers
 
 /**
  * Define the complete structure for backup, with file and id annotations.
@@ -35,13 +32,15 @@ defined('MOODLE_INTERNAL') || die();
 class backup_rocketchat_activity_structure_step extends backup_activity_structure_step {
 
     /**
-     * Defines the backup structure of the module
+     * Defines the backup structure of the module.
      *
      * @return backup_nested_element
      */
     protected function define_structure() {
 
-        $rocketchat = new backup_nested_element('rocketchat', array('id'), array('name', 'intro', 'introformat', 'timecreated', 'timemodified', 'rocketchatid', 'displaytype', 'popupheight', 'popupwith', 'moderatorroles', 'userroles'));
+        $rocketchat = new backup_nested_element('rocketchat', array('id'),
+            array('name', 'intro', 'introformat', 'timecreated', 'timemodified', 'rocketchatid',
+                'displaytype', 'popupheight', 'popupwith', 'moderatorroles', 'userroles'));
         $rocketchat->set_source_table('rocketchat', array('id' => backup::VAR_ACTIVITYID));
         $rocketchat->annotate_files('mod_rocketchat', 'intro', null);
         return $this->prepare_activity_structure($rocketchat);

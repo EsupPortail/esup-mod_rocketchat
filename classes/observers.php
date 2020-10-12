@@ -34,7 +34,7 @@ class observers {
 
     public static function role_assigned(\core\event\role_assigned $event) {
         global $DB;
-        if(\mod_rocketchat_tools::rocketchat_enabled()) {
+        if (\mod_rocketchat_tools::rocketchat_enabled()) {
             $context = $event->get_context();
             $userid = $event->relateduserid;
             $moodleuser = $DB->get_record('user', array('id' => $userid));
@@ -42,7 +42,7 @@ class observers {
             $rocketchatapimanager = new rocket_chat_api_manager();
             if ($context->contextlevel == CONTEXT_COURSE && is_enrolled($context, $userid)) {
                 $courseid = $context->instanceid;
-                //search for rocketchat module instances concerned
+                // Search for rocketchat module instances concerned.
                 $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
                 foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
                     $ismoderator = false;
@@ -65,7 +65,7 @@ class observers {
 
     public static function role_unassigned(\core\event\role_unassigned $event) {
         global $DB;
-        if(\mod_rocketchat_tools::rocketchat_enabled()) {
+        if (\mod_rocketchat_tools::rocketchat_enabled()) {
             $context = $event->get_context();
             $userid = $event->relateduserid;
             $moodleuser = $DB->get_record('user', array('id' => $userid));
@@ -88,16 +88,16 @@ class observers {
         }
     }
 
-    public static function course_bin_item_created(\tool_recyclebin\event\course_bin_item_created $event){
+    public static function course_bin_item_created(\tool_recyclebin\event\course_bin_item_created $event) {
         global $DB;
-        if(\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+        if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $cminfos = $event->other;
-            // Check that this is a Rocket.Chat module instance
-            $rocketchatmodule = $DB->get_record_sql('select * from {course_modules} cm inner join {modules} m on m.id=cm.module where cm.id=:cmid',
-                array('cmid' => $cminfos['cmid']));
-            if($rocketchatmodule) {
+            // Check that this is a Rocket.Chat module instance.
+            $sql = 'select * from {course_modules} cm inner join {modules} m on m.id=cm.module where cm.id=:cmid';
+            $rocketchatmodule = $DB->get_record_sql($sql, array('cmid' => $cminfos['cmid']));
+            if ($rocketchatmodule) {
                 $rocketchat = $DB->get_record('rocketchat', array('id' => $cminfos['instanceid']));
-                //insert intem into association table
+                // Insert item into association table.
                 $record = new \stdClass();
                 $record->cmid = $cminfos['cmid'];
                 $record->rocketchatid = $rocketchat->rocketchatid;
@@ -107,9 +107,9 @@ class observers {
         }
     }
 
-    public static function course_bin_item_deleted(\tool_recyclebin\event\course_bin_item_deleted $event){
+    public static function course_bin_item_deleted(\tool_recyclebin\event\course_bin_item_deleted $event) {
         global $DB;
-        if(\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+        if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
             if ($rocketchatrecyclebin) {
                 $rocketchatapimanager = new rocket_chat_api_manager();
@@ -121,7 +121,7 @@ class observers {
 
     public static function course_bin_item_restored(\tool_recyclebin\event\course_bin_item_restored $event) {
         global $DB;
-        if(\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+        if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
             $rocketchatapimanager = new rocket_chat_api_manager();
             $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatrecyclebin->rocketchatid);
@@ -130,18 +130,18 @@ class observers {
         }
     }
 
-    public static function course_module_updated(\core\event\course_module_updated $event){
+    public static function course_module_updated(\core\event\course_module_updated $event) {
         global $DB;
-        if(\mod_rocketchat_tools::rocketchat_enabled() && $event->other['modulename'] == 'rocketchat') {
+        if (\mod_rocketchat_tools::rocketchat_enabled() && $event->other['modulename'] == 'rocketchat') {
             $coursemodule = $DB->get_record('course_modules', array('id' => $event->objectid));
             $rocketchat = $DB->get_record('rocketchat', array('id' => $event->other['instanceid']));
             $rocketchatapimanager = new rocket_chat_api_manager();
             $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchat->rocketchatid);
             if ($rocketchat) {
                 if (!$coursemodule->visible or !$coursemodule->visibleoncoursepage) {
-                    // Can't detect visibility changind here
+                    // Can't detect visibility changind here.
                     $group->archive();
-                } else if($coursemodule->visible && $coursemodule->visibleoncoursepage) {
+                } else if ($coursemodule->visible && $coursemodule->visibleoncoursepage) {
                     $group->unarchive();
                 }
             }

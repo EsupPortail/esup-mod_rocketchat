@@ -38,13 +38,12 @@ function rocketchat_supports($feature) {
     if (!$feature) {
         return null;
     }
-    // TODO check each feature groups and backup
     $features = array(
         (string) FEATURE_IDNUMBER => true,
         (string) FEATURE_GROUPS => true,
         (string) FEATURE_GROUPINGS => true,
         (string) FEATURE_MOD_INTRO => true,
-        (string) FEATURE_BACKUP_MOODLE2 => true, //TODO
+        (string) FEATURE_BACKUP_MOODLE2 => true,
         (string) FEATURE_COMPLETION_TRACKS_VIEWS => true,
         (string) FEATURE_GRADE_HAS_GRADE => false,
         (string) FEATURE_GRADE_OUTCOMES => false,
@@ -76,16 +75,15 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
     $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
     $rocketchatapimanager = new rocket_chat_api_manager();
     $moduleinstance->rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
-    if(is_null($moduleinstance->rocketchatid)){
+    if (is_null($moduleinstance->rocketchatid)) {
         print_error('an error occured while creating Rocket.Chat group');
     }
-    if(!$moduleinstance->visible || !$moduleinstance->visibleoncoursepage){
+    if (!$moduleinstance->visible || !$moduleinstance->visibleoncoursepage) {
         $group = $rocketchatapimanager->get_rocketchat_group_object($moduleinstance->rocketchatid);
         $group->archive();
     }
     $id = $DB->insert_record('rocketchat', $moduleinstance);
     mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($moduleinstance);
-    // TODO update calendar here when calendar considerations will be implemented
     return $id;
 }
 
@@ -120,11 +118,11 @@ function rocketchat_delete_instance($id) {
     if (!$rocketchat) {
         return false;
     }
-    // Treat remote Rocket.Chat remote private group depending of
+    // Treat remote Rocket.Chat remote private group depending of.
     $rocketchatapimanager = new rocket_chat_api_manager();
     if (\tool_recyclebin\course_bin::is_enabled()) {
         $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
-    }else{
+    } else {
         $rocketchatapimanager->delete_rocketchat_group($rocketchat->rocketchatid);
     }
     $DB->delete_records('rocketchat', array('id' => $id));

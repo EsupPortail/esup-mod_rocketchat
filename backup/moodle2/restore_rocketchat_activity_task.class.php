@@ -20,14 +20,11 @@
  * @package     mod_rocketchat
  * @category    restore
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-// For more information about the backup and restore process, please visit:
-// https://docs.moodle.org/dev/Backup_2.0_for_developers
-// https://docs.moodle.org/dev/Restore_2.0_for_developers
 
 require_once($CFG->dirroot.'//mod/rocketchat/backup/moodle2/restore_rocketchat_stepslib.php');
 
@@ -109,7 +106,7 @@ class restore_rocketchat_activity_task extends restore_activity_task {
         return $rules;
     }
 
-    public function get_plan_mode(){
+    public function get_plan_mode() {
         return $this->plan->get_mode();
     }
 }

@@ -20,6 +20,7 @@
  * @package     mod_rocketchat
  * @category    restore
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,10 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 global $CFG;
 require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
-
-// For more information about the backup and restore process, please visit:
-// https://docs.moodle.org/dev/Backup_2.0_for_developers
-// https://docs.moodle.org/dev/Restore_2.0_for_developers
 
 /**
  * Defines the structure step to restore one mod_rocketchat activity.
@@ -60,14 +57,10 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
         $data = (object)$data;
         $oldid = $data->id;
         $modulename = $this->task->get_modulename();
-
-
         $data->course = $this->get_courseid();
-
         if (empty($data->timecreated)) {
             $data->timecreated = time();
         }
-
         if (empty($data->timemodified)) {
             $data->timemodified = time();
         }
@@ -81,22 +74,22 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
      */
     protected function after_execute() {
         global $DB;
-        // Add rocketchat related files
+        // Add rocketchat related files.
         $this->add_related_files('mod_rocketchat', 'intro', null);
         $cmid = $this->get_task()->get_moduleid();
         $mode = $this->get_task()->get_plan_mode();
         $instanceid = $this->get_task()->get_activityid();
-        if($mode != backup::MODE_AUTOMATED){
-            // If not a recyclebin restoration create a new remote Rocket.Chat private group
+        if ($mode != backup::MODE_AUTOMATED) {
+            // If not a recyclebin restoration create a new remote Rocket.Chat private group.
             $course = $DB->get_record('course', array('id' => $this->get_courseid()));
             $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
             $rocketchatapimanager = new rocket_chat_api_manager();
             $rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
-            // Update rocketchat table
+            // Update rocketchat table.
             $rocketchat = $DB->get_record('rocketchat', array('id' => $instanceid));
             $rocketchat->rocketchatid = $rocketchatid;
             $DB->update_record('rocketchat', $rocketchat);
-            // Need to enrol users
+            // Need to enrol users.
             // Course information to fit ton function needs.
             $rocketchat->course = $course->id;
             mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($rocketchat);

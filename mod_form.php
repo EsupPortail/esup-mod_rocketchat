@@ -42,16 +42,14 @@ class mod_rocketchat_mod_form extends moodleform_mod {
      */
     public function definition() {
         global $CFG;
-
         $mform = $this->_form;
-        //TODO add capability for creating RocketChat room
         // General Section.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        // Adding a name field not the channel name but the name
+        // Adding a name field not the channel name but the name.
         $mform->addElement('text', 'name', get_string('name', 'mod_rocketchat'), array('size' => '255'));
 
-        // Strip name if necessary
+        // Strip name if necessary.
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -64,10 +62,10 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         $embbeddisplaymodechange = has_capability('mod/rocketchat:change_embedded_display_mode', $this->get_context());
-        if($embbeddisplaymodechange){
-            $mform->addElement('checkbox','embbeded',
+        if ($embbeddisplaymodechange) {
+            $mform->addElement('checkbox', 'embbeded',
                 get_string('embedded_display_mode', 'mod_rocketchat'));
-        }else{
+        } else {
             $mform->addElement('hidden', 'embbeded');
         }
         $mform->setType('embbeded', PARAM_INT);
@@ -82,7 +80,7 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $mform->setType('popupwidth', PARAM_INT);
         $mform->setDefault('popupwidth', 700);
         if (count($options) > 1) {
-            $mform->disabledIf('popupwidth', 'displaytype',
+            $mform->disabledif ('popupwidth', 'displaytype',
                 'noteq', mod_rocketchat_tools::DISPLAY_POPUP);
         }
 
@@ -90,39 +88,33 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $mform->setType('popupheight', PARAM_INT);
         $mform->setDefault('popupheight', 700);
         if (count($options) > 1) {
-            $mform->disabledIf('popupheight', 'displaytype',
+            $mform->disabledif ('popupheight', 'displaytype',
                 'noteq', mod_rocketchat_tools::DISPLAY_POPUP);
         }
 
         $rolesreadonly = !has_capability('mod/rocketchat:candefineroles', $this->get_context());
         $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
 
-        $moderatorroles = $mform->addElement('select', 'moderatorroles'.($rolesreadonly? 'ro':''),
+        $moderatorroles = $mform->addElement('select', 'moderatorroles'.($rolesreadonly ? 'ro' : ''),
             get_string('moderatorroles', 'mod_rocketchat'),
             $rolesoptions);
         $moderatorroles->setMultiple(true);
 
-        $userroles = $mform->addElement('select', 'userroles'.($rolesreadonly? 'ro':''),
+        $userroles = $mform->addElement('select', 'userroles'.($rolesreadonly ? 'ro' : ''),
             get_string('userroles', 'mod_rocketchat'),
             $rolesoptions);
         $userroles->setMultiple(true);
 
-        if($rolesreadonly) {
+        if ($rolesreadonly) {
             $moderatorroles->setAttributes(array('disabled' => 'true'));
             $userroles->setAttributes(array('disabled' => 'true'));
             $mform->addElement('hidden', 'moderatorroles');
             $mform->addElement('hidden', 'userroles');
         }
-        $mform->setDefault('moderatorroles',get_config('mod_rocketchat','defaultmoderatorroles'));
-        $mform->setDefault('userroles',get_config('mod_rocketchat','defaultuserroles'));
+        $mform->setDefault('moderatorroles', get_config('mod_rocketchat', 'defaultmoderatorroles'));
+        $mform->setDefault('userroles', get_config('mod_rocketchat', 'defaultuserroles'));
         $mform->setType('moderatorroles', PARAM_RAW);
         $mform->setType('userroles', PARAM_RAW);
-
-        // Do not add availibility at the moment.
-        /*
-        $mform->addElement('header', 'availability', get_string('availability', 'assign'));
-        $mform->setExpanded('availability', true);
-         */
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
@@ -132,7 +124,7 @@ class mod_rocketchat_mod_form extends moodleform_mod {
     }
 
     public function data_postprocessing($data) {
-        $data->moderatorroles = is_array($data->moderatorroles)? implode(',', $data->moderatorroles): $data->moderatorroles;
+        $data->moderatorroles = is_array($data->moderatorroles) ? implode(',', $data->moderatorroles) : $data->moderatorroles;
         $data->userroles = is_array($data->userroles) ? implode(',', $data->userroles) : $data->userroles;
 
     }

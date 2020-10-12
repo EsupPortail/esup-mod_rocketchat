@@ -44,8 +44,8 @@ class backup_restore_testcase extends advanced_testcase{
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
         $this->resetAfterTest();
         $this->setAdminUser();
-        set_config('recyclebin_patch',1,'mod_rocketchat');
-        // Enable rocketchat module
+        set_config('recyclebin_patch', 1, 'mod_rocketchat');
+        // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
@@ -57,7 +57,7 @@ class backup_restore_testcase extends advanced_testcase{
         $this->user = $generator->create_user(array('username' => $username, 'firstname' => $username, 'lastname' => $username));
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->user->id, $this->course->id, $student->id);
-        //set a groupname for tests
+        // Set a groupname for tests.
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_'.time(),
             'mod_rocketchat');
@@ -65,12 +65,11 @@ class backup_restore_testcase extends advanced_testcase{
         $this->rocketchat = $generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));
     }
-    protected function tearDown()
-    {
-        if(!empty($this->rocketchat)) {
+    protected function tearDown() {
+        if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);
         }
-        if(!empty($this->newrocketchat)){
+        if (!empty($this->newrocketchat)) {
             ob_start();
             course_delete_module($this->newrocketchatmodule->id, true);
             ob_get_contents();
@@ -83,10 +82,10 @@ class backup_restore_testcase extends advanced_testcase{
 
     public function test_backup_restore() {
         global $DB;
-        // backup course
+        // Backup course.
         $newcourseid = $this->backup_and_restore($this->course);
         $modules = get_coursemodules_in_course('rocketchat', $newcourseid);
-        $this->assertCount(1,$modules);
+        $this->assertCount(1, $modules);
         $this->newrocketchatmodule = array_pop($modules);
         $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);

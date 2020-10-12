@@ -33,40 +33,40 @@ class mod_rocketchat_tools {
     /** Display in curent window */
     const DISPLAY_CURRENT = 2;
     /** Display in popup */
-    const DISPLAY_POPUP =  3;
+    const DISPLAY_POPUP = 3;
 
     /**
      * Construct display options.
      * @return array
      * @throws coding_exception
      */
-    public static function get_display_options(){
+    public static function get_display_options() {
         $options = array();
-        $options[mod_rocketchat_tools::DISPLAY_NEW] = get_string('displaynew', 'mod_rocketchat');
-        $options[mod_rocketchat_tools::DISPLAY_CURRENT] = get_string('displaycurrent', 'mod_rocketchat');
-        $options[mod_rocketchat_tools::DISPLAY_POPUP] = get_string('displaypopup', 'mod_rocketchat');
+        $options[self::DISPLAY_NEW] = get_string('displaynew', 'mod_rocketchat');
+        $options[self::DISPLAY_CURRENT] = get_string('displaycurrent', 'mod_rocketchat');
+        $options[self::DISPLAY_POPUP] = get_string('displaypopup', 'mod_rocketchat');
         return $options;
     }
 
-    public static function get_roles_options(){
+    public static function get_roles_options() {
         global $DB;
-        return $DB->get_records('role',array(), 'shortname asc');
+        return $DB->get_records('role', array(), 'shortname asc');
     }
 
-    public static function rocketchat_group_name($cmid, $course){
+    public static function rocketchat_group_name($cmid, $course) {
         global $CFG, $SITE;
         $formatarguments = new stdClass();
-        $formatarguments->moodleshortname =  $SITE->shortname;
-        $formatarguments->moodlefullnamename =  $SITE->fullname;
-        $formatarguments->moodleid =  sha1($CFG->wwwroot);
-        $formatarguments->moduleid =  $cmid;
-        $formatarguments->modulemoodleid =  sha1($SITE->shortname.'_'.$cmid);
-        $formatarguments->courseid =  $course->id;
-        $formatarguments->courseshortname =  $course->shortname;
-        $formatarguments->coursefullname =  $course->fullname;
+        $formatarguments->moodleshortname = $SITE->shortname;
+        $formatarguments->moodlefullnamename = $SITE->fullname;
+        $formatarguments->moodleid = sha1($CFG->wwwroot);
+        $formatarguments->moduleid = $cmid;
+        $formatarguments->modulemoodleid = sha1($SITE->shortname.'_'.$cmid);
+        $formatarguments->courseid = $course->id;
+        $formatarguments->courseshortname = $course->shortname;
+        $formatarguments->coursefullname = $course->fullname;
         $groupnameformat = get_config('mod_rocketchat', 'groupnametoformat');
         $groupnameformat = is_null($groupnameformat) ? '{$a->moodleid}_{$a->courseshortname}_{$a->moduleid}' : $groupnameformat;
-        $groupname = self::format_string($groupnameformat,$formatarguments);
+        $groupname = self::format_string($groupnameformat, $formatarguments);
         return self::sanitize_groupname($groupname);
     }
 
@@ -103,28 +103,30 @@ class mod_rocketchat_tools {
 
     public static function get_rocketchat_module_instances($courseid) {
         global $DB;
-        $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles  from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance where m.name=:rocketchat and cm.course=:courseid';
+        $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles'
+            .' from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance '
+            .'where m.name=:rocketchat and cm.course=:courseid';
         $moduleinstances = $DB->get_records_sql($sql , array('courseid' => $courseid, 'rocketchat' => 'rocketchat'));
         return $moduleinstances;
     }
 
-    public static function enrol_all_concerned_users_to_rocketchat_group($rocketchatmoduleinstance){
+    public static function enrol_all_concerned_users_to_rocketchat_group($rocketchatmoduleinstance) {
         $courseid = $rocketchatmoduleinstance->course;
         $coursecontext = context_course::instance($courseid);
         $users = get_enrolled_users($coursecontext);
         $rocketchatapimanager = new rocket_chat_api_manager();
-        foreach($users as $user){
-            $moderatorroleids = explode(',',$rocketchatmoduleinstance->moderatorroles);
+        foreach ($users as $user) {
+            $moderatorroleids = explode(',', $rocketchatmoduleinstance->moderatorroles);
             $ismoderator = false;
-            foreach($moderatorroleids as $moderatorroleid){
-                if (user_has_role_assignment($user->id, $moderatorroleid, $coursecontext->id)){
+            foreach ($moderatorroleids as $moderatorroleid) {
+                if (user_has_role_assignment($user->id, $moderatorroleid, $coursecontext->id)) {
                     $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid, $user);
                 }
             }
-            if(!$ismoderator){
-                $userroleids = explode(',',$rocketchatmoduleinstance->userroles);
-                foreach($userroleids as $userroleid){
-                    if (user_has_role_assignment($user->id, $userroleid, $coursecontext->id)){
+            if (!$ismoderator) {
+                $userroleids = explode(',', $rocketchatmoduleinstance->userroles);
+                foreach ($userroleids as $userroleid) {
+                    if (user_has_role_assignment($user->id, $userroleid, $coursecontext->id)) {
                         $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid, $user);
                     }
                 }
@@ -135,27 +137,28 @@ class mod_rocketchat_tools {
 
         global $DB;
         $module = $DB->get_record('modules', array('name' => 'rocketchat'));
-        if(!empty($module->visible)) {
+        if (!empty($module->visible)) {
             $config = get_config('mod_rocketchat');
-            if(!empty($config->instanceurl) && !empty($config->restapiroot) && !empty($config->apiuser) && !empty($config->apipassword)){
+            if (!empty($config->instanceurl) && !empty($config->restapiroot)
+                && !empty($config->apiuser) && !empty($config->apipassword)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static function is_patch_installed(){
-        return get_config('mod_rocketchat','recyclebin_patch');
+    public static function is_patch_installed() {
+        return get_config('mod_rocketchat', 'recyclebin_patch');
     }
 
-    public static function get_group_link($rocketchatid, $embbeded = 0){
+    public static function get_group_link($rocketchatid, $embbeded = 0) {
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($rocketchatid);
-        if(!$group){
+        if (!$group) {
             print_error('can\'t find Rocket.Chat group with id '. $rocketchatid);
         }
         $groupinfo = $group->info();
-        if(!$groupinfo){
+        if (!$groupinfo) {
             print_error('can\'t find Rocket.Chat group info for id '. $rocketchatid);
         }
         return $rocketchatmanager->get_instance_url() . '/group/' .$groupinfo->group->name.
@@ -170,7 +173,7 @@ class mod_rocketchat_tools {
     public static function sanitize_groupname($groupname) {
         $groupname =
             preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupname);
-        if(empty($groupname)){
+        if (empty($groupname)) {
             print_error('sanitized Rocket.Chat groupname can\'t be empty');
         }
         return $groupname;

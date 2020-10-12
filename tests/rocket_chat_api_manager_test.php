@@ -34,7 +34,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     public function setUp() {
         global $DB;
         parent::setUp();
-        // Enable rocketchat module
+        // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
@@ -71,7 +71,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
         $rocketchatuser = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
         $this->assertNotEmpty($rocketchatuser);
-        //try this second time : not created but retrieved
+        // Try this second time : not created but retrieved.
         $rocketchatuser = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
         $this->assertNotEmpty($rocketchatuser);
         $this->assertTrue(property_exists($rocketchatuser, '_id'));
@@ -132,7 +132,6 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertNotEmpty($rocketchatuser);
         $this->assertTrue(property_exists($rocketchatuser, '_id'));
 
-
         $this->assertNotEmpty($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moodleusermoderator));
         $this->assertNotEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser));
 
@@ -154,7 +153,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     }
 
     public function test_enrol_unenrol_user_to_group_with_user_creation() {
-        set_config('create_user_account_if_not_exists',1, 'mod_rocketchat');
+        set_config('create_user_account_if_not_exists', 1, 'mod_rocketchat');
         $this->initiate_environment_and_connection();
         $groupname = 'moodletestgroup'.time();
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
@@ -194,7 +193,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     }
 
     public function test_enrol_unenrol_user_to_group_with_user_creation_not_allowed() {
-        set_config('create_user_account_if_not_exists',0, 'mod_rocketchat');
+        set_config('create_user_account_if_not_exists', 0, 'mod_rocketchat');
         $this->initiate_environment_and_connection();
         $groupname = 'moodletestgroup'.time();
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
@@ -213,10 +212,10 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->lastname = 'moodleusertestL';
         $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
 
-        $this->assertEmpty($this->rocketchatapimanager->enrol_moderator_to_group($groupid,$moodleusermoderator));
-        $this->assertEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid,$moodleuser));
+        $this->assertEmpty($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moodleusermoderator));
+        $this->assertEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser));
 
-        $this->resetDebugging(); //to prevent debug error display and so test failing
+        $this->resetDebugging(); // To prevent debug error display and so test failing.
 
         $members = $this->rocketchatapimanager->get_group_members($groupid);
         $this->assertTrue(is_array($members));
@@ -225,7 +224,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     }
 
 
-    private function load_rocketchat_test_config(){
+    private function load_rocketchat_test_config() {
         global $CFG;
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
     }
@@ -235,7 +234,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->load_rocketchat_test_config();
     }
 
-    private function initiate_environment_and_connection(){
+    private function initiate_environment_and_connection() {
         $this->initiate_test_environment();
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
     }

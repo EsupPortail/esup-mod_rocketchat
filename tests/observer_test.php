@@ -39,8 +39,8 @@ class observer_testcase extends advanced_testcase{
     protected function setUp() {
         global $CFG, $DB;
         parent::setUp();
-        set_config('recyclebin_patch',1,'mod_rocketchat');
-        // Enable rocketchat module
+        set_config('recyclebin_patch', 1, 'mod_rocketchat');
+        // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
@@ -55,7 +55,7 @@ class observer_testcase extends advanced_testcase{
         $this->user = $generator->create_user(array('username' => $username, 'firstname' => $username, 'lastname' => $username));
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->user->id, $this->course->id, $student->id);
-        //set a groupname for tests
+        // Set a groupname for tests.
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_'.time(),
             'mod_rocketchat');
@@ -63,10 +63,9 @@ class observer_testcase extends advanced_testcase{
         $this->rocketchat = $generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));
     }
-    protected function tearDown()
-    {
+    protected function tearDown() {
         ob_start();
-        if(!empty($this->rocketchat)) {
+        if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);
         }
         $rocketchatmanager = new rocket_chat_api_manager();
@@ -114,27 +113,27 @@ class observer_testcase extends advanced_testcase{
         $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
         $groupinfo = $rocketchatgroup->info()->group;
         list($course, $cm) = get_course_and_cm_from_cmid($this->rocketchat->cmid);
-        $this->assertFalse(property_exists($groupinfo,'archived'));
-        set_coursemodule_visible($this->rocketchat->cmid,0,1);
+        $this->assertFalse(property_exists($groupinfo, 'archived'));
+        set_coursemodule_visible($this->rocketchat->cmid, 0, 1);
         // Need to trigger event manually.
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
         $groupinfo = $rocketchatgroup->info()->group;
         $this->assertTrue($groupinfo->archived);
-        set_coursemodule_visible($this->rocketchat->cmid,1,1);
+        set_coursemodule_visible($this->rocketchat->cmid, 1, 1);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
         $groupinfo = $rocketchatgroup->info()->group;
         $this->assertFalse($groupinfo->archived);
-        set_coursemodule_visible($this->rocketchat->cmid,0,0);
+        set_coursemodule_visible($this->rocketchat->cmid, 0, 0);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
         $groupinfo = $rocketchatgroup->info()->group;
         $this->assertTrue($groupinfo->archived);
-        set_coursemodule_visible($this->rocketchat->cmid,1,1);
+        set_coursemodule_visible($this->rocketchat->cmid, 1, 1);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
-        set_coursemodule_visible($this->rocketchat->cmid,1,0);
+        set_coursemodule_visible($this->rocketchat->cmid, 1, 0);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
         $groupinfo = $rocketchatgroup->info()->group;

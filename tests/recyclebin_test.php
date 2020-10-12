@@ -38,7 +38,7 @@ class recyclebin_testcase extends advanced_testcase{
     protected function setUp() {
         global $CFG, $DB;
         parent::setUp();
-        // Enable rocketchat module
+        // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
@@ -50,10 +50,10 @@ class recyclebin_testcase extends advanced_testcase{
 
     public function test_deletion_with_recyclebin() {
         global $DB;
-        set_config('recyclebin_patch',1,'mod_rocketchat');
+        set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
         set_config('coursebinenable', 1, 'tool_recyclebin');
-        set_config('coursebinexpiry',1,'tool_recyclebin');
+        set_config('coursebinexpiry', 1, 'tool_recyclebin');
         $this->set_up_moodle_datas();
         course_delete_module($this->rocketchat->cmid, true);
         // Now, run the course module deletion adhoc task.
@@ -73,7 +73,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatrecord);
         $rocketchatmanager->delete_user($this->user->username);
         phpunit_util::run_all_adhoc_tasks(); // Just in case of plugin taht trigger this behaviour.
-        //time to empty recycle bin
+        // Empty recycle bin.
         ob_start();
         $task = new \tool_recyclebin\task\cleanup_course_bin();
         $task->execute();
@@ -92,7 +92,7 @@ class recyclebin_testcase extends advanced_testcase{
 
     public function test_deletion_without_recyclebin() {
         global $DB;
-        set_config('recyclebin_patch',1,'mod_rocketchat');
+        set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
         set_config('coursebinenable', 0, 'tool_recyclebin');
         $this->set_up_moodle_datas();
@@ -103,7 +103,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatrecord);
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertEmpty($rocketchatxrecyclebin);
-        // Remote Rocket.Chat private group is deleted
+        // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
         $this->assertNotEmpty($group);
@@ -115,16 +115,16 @@ class recyclebin_testcase extends advanced_testcase{
 
     public function test_restoration_with_recyclebin() {
         global $DB;
-        set_config('recyclebin_patch',1,'mod_rocketchat');
+        set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
         set_config('coursebinenable', 1, 'tool_recyclebin');
-        set_config('coursebinexpiry',1,'tool_recyclebin');
+        set_config('coursebinexpiry', 1, 'tool_recyclebin');
         $this->set_up_moodle_datas();
         course_delete_module($this->rocketchat->cmid, true);
         // Now, run the course module deletion adhoc task.
         phpunit_util::run_all_adhoc_tasks();
         $rocketchatmanager = new rocket_chat_api_manager();
-        // Remote Rocket.Chat private group exists and is archived
+        // Remote Rocket.Chat private group exists and is archived.
         $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
         $this->assertNotEmpty($group);
         $groupinfo = $group->info();
@@ -146,7 +146,7 @@ class recyclebin_testcase extends advanced_testcase{
         ob_end_clean();
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertEmpty($rocketchatxrecyclebin);
-        // Remote Rocket.Chat private group exists
+        // Remote Rocket.Chat private group exists.
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
         $this->assertNotEmpty($group);
@@ -159,10 +159,10 @@ class recyclebin_testcase extends advanced_testcase{
     }
     public function test_deletion_with_recyclebin_without_patch() {
         global $DB;
-        set_config('recyclebin_patch',0,'mod_rocketchat');
+        set_config('recyclebin_patch', 0, 'mod_rocketchat');
         // We want the category bin to be enabled.
         set_config('coursebinenable', 1, 'tool_recyclebin');
-        set_config('coursebinexpiry',1,'tool_recyclebin');
+        set_config('coursebinexpiry', 1, 'tool_recyclebin');
         $this->set_up_moodle_datas();
         course_delete_module($this->rocketchat->cmid, true);
         // Now, run the course module deletion adhoc task.
@@ -180,7 +180,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
         $this->assertEmpty($rocketchatrecord);
-        //time to empty recycle bin
+        // Time to empty recycle bin.
         ob_start();
         $task = new \tool_recyclebin\task\cleanup_course_bin();
         $task->execute();
@@ -202,7 +202,7 @@ class recyclebin_testcase extends advanced_testcase{
     }
     public function test_deletion_without_recyclebin_without_patch() {
         global $DB;
-        set_config('recyclebin_patch',0,'mod_rocketchat');
+        set_config('recyclebin_patch', 0, 'mod_rocketchat');
         // We want the category bin to be enabled.
         set_config('coursebinenable', 0, 'tool_recyclebin');
         $this->set_up_moodle_datas();
@@ -213,7 +213,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatrecord);
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertEmpty($rocketchatxrecyclebin);
-        // Remote Rocket.Chat private group is deleted
+        // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
         $this->assertNotEmpty($group);
@@ -224,16 +224,16 @@ class recyclebin_testcase extends advanced_testcase{
     }
     public function test_restoration_with_recyclebin_without_patch() {
         global $DB;
-        set_config('recyclebin_patch',0,'mod_rocketchat');
+        set_config('recyclebin_patch', 0, 'mod_rocketchat');
         // We want the category bin to be enabled.
         set_config('coursebinenable', 1, 'tool_recyclebin');
-        set_config('coursebinexpiry',1,'tool_recyclebin');
+        set_config('coursebinexpiry', 1, 'tool_recyclebin');
         $this->set_up_moodle_datas();
         course_delete_module($this->rocketchat->cmid, true);
         // Now, run the course module deletion adhoc task.
         phpunit_util::run_all_adhoc_tasks();
         $rocketchatmanager = new rocket_chat_api_manager();
-        // Remote Rocket.Chat private group exists and is archived
+        // Remote Rocket.Chat private group exists and is archived.
         $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
         $this->assertNotEmpty($group);
         $groupinfo = $group->info();
@@ -255,7 +255,7 @@ class recyclebin_testcase extends advanced_testcase{
         ob_end_clean();
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertEmpty($rocketchatxrecyclebin);
-        // Remote Rocket.Chat private group exists
+        // Remote Rocket.Chat private group exists.
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
         $this->assertNotEmpty($group);
@@ -277,7 +277,7 @@ class recyclebin_testcase extends advanced_testcase{
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->user->id, $this->course->id, $student->id);
         // TODO if possible, try to create a mock that take in charge inner new rocket_chat_api_manager() call
-        //set a groupname for tests
+        // Set a groupname for tests.
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_' . time(),
             'mod_rocketchat');

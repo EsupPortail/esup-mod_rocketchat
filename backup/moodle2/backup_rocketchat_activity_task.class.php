@@ -20,14 +20,11 @@
  * @package     mod_rocketchat
  * @category    backup
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-// For more information about the backup and restore process, please visit:
-// https://docs.moodle.org/dev/Backup_2.0_for_developers
-// https://docs.moodle.org/dev/Restore_2.0_for_developers
 
 require_once($CFG->dirroot.'//mod/rocketchat/backup/moodle2/backup_rocketchat_stepslib.php');
 
@@ -59,15 +56,15 @@ class backup_rocketchat_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot,"/");
+        $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list of choices
-        $search="/(".$base."\/mod\/rocketchat\/index.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@ROCKETCHATINDEX*$2@$', $content);
+        // Link to the list of choices.
+        $search = "/(".$base."\/mod\/rocketchat\/index.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@ROCKETCHATINDEX*$2@$', $content);
 
-        // Link to choice view by moduleid
-        $search="/(".$base."\/mod\/rocketchat\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@ROCKETCHATVIEWBYID*$2@$', $content);
+        // Link to choice view by moduleid.
+        $search = "/(".$base."\/mod\/rocketchat\/view.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@ROCKETCHATVIEWBYID*$2@$', $content);
 
         return $content;
     }

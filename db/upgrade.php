@@ -1,4 +1,28 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * upgrade file
+ *
+ * @package     mod_rocketchat
+ * @category    upgrade
+ * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
+ * @author Céline Pervès<cperves@unistra.fr>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 function xmldb_rocketchat_upgrade($oldversion) {
     global $DB;
@@ -55,13 +79,13 @@ function xmldb_rocketchat_upgrade($oldversion) {
         // Rocketchat savepoint reached.
         upgrade_mod_savepoint(true, 2020100901, 'rocketchat');
     }
-    if($oldversion < 2020101203){
+    if ($oldversion < 2020101203) {
         $table = new xmldb_table('rocketchat');
         $field = new xmldb_field('embbeded', XMLDB_TYPE_INTEGER, '1',
             null, null, null, '0', 'popupwidth');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
-            $DB->set_field('rocketchat','embbeded', 0);
+            $DB->set_field('rocketchat', 'embbeded', 0);
             $dbman->change_field_notnull($table, $field);
         }
         upgrade_mod_savepoint(true, 2020101203, 'rocketchat');
