@@ -22,6 +22,9 @@ git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTO
 patch -p1 /moodlepath/admin/tool/recyclebin/classes/course_bin.php < /moodlepath/patch/admin_tool_recyclebin_classes_course_bin.patch
 ```
 
+## Specials capabilities
+* mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 
+* mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing th emodule instance
 ## Unit tests
 * to run unit tests that involved Rocket.Chat remote server just create a config-test.php file into the module rocketchat root dorectory
 * fill in with following parameters
