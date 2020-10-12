@@ -148,7 +148,7 @@ class mod_rocketchat_tools {
         return get_config('mod_rocketchat','recyclebin_patch');
     }
 
-    public static function get_group_link($rocketchatid){
+    public static function get_group_link($rocketchatid, $embbeded = 0){
         $rocketchatmanager = new rocket_chat_api_manager();
         $group = $rocketchatmanager->get_rocketchat_group_object($rocketchatid);
         if(!$group){
@@ -158,7 +158,8 @@ class mod_rocketchat_tools {
         if(!$groupinfo){
             print_error('can\'t find Rocket.Chat group info for id '. $rocketchatid);
         }
-        return $rocketchatmanager->get_instance_url() . '/group/' .$groupinfo->group->name;
+        return $rocketchatmanager->get_instance_url() . '/group/' .$groupinfo->group->name.
+            (empty($embbeded) ? '' : '?layout=embedded');
     }
 
     /**

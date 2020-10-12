@@ -115,4 +115,11 @@ if ($ADMIN->fulltree) {
                 '/[^0-9a-zA-Z-_.]/'
         )
     );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/embedded_display_mode',
+            get_string('embedded_display_mode_setting', 'mod_rocketchat'),
+            get_string('embedded_display_mode_setting_desc', 'mod_rocketchat'),
+            1
+        )
+    );
 }

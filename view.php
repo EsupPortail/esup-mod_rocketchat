@@ -65,7 +65,8 @@ $PAGE->set_context($modulecontext);
 $config = get_config('mod_rocketchat');
 echo $OUTPUT->header();
 $rocketchatapiconfig = new \mod_rocketchat\api\manager\rocket_chat_api_config();
-$link = mod_rocketchat_tools::get_group_link($moduleinstance->rocketchatid);
+$embbeded = $moduleinstance-> embbeded;
+$link = mod_rocketchat_tools::get_group_link($moduleinstance->rocketchatid, $embbeded);
 
 switch ($moduleinstance->displaytype) {
     case mod_rocketchat_tools::DISPLAY_POPUP:

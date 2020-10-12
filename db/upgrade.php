@@ -55,5 +55,17 @@ function xmldb_rocketchat_upgrade($oldversion) {
         // Rocketchat savepoint reached.
         upgrade_mod_savepoint(true, 2020100901, 'rocketchat');
     }
+    if($oldversion < 2020101203){
+        $table = new xmldb_table('rocketchat');
+        $field = new xmldb_field('embbeded', XMLDB_TYPE_INTEGER, '1',
+            null, null, null, '0', 'popupwidth');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+            $DB->set_field('rocketchat','embbeded', 0);
+            $dbman->change_field_notnull($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2020101203, 'rocketchat');
+
+    }
     return true;
 }

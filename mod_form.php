@@ -63,6 +63,16 @@ class mod_rocketchat_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements();
 
+        $embbeddisplaymodechange = has_capability('mod/rocketchat:change_embedded_display_mode', $this->get_context());
+        if($embbeddisplaymodechange){
+            $mform->addElement('checkbox','embbeded',
+                get_string('embedded_display_mode', 'mod_rocketchat'));
+        }else{
+            $mform->addElement('hidden', 'embbeded');
+        }
+        $mform->setType('embbeded', PARAM_INT);
+        $mform->setDefault('embbeded', get_config('mod_rocketchat', 'embedded_display_mode'));
+
         $options = mod_rocketchat_tools::get_display_options();
 
         $mform->addElement('select', 'displaytype', get_string('displaytype', 'mod_rocketchat'),
@@ -84,20 +94,20 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                 'noteq', mod_rocketchat_tools::DISPLAY_POPUP);
         }
 
-        $readonly = !has_capability('mod/rocketchat:candefineroles', $this->get_context());
+        $rolesreadonly = !has_capability('mod/rocketchat:candefineroles', $this->get_context());
         $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
 
-        $moderatorroles = $mform->addElement('select', 'moderatorroles'.($readonly? 'ro':''),
+        $moderatorroles = $mform->addElement('select', 'moderatorroles'.($rolesreadonly? 'ro':''),
             get_string('moderatorroles', 'mod_rocketchat'),
             $rolesoptions);
         $moderatorroles->setMultiple(true);
 
-        $userroles = $mform->addElement('select', 'userroles'.($readonly? 'ro':''),
+        $userroles = $mform->addElement('select', 'userroles'.($rolesreadonly? 'ro':''),
             get_string('userroles', 'mod_rocketchat'),
             $rolesoptions);
         $userroles->setMultiple(true);
 
-        if($readonly) {
+        if($rolesreadonly) {
             $moderatorroles->setAttributes(array('disabled' => 'true'));
             $userroles->setAttributes(array('disabled' => 'true'));
             $mform->addElement('hidden', 'moderatorroles');
