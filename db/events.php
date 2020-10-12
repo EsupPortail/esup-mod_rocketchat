@@ -52,5 +52,9 @@ $observers = array(
     array(
         'eventname' => 'tool_recyclebin\event\course_bin_item_deleted',
         'callback' => '\mod_rocketchat\observers::course_bin_item_deleted',
+    ),
+    array(
+        'eventname' => '\core\event\course_module_updated',
+        'callback' => '\mod_rocketchat\observers::course_module_updated',
     )
 );

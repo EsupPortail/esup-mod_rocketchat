@@ -129,4 +129,22 @@ class observers {
             $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
         }
     }
+
+    public static function course_module_updated(\core\event\course_module_updated $event){
+        global $DB;
+        if(\mod_rocketchat_tools::rocketchat_enabled() && $event->other['modulename'] == 'rocketchat') {
+            $coursemodule = $DB->get_record('course_modules', array('id' => $event->objectid));
+            $rocketchat = $DB->get_record('rocketchat', array('id' => $event->other['instanceid']));
+            $rocketchatapimanager = new rocket_chat_api_manager();
+            $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchat->rocketchatid);
+            if ($rocketchat) {
+                if (!$coursemodule->visible or !$coursemodule->visibleoncoursepage) {
+                    // Can't detect visibility changind here
+                    $group->archive();
+                } else if($coursemodule->visible && $coursemodule->visibleoncoursepage) {
+                    $group->unarchive();
+                }
+            }
+        }
+    }
 }

@@ -71,6 +71,7 @@ class observer_testcase extends advanced_testcase{
         }
         $rocketchatmanager = new rocket_chat_api_manager();
         $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         ob_get_contents();
         ob_end_clean();
         parent::tearDown();
@@ -105,5 +106,38 @@ class observer_testcase extends advanced_testcase{
         $this->assertNotEmpty($rocketchatgroup);
         $this->assertEmpty($rocketchatgroup->info());
 
+    }
+
+    public function test_module_visibility() {
+        // Structure created in setUp.
+        $rocketchatmanager = new rocket_chat_api_manager();
+        $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
+        $groupinfo = $rocketchatgroup->info()->group;
+        list($course, $cm) = get_course_and_cm_from_cmid($this->rocketchat->cmid);
+        $this->assertFalse(property_exists($groupinfo,'archived'));
+        set_coursemodule_visible($this->rocketchat->cmid,0,1);
+        // Need to trigger event manually.
+        \core\event\course_module_updated::create_from_cm($cm)->trigger();
+        rebuild_course_cache($cm->course, true);
+        $groupinfo = $rocketchatgroup->info()->group;
+        $this->assertTrue($groupinfo->archived);
+        set_coursemodule_visible($this->rocketchat->cmid,1,1);
+        \core\event\course_module_updated::create_from_cm($cm)->trigger();
+        rebuild_course_cache($cm->course, true);
+        $groupinfo = $rocketchatgroup->info()->group;
+        $this->assertFalse($groupinfo->archived);
+        set_coursemodule_visible($this->rocketchat->cmid,0,0);
+        \core\event\course_module_updated::create_from_cm($cm)->trigger();
+        rebuild_course_cache($cm->course, true);
+        $groupinfo = $rocketchatgroup->info()->group;
+        $this->assertTrue($groupinfo->archived);
+        set_coursemodule_visible($this->rocketchat->cmid,1,1);
+        \core\event\course_module_updated::create_from_cm($cm)->trigger();
+        rebuild_course_cache($cm->course, true);
+        set_coursemodule_visible($this->rocketchat->cmid,1,0);
+        \core\event\course_module_updated::create_from_cm($cm)->trigger();
+        rebuild_course_cache($cm->course, true);
+        $groupinfo = $rocketchatgroup->info()->group;
+        $this->assertTrue($groupinfo->archived);
     }
 }

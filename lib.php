@@ -79,6 +79,10 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
     if(is_null($moduleinstance->rocketchatid)){
         print_error('an error occured while creating Rocket.Chat group');
     }
+    if(!$moduleinstance->visible || !$moduleinstance->visibleoncoursepage){
+        $group = $rocketchatapimanager->get_rocketchat_group_object($moduleinstance->rocketchatid);
+        $group->archive();
+    }
     $id = $DB->insert_record('rocketchat', $moduleinstance);
     mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($moduleinstance);
     // TODO update calendar here when calendar considerations will be implemented
