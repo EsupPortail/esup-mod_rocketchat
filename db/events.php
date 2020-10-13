@@ -49,6 +49,18 @@ $observers = array(
         'callback' => '\mod_rocketchat\observers::course_bin_item_deleted',
     ),
     array(
+        'eventname' => 'tool_recyclebin\event\category_bin_item_restored',
+        'callback' => '\mod_rocketchat\observers::category_bin_item_restored',
+    ),
+    array(
+        'eventname' => 'tool_recyclebin\event\category_bin_item_created',
+        'callback' => '\mod_rocketchat\observers::category_bin_item_created',
+    ),
+    array(
+        'eventname' => 'tool_recyclebin\event\category_bin_item_deleted',
+        'callback' => '\mod_rocketchat\observers::category_bin_item_deleted',
+    ),
+    array(
         'eventname' => '\core\event\course_module_updated',
         'callback' => '\mod_rocketchat\observers::course_module_updated',
     )

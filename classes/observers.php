@@ -130,6 +130,58 @@ class observers {
         }
     }
 
+    public static function category_bin_item_created(\tool_recyclebin\event\category_bin_item_created $event) {
+        global $DB;
+        if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+            $courseinfos = $event->other;
+            // Check that this is a Rocket.Chat module instance.
+            $sql = 'select * from {course_modules} cm inner join {modules} m on m.id=cm.module '
+                .'where cm.course=:courseid and m.name=:modname';
+            $rocketchatmodules = $DB->get_records_sql($sql,
+                array('courseid' => $courseinfos['courseid'], 'modname' => 'rocketchat'));
+            foreach ($rocketchatmodules as $rocketchatmodule) {
+                if ($rocketchatmodule) {
+                    $rocketchat = $DB->get_record('rocketchat', array('id' => $rocketchatmodule->instance));
+                    // Insert item into association table.
+                    $record = new \stdClass();
+                    $record->cmid = $rocketchatmodule->id;
+                    $record->rocketchatid = $rocketchat->rocketchatid;
+                    $record->binid = $event->objectid;
+                    $DB->insert_record('rocketchatxrecyclebin', $record);
+                }
+            }
+        }
+    }
+
+    public static function category_bin_item_deleted(\tool_recyclebin\event\category_bin_item_deleted $event) {
+        global $DB;
+        if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+            $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
+            foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {
+                if ($rocketchatrecyclebin) {
+                    $rocketchatapimanager = new rocket_chat_api_manager();
+                    $rocketchatapimanager->delete_rocketchat_group($rocketchatrecyclebin->rocketchatid);
+                    $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id,
+                        'rocketchatid' => $rocketchatrecyclebin->rocketchatid));
+                }
+            }
+        }
+    }
+
+    public static function category_bin_item_restored(\tool_recyclebin\event\category_bin_item_restored $event) {
+        global $DB;
+        if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+            $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
+            $rocketchatapimanager = new rocket_chat_api_manager();
+            foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {
+                $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatrecyclebin->rocketchatid);
+                $group->unarchive();
+                $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id,
+                    'rocketchatid' => $rocketchatrecyclebin->rocketchatid));
+            }
+        }
+    }
+
     public static function course_module_updated(\core\event\course_module_updated $event) {
         global $DB;
         if (\mod_rocketchat_tools::rocketchat_enabled() && $event->other['modulename'] == 'rocketchat') {

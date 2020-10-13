@@ -120,7 +120,9 @@ function rocketchat_delete_instance($id) {
     }
     // Treat remote Rocket.Chat remote private group depending of.
     $rocketchatapimanager = new rocket_chat_api_manager();
-    if (\tool_recyclebin\course_bin::is_enabled()) {
+    list(,$caller) = debug_backtrace(false);
+    if ((\tool_recyclebin\course_bin::is_enabled() && $caller['function'] == 'course_delete_module')
+        || (\tool_recyclebin\category_bin::is_enabled() && $caller['function'] == 'remove_course_contents')) {
         $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
     } else {
         $rocketchatapimanager->delete_rocketchat_group($rocketchat->rocketchatid);

@@ -20,6 +20,7 @@ git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTO
 * you can apply it with patch command
 ```bash
 patch -p1 /moodlepath/admin/tool/recyclebin/classes/course_bin.php < /moodlepath/patch/admin_tool_recyclebin_classes_course_bin.patch
+patch -p1 /moodlepath/admin/tool/recyclebin/classes/category_bin.php < /moodlepath/patch/admin_tool_recyclebin_classes_category_bin.patch
 ```
 
 ## Specials capabilities

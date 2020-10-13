@@ -1,0 +1,14 @@
+--- /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle_org/admin/tool/recyclebin/classes/category_bin.php	2020-03-12 22:22:34.000000000 +0100
++++ /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_version/admin/tool/recyclebin/classes/category_bin.php	2020-10-12 16:55:13.935916374 +0200
+@@ -183,7 +183,10 @@
+         // Fire event.
+         $event = \tool_recyclebin\event\category_bin_item_created::create(array(
+             'objectid' => $binid,
+-            'context' => \context_coursecat::instance($course->category)
++            // mod_rocketchat recyclebin patch.
++            'context' => \context_coursecat::instance($course->category),
++            'other' => array('courseid' => $course->id),
++            // END mod_rocketchat recyclebin patch.
+         ));
+         $event->trigger();
+     }
