@@ -62,6 +62,6 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
   * Developpers
 * Institutions
   * Centrale Marseille
-  * Université de Lorrainne
+  * Université de Lorraine
   * Université de Strasbourg
   * Université de technologie de Troyes
