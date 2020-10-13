@@ -54,3 +54,9 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <http://www.gnu.org/licenses/>.
+
+## Rocket.Chat moodle module ESUP team
+* The Rocket.Chat moodle Esup team is composed of people from various places and from differents working domains.
+  * Pedagocical engineer
+  * System administrators
+  * Developpers
