@@ -64,11 +64,11 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $embbeddisplaymodechange = has_capability('mod/rocketchat:change_embedded_display_mode', $this->get_context());
         if ($embbeddisplaymodechange) {
             $mform->addElement('checkbox', 'embbeded',
-                get_string('embedded_display_mode', 'mod_rocketchat'));
+                get_string('embedded_display_mode', 'mod_rocketchat'),
+                get_string('embedded_display_mode_desc', 'mod_rocketchat'));
         } else {
             $mform->addElement('hidden', 'embbeded');
         }
-        $mform->setType('embbeded', PARAM_INT);
         $mform->setDefault('embbeded', get_config('mod_rocketchat', 'embedded_display_mode'));
 
         $options = mod_rocketchat_tools::get_display_options();
@@ -126,7 +126,8 @@ class mod_rocketchat_mod_form extends moodleform_mod {
     public function data_postprocessing($data) {
         $data->moderatorroles = is_array($data->moderatorroles) ? implode(',', $data->moderatorroles) : $data->moderatorroles;
         $data->userroles = is_array($data->userroles) ? implode(',', $data->userroles) : $data->userroles;
-
+        // Funtion get data return null when checkbox is not checked.
+        $data->embbeded = !property_exists($data, 'embbeded') ? 0 : $data->embbeded;
     }
 
 

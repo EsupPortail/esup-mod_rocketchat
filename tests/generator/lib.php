@@ -54,6 +54,7 @@ class mod_rocketchat_generator extends testing_module_generator {
             "rocketchatid" => sha1(rand()),
             "rocketchatname" => $groupname,
             "displaytype" => 1,
+            "embedded" => 1,
             "popupheight" => 700,
             "popupwidth" => 700,
             "moderatorroles" => "$student->id",

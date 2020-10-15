@@ -40,7 +40,7 @@ class backup_rocketchat_activity_structure_step extends backup_activity_structur
 
         $rocketchat = new backup_nested_element('rocketchat', array('id'),
             array('name', 'intro', 'introformat', 'timecreated', 'timemodified', 'rocketchatid',
-                'displaytype', 'popupheight', 'popupwith', 'moderatorroles', 'userroles'));
+                'displaytype', 'popupheight', 'popupwith', 'embedded', 'moderatorroles', 'userroles'));
         $rocketchat->set_source_table('rocketchat', array('id' => backup::VAR_ACTIVITYID));
         $rocketchat->annotate_files('mod_rocketchat', 'intro', null);
         return $this->prepare_activity_structure($rocketchat);
