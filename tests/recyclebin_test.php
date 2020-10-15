@@ -27,11 +27,13 @@ require_once(__DIR__.'/../locallib.php');
 global $CFG;
 
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
+require_once($CFG->dirroot.'/enrol/manual/externallib.php');
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
 class recyclebin_testcase extends advanced_testcase{
 
-    private $user;
+    private $userstudent1;
+    private $userstudent2;
     private $rocketchat;
     private $course;
 
@@ -71,7 +73,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertNotEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
         $this->assertEmpty($rocketchatrecord);
-        $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_user($this->userstudent1->username);
         phpunit_util::run_all_adhoc_tasks(); // Just in case of plugin taht trigger this behaviour.
         // Empty recycle bin.
         ob_start();
@@ -109,7 +111,8 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertNotEmpty($group);
         $groupinfo = $group->info();
         $this->assertEmpty($groupinfo);
-        $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_user($this->userstudent1->username);
+        $rocketchatmanager->delete_user($this->userstudent2->username);
 
     }
 
@@ -135,6 +138,20 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertNotEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
         $this->assertEmpty($rocketchatrecord);
+        // Can't retrieve members from a archived group...
+        // So can't test that members number doesn't change.
+        // Unenrol a user
+        $enrol = enrol_get_plugin('manual');
+        $enrolinstances = enrol_get_instances($this->course->id, true);
+        foreach ($enrolinstances as $courseenrolinstance) {
+            if ($courseenrolinstance->enrol == "manual") {
+                $instance = $courseenrolinstance;
+                break;
+            }
+        }
+        $enrol->unenrol_user($instance, $this->userstudent2->id);
+        // Can't retrieve members from a archived group...
+        // So can't test that members number doesn't change.
         // Restore from recycle bin.
         ob_start();
         // Try restoring.
@@ -153,9 +170,11 @@ class recyclebin_testcase extends advanced_testcase{
         $groupinfo = $group->info();
         $this->assertNotEmpty($groupinfo);
         $this->assertFalse($groupinfo->group->archived);
+        $this->assertCount(2,$group->members());
         // Clean Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
-        $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_user($this->userstudent1->username);
+        $rocketchatmanager->delete_user($this->userstudent2->username);
     }
     public function test_deletion_with_recyclebin_without_patch() {
         global $DB;
@@ -198,7 +217,8 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertTrue($groupinfo->group->archived);
         // Clean remote Rocket.Chat.
         $group->delete();
-        $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_user($this->userstudent1->username);
+        $rocketchatmanager->delete_user($this->userstudent2->username);
     }
     public function test_deletion_without_recyclebin_without_patch() {
         global $DB;
@@ -219,7 +239,8 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertNotEmpty($group);
         $groupinfo = $group->info();
         $this->assertEmpty($groupinfo);
-        $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_user($this->userstudent1->username);
+        $rocketchatmanager->delete_user($this->userstudent2->username);
 
     }
     public function test_restoration_with_recyclebin_without_patch() {
@@ -265,7 +286,8 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertTrue($groupinfo->group->archived);
         // Clean Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
-        $rocketchatmanager->delete_user($this->user->username);
+        $rocketchatmanager->delete_user($this->userstudent1->username);
+        $rocketchatmanager->delete_user($this->userstudent2->username);
     }
 
     protected function set_up_moodle_datas() {
@@ -273,9 +295,12 @@ class recyclebin_testcase extends advanced_testcase{
         $generator = $this->getDataGenerator();
         $this->course = $generator->create_course();
         $username = 'moodleusertest' . time();
-        $this->user = $generator->create_user(array('username' => $username, 'firstname' => $username, 'lastname' => $username));
+        $username2 = 'moodleusertest' . (time()+1);
+        $this->userstudent1 = $generator->create_user(array('username' => $username, 'firstname' => $username, 'lastname' => $username));
+        $this->userstudent2 = $generator->create_user(array('username' => $username2, 'firstname' => $username2, 'lastname' => $username2));
         $student = $DB->get_record('role', array('shortname' => 'student'));
-        $generator->enrol_user($this->user->id, $this->course->id, $student->id);
+        $generator->enrol_user($this->userstudent1->id, $this->course->id, $student->id);
+        $generator->enrol_user($this->userstudent2->id, $this->course->id, $student->id);
         // TODO if possible, try to create a mock that take in charge inner new rocket_chat_api_manager() call
         // Set a groupname for tests.
         set_config('groupnametoformat',

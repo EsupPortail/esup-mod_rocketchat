@@ -127,6 +127,8 @@ class observers {
             $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatrecyclebin->rocketchatid);
             $group->unarchive();
             $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
+            // Synchronise members
+            \mod_rocketchat_tools::synchronize_group_members($rocketchatrecyclebin->rocketchatid);
         }
     }
 
