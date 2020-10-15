@@ -1,0 +1,46 @@
+--- /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle_org/user/classes/output/user_roles_editable.php	2020-03-12 22:22:34.000000000 +0100
++++ /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_version/user/classes/output/user_roles_editable.php	2020-10-15 16:39:22.063346108 +0200
+@@ -193,20 +193,7 @@
+             $rolestoprocess[$roleid] = $roleid;
+         }
+ 
+-        // Process adds.
+-        foreach ($rolestoprocess as $roleid) {
+-            if (!isset($userroles[$roleid])) {
+-                // Add them.
+-                $id = role_assign($roleid, $userid, $context);
+-                // Keep this variable in sync.
+-                $role = new \stdClass();
+-                $role->id = $id;
+-                $role->roleid = $roleid;
+-                $role->contextid = $context->id;
+-                $userroles[$role->roleid] = $role;
+-            }
+-        }
+-
++        // MDL-69954 patch.
+         // Process removals.
+         foreach ($assignableroles as $roleid => $rolename) {
+             if (isset($userroles[$roleid]) && !isset($rolestoprocess[$roleid])) {
+@@ -238,6 +225,21 @@
+             }
+         }
+ 
++        // Process adds.
++        foreach ($rolestoprocess as $roleid) {
++            if (!isset($userroles[$roleid])) {
++                // Add them.
++                $id = role_assign($roleid, $userid, $context);
++                // Keep this variable in sync.
++                $role = new \stdClass();
++                $role->id = $id;
++                $role->roleid = $roleid;
++                $role->contextid = $context->id;
++                $userroles[$role->roleid] = $role;
++            }
++        }
++        // End MDL-69954 patch.
++
+         $course = get_course($courseid);
+         $user = core_user::get_user($userid);
+         return new self($course, $context, $user, $allroles, $assignableroles, $profileroles, $userroles, $viewableroles);
