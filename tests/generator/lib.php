@@ -57,8 +57,8 @@ class mod_rocketchat_generator extends testing_module_generator {
             "embedded" => 1,
             "popupheight" => 700,
             "popupwidth" => 700,
-            "moderatorroles" => "$student->id",
-            "userroles" => "$editingteacher->id",
+            "moderatorroles" => "$editingteacher->id",
+            "userroles" => "$student->id",
             "timecreated" => $now,
             "timemodified" => $now,
             "presentation" => null

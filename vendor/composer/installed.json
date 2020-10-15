@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/EsupPortail/rocket-chat-rest-client.git",
-            "reference": "3f7fd4cb69bccde6430019bb18c4e308320bd27c"
+            "reference": "09bd3d4ac74b7f7dee4fbc42b32adcc3be36f9a9"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/3f7fd4cb69bccde6430019bb18c4e308320bd27c",
-            "reference": "3f7fd4cb69bccde6430019bb18c4e308320bd27c",
+            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/09bd3d4ac74b7f7dee4fbc42b32adcc3be36f9a9",
+            "reference": "09bd3d4ac74b7f7dee4fbc42b32adcc3be36f9a9",
             "shasum": ""
         },
         "require": {
@@ -21,7 +21,7 @@
         "require-dev": {
             "phpunit/phpunit": "^8"
         },
-        "time": "2020-10-15T07:00:43+00:00",
+        "time": "2020-10-15T11:45:11+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {

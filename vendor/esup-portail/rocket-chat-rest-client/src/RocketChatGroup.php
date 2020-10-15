@@ -362,6 +362,25 @@ class Group extends Client {
 		}
 	}
 
+    public function moderators($verbose=false){
+        $response = Request::get( $this->api . 'groups.moderators?roomId=' . $this->id )->send();
+
+        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+            $moderators = array();
+            foreach($response->body->moderators as $moderator){
+                $user = new User($moderator->username, null, get_object_vars($moderator), $this->instanceurl, $this->restroot);
+                $user->info();
+                $moderators[] = $user;
+            }
+            return $moderators;
+        } else {
+            if ($verbose){
+                $this->logger->error( "Can't list moderators of this group. Error : ".$response->body->error . "\n" );
+            }
+            return false;
+        }
+    }
+
 	/**
 	* Create a link to invite users to this group
 	* 	$days :	The number of days that the invite will be valid for.
