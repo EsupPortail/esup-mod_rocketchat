@@ -65,7 +65,7 @@ class Group extends Client {
 			return $response->body->group;
 		} else {
 			if($verbose){
-				echo( $response->body->error . "\n" );
+                $this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -98,7 +98,7 @@ class Group extends Client {
 			return $response->body;
 		} else {
 			if ($verbose){
-				echo( $response->body->error . "\n" );
+                $this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -120,8 +120,12 @@ class Group extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			if( isset($response->body->error) )	echo( $response->body->error . "\n" );
-			else if( isset($response->body->message) )	echo( $response->body->message . "\n" );
+			if( isset($response->body->error) ) {
+                $this->logger->error( $response->body->error . "\n" );
+            }
+			else if( isset($response->body->message) ) {
+                $this->logger->error($response->body->message . "\n");
+            }
 			return false;
 		}
 	}
@@ -141,7 +145,7 @@ class Group extends Client {
 			return true;
 		} else {
 			if ($verbose){
-				if( isset($response->body->error) )	echo( $response->body->error . "\n" );
+				if( isset($response->body->error) )	$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -159,7 +163,7 @@ class Group extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+            $this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -176,7 +180,7 @@ class Group extends Client {
 			$this->archived = true;
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -193,7 +197,7 @@ class Group extends Client {
 			$this->archived = false;
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -209,7 +213,7 @@ class Group extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -229,7 +233,7 @@ class Group extends Client {
 			return true;
 		} else {
 			if ($verbose){
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -250,7 +254,7 @@ class Group extends Client {
 			return true;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -270,7 +274,7 @@ class Group extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -289,7 +293,7 @@ class Group extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -309,7 +313,7 @@ class Group extends Client {
 			return true;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -330,7 +334,7 @@ class Group extends Client {
 			return true;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -352,7 +356,7 @@ class Group extends Client {
 			return $members;
 		} else {
 			if ($verbose){
-				echo( "Can't list participants of this group. Error : ".$response->body->error . "\n" );
+				$this->logger->error( "Can't list participants of this group. Error : ".$response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -373,7 +377,7 @@ class Group extends Client {
 			return $response->body->url;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}

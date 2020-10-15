@@ -61,3 +61,5 @@ $string['mod_rocketchat:candefineroles'] = 'Peut définir les rôles à propager
 $string['rocketchat_nickname'] = '{$a->firstname} {$a->lastname}';
 $string['create_user_account_if_not_exists'] = 'Créer le compte Rocket.Chat';
 $string['create_user_account_if_not_exists_desc'] = 'Lors de l\'inscription d\'un utilisateur, créé l\'utilisateur correspondant dans Rocket.Chat, s\'il n\'existe pas';
+$string['verbose_mode'] = 'Rocket.Chat api rest in verbose mode';
+$string['verbose_mode_desc'] = 'If verbose, Rocket.Chat api rest error messages will be loggued into php error log file.';

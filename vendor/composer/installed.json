@@ -6,21 +6,22 @@
         "source": {
             "type": "git",
             "url": "https://github.com/EsupPortail/rocket-chat-rest-client.git",
-            "reference": "8aa2f2adaff0d9c9eda1dc8418c0b8a4e4dc0103"
+            "reference": "3f7fd4cb69bccde6430019bb18c4e308320bd27c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/8aa2f2adaff0d9c9eda1dc8418c0b8a4e4dc0103",
-            "reference": "8aa2f2adaff0d9c9eda1dc8418c0b8a4e4dc0103",
+            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/3f7fd4cb69bccde6430019bb18c4e308320bd27c",
+            "reference": "3f7fd4cb69bccde6430019bb18c4e308320bd27c",
             "shasum": ""
         },
         "require": {
+            "monolog/monolog": "*",
             "nategood/httpful": "*"
         },
         "require-dev": {
             "phpunit/phpunit": "^8"
         },
-        "time": "2020-09-21T13:27:02+00:00",
+        "time": "2020-10-15T07:00:43+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -32,6 +33,89 @@
         "support": {
             "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/config_adjustment"
         }
+    },
+    {
+        "name": "monolog/monolog",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Seldaek/monolog.git",
+            "reference": "bbe10b1e28aedde9a28bf7b7cedea622ddddc3ba"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bbe10b1e28aedde9a28bf7b7cedea622ddddc3ba",
+            "reference": "bbe10b1e28aedde9a28bf7b7cedea622ddddc3ba",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.2",
+            "psr/log": "^1.0.1"
+        },
+        "provide": {
+            "psr/log-implementation": "1.0.0"
+        },
+        "require-dev": {
+            "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+            "doctrine/couchdb": "~1.0@dev",
+            "elasticsearch/elasticsearch": "^6.0",
+            "graylog2/gelf-php": "^1.4.2",
+            "php-amqplib/php-amqplib": "~2.4",
+            "php-console/php-console": "^3.1.3",
+            "php-parallel-lint/php-parallel-lint": "^1.0",
+            "phpspec/prophecy": "^1.6.1",
+            "phpunit/phpunit": "^8.5",
+            "predis/predis": "^1.1",
+            "rollbar/rollbar": "^1.3",
+            "ruflin/elastica": ">=0.90 <3.0",
+            "swiftmailer/swiftmailer": "^5.3|^6.0"
+        },
+        "suggest": {
+            "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+            "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+            "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
+            "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+            "ext-mbstring": "Allow to work properly with unicode symbols",
+            "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
+            "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+            "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
+            "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+            "php-console/php-console": "Allow sending log messages to Google Chrome",
+            "rollbar/rollbar": "Allow sending log messages to Rollbar",
+            "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
+        },
+        "time": "2020-08-23T11:42:45+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Monolog\\": "src/Monolog"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jordi Boggiano",
+                "email": "j.boggiano@seld.be",
+                "homepage": "http://seld.be"
+            }
+        ],
+        "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+        "homepage": "http://github.com/Seldaek/monolog",
+        "keywords": [
+            "log",
+            "logging",
+            "psr-3"
+        ]
     },
     {
         "name": "nategood/httpful",
@@ -83,6 +167,55 @@
             "requests",
             "rest",
             "restful"
+        ]
+    },
+    {
+        "name": "psr/log",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/log.git",
+            "reference": "dd738d0b4491f32725492cf345f6b501f5922fec"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/dd738d0b4491f32725492cf345f6b501f5922fec",
+            "reference": "dd738d0b4491f32725492cf345f6b501f5922fec",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2020-09-18T06:44:51+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Psr\\Log\\": "Psr/Log/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "https://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for logging libraries",
+        "homepage": "https://github.com/php-fig/log",
+        "keywords": [
+            "log",
+            "psr",
+            "psr-3"
         ]
     }
 ]

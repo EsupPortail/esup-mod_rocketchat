@@ -34,7 +34,7 @@ class Settings extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return $response->body->value;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 		}
 	}
 
@@ -49,7 +49,7 @@ class Settings extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 		}
 	}
 

@@ -3,14 +3,19 @@
 namespace RocketChat;
 
 use Httpful\Request;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Logger;
 
 class Client{
 
 	public $api;
 	protected $instanceurl;
 	public $restroot;
+	protected $logger;
 
 	function __construct(){
+	    $this->logger = new Logger('Rocket.Chat.Rest.Api');
+	    $this->logger->pushHandler(new ErrorLogHandler(ErrorLogHandler::OPERATING_SYSTEM));
 		$args = func_get_args();
 		if( count($args) == 2){
 			$this->api = $args[0].$args[1];
@@ -47,7 +52,7 @@ class Client{
 				return $response->body;
 			}
 		} else {
-			echo( $response->body->message . "\n" );
+			$this->logger->error( $response->body->message . "\n" );
 			return false;
 		}
 	}
@@ -64,7 +69,7 @@ class Client{
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return $response->body->users;
 		} else {
-			echo( $response->body->error . "\n" );
+            $this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -82,7 +87,7 @@ class Client{
 			}
 			return $groups;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -101,7 +106,7 @@ class Client{
 			return $groups;
 		} else {
 			var_dump( $response );
-			//echo( $response->body->error . "\n" );
+			//$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -119,7 +124,7 @@ class Client{
 			}
 			return $groups;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
@@ -137,7 +142,7 @@ class Client{
 			return $response->body->user;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}

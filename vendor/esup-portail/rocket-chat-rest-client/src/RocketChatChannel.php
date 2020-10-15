@@ -75,7 +75,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -94,7 +94,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -128,8 +128,8 @@ class Channel extends Client
 		}
 		else
 		{
-			if (isset($response->body->error)) echo($response->body->error . "\n");
-			else if (isset($response->body->message)) echo($response->body->message . "\n");
+			if (isset($response->body->error)) $this->logger->error($response->body->error . "\n");
+			else if (isset($response->body->message)) $this->logger->error($response->body->message . "\n");
 			return false;
 		}
 	}
@@ -149,7 +149,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -169,7 +169,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -192,7 +192,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -215,7 +215,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -238,7 +238,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}
@@ -261,7 +261,7 @@ class Channel extends Client
 		}
 		else
 		{
-			echo($response->body->error . "\n");
+			$this->logger->error($response->body->error . "\n");
 			return false;
 		}
 	}

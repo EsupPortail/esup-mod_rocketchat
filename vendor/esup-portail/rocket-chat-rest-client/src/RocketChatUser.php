@@ -50,7 +50,7 @@ class User extends Client {
 			$this->id = $response->body->data->userId;
 			return true;
 		} else {
-			echo( $response->body->message . "\n" );
+			$this->logger->error( $response->body->message . "\n" );
 			return false;
 		}
 	}
@@ -63,7 +63,7 @@ class User extends Client {
             Request::resetIni();
             return true;
         } else {
-            echo( $response->body->message . "\n" );
+            $this->logger->error( $response->body->message . "\n" );
             return false;
         }
     }
@@ -89,7 +89,7 @@ class User extends Client {
 			return $response->body;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -116,7 +116,7 @@ class User extends Client {
 			return $response->body->user;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -138,7 +138,7 @@ class User extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}

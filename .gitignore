@@ -8,3 +8,10 @@ vendor/nategood/httpful/.git
 vendor/nategood/httpful/.gitignore
 vendor/composer/.git
 vendor/composer/.gitignore
+vendor/monolog/monolog/.git
+vendor/monolog/monolog/.gitattributes
+vendor/monolog/monolog/.github
+vendor/monolog/monolog/.gitignore
+vendor/psr/log/.git
+vendor/psr/log/.gitignore
+vendor/psr/log/.gitattributes

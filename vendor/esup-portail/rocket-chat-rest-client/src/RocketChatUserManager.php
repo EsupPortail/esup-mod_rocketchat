@@ -48,7 +48,7 @@ class UserManager extends Client {
 			Request::resetIni();
 			return true;
 		} else {
-			echo( $response->body->message . "\n" );
+			$this->logger->error( $response->body->message . "\n" );
 			return false;
 		}
 	}
@@ -69,7 +69,7 @@ class UserManager extends Client {
 			return $response->body;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -95,7 +95,7 @@ class UserManager extends Client {
 			return $response->body->user;
 		} else {
 			if ($verbose) {
-				echo( $response->body->error . "\n" );
+				$this->logger->error( $response->body->error . "\n" );
 			}
 			return false;
 		}
@@ -112,7 +112,7 @@ class UserManager extends Client {
 		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
 			return true;
 		} else {
-			echo( $response->body->error . "\n" );
+			$this->logger->error( $response->body->error . "\n" );
 			return false;
 		}
 	}
