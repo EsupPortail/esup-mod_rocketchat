@@ -76,3 +76,5 @@ $string['verbose_mode_desc'] = 'Rocket.Chat api rest verbose messages will be pu
 $string['rocketchat:addinstance'] = 'Add a Rocket.Chat instance';
 $string['rocketchat:candefineroles'] = 'Override role mapping through module instance definition';
 $string['rocketchat:change_embedded_display_mode'] = 'Override embedded display mode choice through module instance definition';
+$string['modulenameplural'] = 'Rocket.Chat instances';
+$string['removemessages'] = 'Remove all messages';

@@ -40,16 +40,18 @@ class rocket_chat_api_manager{
     public function get_admin_user() {
         return $this->adminuser;
     }
-    public function __construct() {
+    public function __construct($user=null, $password=null) {
         $this->verbose = get_config('mod_rocketchat', 'verbose_mode');
         $this->rocketchatapiconfig = new rocket_chat_api_config();
-        $this->initiate_connection();
+        $this->initiate_connection($user, $password);
     }
 
-    private function initiate_connection() {
+    private function initiate_connection($user = null, $password = null) {
         // User amanager object , logged to remote Rocket.Chat.
-        $this->adminuser = new \RocketChat\UserManager($this->rocketchatapiconfig->get_apiuser(),
-            $this->rocketchatapiconfig->get_apipassword(), $this->rocketchatapiconfig->get_instanceurl(),
+        $this->adminuser = new \RocketChat\UserManager(
+            is_null($user) ? $this->rocketchatapiconfig->get_apiuser() : $user,
+            is_null($user) ? $this->rocketchatapiconfig->get_apipassword() : $password,
+            $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
     }
 
@@ -63,9 +65,11 @@ class rocket_chat_api_manager{
         }
 
     }
-
-    public function get_rocketchat_client_object($groupid) {
-        return new \RocketChat\Client($this->rocketchatapiconfig->get_instanceurl(),
+    public function get_rocketchat_chanel_object($channelid, $channelname='') {
+        $channel = new \stdClass();
+        $channel->_id = $channelid;
+        $channel->name = $channelname;
+        return new \RocketChat\Channel($channel, array(),  $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
     }
 
@@ -103,6 +107,15 @@ class rocket_chat_api_manager{
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         return $group->delete();
+    }
+
+    public function delete_all_messages_rocketchat_group($id) {
+        $identifier = new \stdClass();
+        $identifier->_id = $id;
+        $identifier->name = '';
+        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+        return $group->deleteAllMessages();
     }
 
     public function archive_rocketchat_group($id) {
@@ -207,6 +220,9 @@ class rocket_chat_api_manager{
         $rocketchatuserinfos->username = $moodleuser->username;
         $rocketchatuserinfos->password = generate_password();
         $user = $this->adminuser->create($rocketchatuserinfos, $this->verbose);
+        if(PHPUNIT_TEST){
+            $user->password = $rocketchatuserinfos->password;
+        }
         return $user;
     }
 

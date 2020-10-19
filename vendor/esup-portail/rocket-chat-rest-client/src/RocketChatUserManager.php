@@ -35,9 +35,11 @@ class UserManager extends Client {
                 ->addHeader('X-Auth-Token', $response->body->data->authToken)
                 ->addHeader('X-User-Id', $response->body->data->userId);
             Request::ini( $tmp );
+            $this->adminid = $response->body->data->userId;
+            return true;
 		}
-		$this->adminid = $response->body->data->userId;
-		return true;
+        $this->logger->error( $response->body->message . "\n" );
+		return false;
 	}
 
 	public function logout() {

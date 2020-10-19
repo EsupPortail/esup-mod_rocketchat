@@ -401,4 +401,41 @@ class Group extends Client {
 			return false;
 		}
 	}
+
+	public function getMessagesId($verbose){
+        $response = Request::get( $this->api . 'groups.messages?roomId=' . $this->id )->send();
+
+        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+            $messages = array();
+            foreach($response->body->messages as $message){
+                $messages[] = $message->_id;
+            }
+            return $messages;
+        } else {
+            if ($verbose){
+                $this->logger->error( "Can't list moderators of this group. Error : ".$response->body->error . "\n" );
+            }
+            return false;
+        }
+    }
+
+    public function deleteAllMessages($verbose){
+	    $messages = $this->getMessagesId($verbose);
+	    if($messages){
+	        foreach ($messages as $message){
+                $response = Request::get( $this->api . 'chat.delete?roomId=' . $this->id. '&msgId='.$message )->send();
+                if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+                    $messages = array();
+                    foreach($response->body->messages as $message){
+                        $messages[] = $message->_id;
+                    }
+                    return $messages;
+                } else {
+                    if ($verbose){
+                        $this->logger->error( "Can't remove message $message for the  group. Error : ".$response->body->error . "\n" );
+                    }
+                }
+            }
+        }
+    }
 }

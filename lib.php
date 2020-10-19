@@ -131,3 +131,46 @@ function rocketchat_delete_instance($id) {
 
     return true;
 }
+
+/**
+ * Course reset form definition
+ * @param $mform
+ * @throws coding_exception
+ */
+function rocketchat_reset_course_form_definition(&$mform) {
+    $mform->addElement('header', 'rocketchatheader', get_string('modulenameplural', 'mod_rocketchat'));
+    $mform->addElement('advcheckbox', 'reset_rocketchat', get_string('removemessages', 'mod_rocketchat'));
+}
+
+/**
+ * Course reset form defaults.
+ *
+ * @param object $course
+ * @return array
+ */
+function rocketchat_reset_course_form_defaults($course) {
+    return array('reset_rocketchat' => 1);
+}
+
+/**Remove all messages
+ * @param $data
+ */
+function rocketchat_reset_userdata($data) {
+    global $DB;
+    // Delete remote Rocket.Chat messages
+    if (!empty($data->reset_rocketchat)) {
+        $sql = 'select cm.id, r.id as instanceid, r.rocketchatid from {course_modules} cm inner join {modules} m on m.id=cm.module '
+            .'inner join {rocketchat} r on r.id=cm.instance'
+            .'where cm.course=:courseid and m.name=:modname';
+        $rocketchats = $DB->get_records_sql($sql,
+            array('courseid' => $data->courseid, 'modname' => 'rocketchat'));
+        if($rocketchats){
+            $rocketchatapimanager = new rocket_chat_api_manager();
+            foreach ($rocketchats as $rocketchat) {
+                $rocketchatapimanager->get_rocketchat_group_object($rocketchat->rockhatid);
+            }
+        }
+
+    }
+
+}

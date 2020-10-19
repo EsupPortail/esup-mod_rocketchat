@@ -21,7 +21,6 @@ class Channel extends Client
 		}else {
 			parent::__construct();
 		}
-		parent::__construct();
 		if (is_string($name))
 		{
 			$this->name = $name;
@@ -112,7 +111,7 @@ class Channel extends Client
 	public function postMessage($text, $alias = null, $emoji = null, $avatar = null)
 	{
 		$body = array();
-		(substr($this->name, 0, 1) == "#" ? $body["channel"] = $this->name : $body["roomId"] = $this->name);
+		(substr($this->name, 0, 1) == "#" ? $body["channel"] = $this->name : $body["roomId"] = $this->id);
 		$body["text"] = $text;
 		if ($alias) $body["alias"] = $alias;
 		if ($alias) $body["emoji"] = $emoji;
