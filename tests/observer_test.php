@@ -77,6 +77,7 @@ class observer_testcase extends advanced_testcase{
         }
         $rocketchatmanager = new rocket_chat_api_manager();
         $rocketchatmanager->delete_user($this->userstudent->username);
+        $rocketchatmanager->delete_user($this->usereditingteacher->username);
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         ob_get_contents();
         ob_end_clean();
