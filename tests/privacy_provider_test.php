@@ -70,7 +70,7 @@ class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testc
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->userstudent->id, $this->course1->id, $student->id);
         $generator->enrol_user($this->userstudent->id, $this->course2->id, $student->id);
-        $edititingteacherusername = 'moodleusertest'.(time()+1);
+        $edititingteacherusername = 'moodleusertest'.(time() + 1);
         $this->usereditingteacher = $generator->create_user(array('username' => $edititingteacherusername,
             'firstname' => $edititingteacherusername, 'lastname' => $edititingteacherusername));
         $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
@@ -149,7 +149,7 @@ class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testc
         $data = $writer->get_data([get_string('pluginname', 'mod_rocketchat'),
             get_string('datastransmittedtorc', 'mod_rocketchat')]);
         $this->assertTrue($writer->has_any_data());
-        $this->assertInstanceOf('stdClass',$data);
+        $this->assertInstanceOf('stdClass', $data);
         $this->assertTrue(property_exists($data, 'transmitted_to_rocket_chat'));
         $this->assertInstanceOf('stdClass', $data->transmitted_to_rocket_chat);
         $this->assertEquals($this->userstudent->username, $data->transmitted_to_rocket_chat->username);
@@ -161,7 +161,7 @@ class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testc
         $data = $writer->get_data([get_string('pluginname', 'mod_rocketchat'),
             get_string('datastransmittedtorc', 'mod_rocketchat')]);
         $this->assertTrue($writer->has_any_data());
-        $this->assertInstanceOf('stdClass',$data);
+        $this->assertInstanceOf('stdClass', $data);
         $this->assertTrue(property_exists($data, 'transmitted_to_rocket_chat'));
         $this->assertInstanceOf('stdClass', $data->transmitted_to_rocket_chat);
         $this->assertEquals($this->userstudent->username, $data->transmitted_to_rocket_chat->username);

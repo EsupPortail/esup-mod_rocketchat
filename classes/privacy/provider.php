@@ -62,8 +62,8 @@ class provider implements
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
         global $DB;
-        // Module context
-        $contextlist =  new contextlist();
+        // Module context.
+        $contextlist = new contextlist();
 
         $sql = 'select cm.id,ctx.id as contextid,r.moderatorroles, r.userroles'
             .' from {course_modules} cm inner join {modules} m on m.id=cm.module'
@@ -85,14 +85,14 @@ class provider implements
             $roles = array();
             $roles = array_merge($roles, explode(',', $record->moderatorroles));
             $roles = array_merge($roles, explode(',', $record->userroles));
-            foreach ($roles as $roleid){
+            foreach ($roles as $roleid) {
                 if (user_has_role_assignment($userid, $roleid, $record->contextid )) {
                     $ctxids[$record->contextid] = $record->contextid;
                 }
             }
         }
         // Fake request.
-        if (count($ctxids) >0 ) {
+        if (count($ctxids) > 0) {
             list($insql, $inparams) = $DB->get_in_or_equal(array_values($ctxids), SQL_PARAMS_NAMED);
             $contextlist->add_from_sql('select distinct id from {context} where id '.$insql, $inparams);
         }
@@ -106,15 +106,15 @@ class provider implements
     public static function get_users_in_context(userlist $userlist) {
         global $DB;
         $context = $userlist->get_context();
-        if($context instanceof \context_module){
-            // Check this is rocketchat module
+        if ($context instanceof \context_module) {
+            // Check this is rocketchat module.
             $rocketchat = $DB->get_record_sql('select r.* from {rocketchat} r inner join {course_modules} cm on cm.instance=r.id'
                 .' inner join {modules} m on m.id=cm.module where cm.id=:cmid', array('cmid' => $context->instanceid));
-            if($rocketchat){
+            if ($rocketchat) {
                 list($moderatorrolesinsql, $moderatorrolesinparams) =
-                    $DB->get_in_or_equal(explode(',',$rocketchat->moderatorroles), SQL_PARAMS_NAMED);
+                    $DB->get_in_or_equal(explode(',', $rocketchat->moderatorroles), SQL_PARAMS_NAMED);
                 list($userrolesinsql, $userrolesinparams) =
-                    $DB->get_in_or_equal(explode(',',$rocketchat->userroles), SQL_PARAMS_NAMED);
+                    $DB->get_in_or_equal(explode(',', $rocketchat->userroles), SQL_PARAMS_NAMED);
                 $sql = 'select ra.userid,cm.id,ctx.id as contextid,r.moderatorroles, r.userroles'
                     .' from {course_modules} cm inner join {modules} m on m.id=cm.module'
                     .' inner join {rocketchat} r on r.id=cm.instance'
@@ -124,7 +124,7 @@ class provider implements
                         .' on ra.contextid=ctx.id and ra.userid=ue.userid'
                         .' and (ra.roleid '.$moderatorrolesinsql.' or ra.roleid '.$userrolesinsql.')'
                 .' where m.name=:modname and cm.id=:cmid';
-                $params = $moderatorrolesinparams+ $userrolesinparams+ [
+                $params = $moderatorrolesinparams + $userrolesinparams + [
                     'contextcourse' => CONTEXT_COURSE,
                     'modname' => 'rocketchat',
                     'cmid' => $context->instanceid
@@ -144,16 +144,16 @@ class provider implements
         $user = $contextlist->get_user();
         $userid = $contextlist->get_user()->id;
         $contexts = $contextlist->get_contexts();
-        foreach ($contexts as $context){
-            if ($context instanceof \context_module){
+        foreach ($contexts as $context) {
+            if ($context instanceof \context_module) {
                 $rocketchat = $DB->get_record_sql('select r.* from {rocketchat} r'
                     .' inner join {course_modules} cm on cm.instance=r.id'
                     .' inner join {modules} m on m.id=cm.module where cm.id=:cmid', array('cmid' => $context->instanceid));
-                if($rocketchat){
+                if ($rocketchat) {
                     list($moderatorrolesinsql, $moderatorrolesinparams) =
-                        $DB->get_in_or_equal(explode(',',$rocketchat->moderatorroles), SQL_PARAMS_NAMED);
+                        $DB->get_in_or_equal(explode(',', $rocketchat->moderatorroles), SQL_PARAMS_NAMED);
                     list($userrolesinsql, $userrolesinparams) =
-                        $DB->get_in_or_equal(explode(',',$rocketchat->userroles), SQL_PARAMS_NAMED);
+                        $DB->get_in_or_equal(explode(',', $rocketchat->userroles), SQL_PARAMS_NAMED);
                     $sql = 'select distinct r.rocketchatid'
                         .' from {course_modules} cm inner join {modules} m on m.id=cm.module'
                         .' inner join {rocketchat} r on r.id=cm.instance'
@@ -163,7 +163,7 @@ class provider implements
                         .' on ra.contextid=ctx.id and ra.userid=ue.userid'
                         .' and (ra.roleid '.$moderatorrolesinsql.' or ra.roleid '.$userrolesinsql.')'
                         .' where m.name=:modname and cm.id=:cmid and ue.userid=:userid';
-                    $params = $moderatorrolesinparams+ $userrolesinparams+ [
+                    $params = $moderatorrolesinparams + $userrolesinparams + [
                         'contextcourse' => CONTEXT_COURSE,
                         'modname' => 'rocketchat',
                         'cmid' => $context->instanceid,
@@ -181,7 +181,7 @@ class provider implements
                             get_string('pluginname', 'mod_rocketchat'),
                             get_string('datastransmittedtorc', 'mod_rocketchat')
                         ],
-                        (object)['transmitted_to_rocket_chat'=>$data]
+                        (object)['transmitted_to_rocket_chat' => $data]
                     );
                 }
             }

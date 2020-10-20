@@ -140,7 +140,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatrecord);
         // Can't retrieve members from a archived group...
         // So can't test that members number doesn't change.
-        // Unenrol a user
+        // Unenrol a user.
         $enrol = enrol_get_plugin('manual');
         $enrolinstances = enrol_get_instances($this->course->id, true);
         foreach ($enrolinstances as $courseenrolinstance) {
@@ -170,7 +170,7 @@ class recyclebin_testcase extends advanced_testcase{
         $groupinfo = $group->info();
         $this->assertNotEmpty($groupinfo);
         $this->assertFalse($groupinfo->group->archived);
-        $this->assertCount(2,$group->members());
+        $this->assertCount(2, $group->members());
         // Clean Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         $rocketchatmanager->delete_user($this->userstudent1->username);
@@ -295,9 +295,11 @@ class recyclebin_testcase extends advanced_testcase{
         $generator = $this->getDataGenerator();
         $this->course = $generator->create_course();
         $username = 'moodleusertest' . time();
-        $username2 = 'moodleusertest' . (time()+1);
-        $this->userstudent1 = $generator->create_user(array('username' => $username, 'firstname' => $username, 'lastname' => $username));
-        $this->userstudent2 = $generator->create_user(array('username' => $username2, 'firstname' => $username2, 'lastname' => $username2));
+        $username2 = 'moodleusertest' . (time() + 1);
+        $this->userstudent1 = $generator->create_user(array('username' => $username, 'firstname' => $username,
+            'lastname' => $username));
+        $this->userstudent2 = $generator->create_user(array('username' => $username2, 'firstname' => $username2,
+            'lastname' => $username2));
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->userstudent1->id, $this->course->id, $student->id);
         $generator->enrol_user($this->userstudent2->id, $this->course->id, $student->id);

@@ -57,7 +57,7 @@ class observer_testcase extends advanced_testcase{
             'firstname' => $studentusername, 'lastname' => $studentusername));
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->userstudent->id, $this->course->id, $student->id);
-        $edititingteacherusername = 'moodleusertest'.(time()+1);
+        $edititingteacherusername = 'moodleusertest'.(time() + 1);
         $this->usereditingteacher = $generator->create_user(array('username' => $edititingteacherusername,
             'firstname' => $edititingteacherusername, 'lastname' => $edititingteacherusername));
         $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
@@ -148,14 +148,14 @@ class observer_testcase extends advanced_testcase{
         $this->assertTrue($groupinfo->archived);
     }
 
-    public function test_user_role_changes(){
+    public function test_user_role_changes() {
         global $DB;
         $rocketchatmanager = new rocket_chat_api_manager();
         $rocketchatgroup = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
         $members = $rocketchatgroup->members();
-        $this->assertCount(3,$members);
+        $this->assertCount(3, $members);
         $moderators = $rocketchatgroup->moderators();
-        $this->assertCount(1,$moderators);
+        $this->assertCount(1, $moderators);
         $moderator = $moderators[0];
         $this->assertEquals($this->usereditingteacher->username, $moderator->username);
         // Change role for usereditingteacher.
@@ -170,18 +170,18 @@ class observer_testcase extends advanced_testcase{
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
         // Enrol as student.
         $student = $DB->get_record('role', array('shortname' => 'student'));
-        $this->getDataGenerator()->enrol_user($this->usereditingteacher->id,$this->course->id, $student->id);
+        $this->getDataGenerator()->enrol_user($this->usereditingteacher->id, $this->course->id, $student->id);
         $moderators = $rocketchatgroup->moderators();
         $members = $rocketchatgroup->members();
-        $this->assertCount(3,$members);
-        $this->assertCount(0,$moderators);
+        $this->assertCount(3, $members);
+        $this->assertCount(0, $moderators);
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
         $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
-        $this->getDataGenerator()->enrol_user($this->usereditingteacher->id,$this->course->id, $editingteacher->id);
+        $this->getDataGenerator()->enrol_user($this->usereditingteacher->id, $this->course->id, $editingteacher->id);
         $moderators = $rocketchatgroup->moderators();
         $members = $rocketchatgroup->members();
-        $this->assertCount(3,$members);
-        $this->assertCount(1,$moderators);
+        $this->assertCount(3, $members);
+        $this->assertCount(1, $moderators);
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
     }
 }

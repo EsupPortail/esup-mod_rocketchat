@@ -244,12 +244,8 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->firstname = 'moodleusertestF';
         $moodleuser->lastname = 'moodleusertestL';
         $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
-        /*$user = $this->rocketchatapimanager->create_user_if_not_exists($moodleusermoderator);
-        $moodleusermoderator->password = $user->password; // Password only returned in PHPUNIT_TEST mode
-        */
         $user = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
-        $moodleuser->password = $user->password; // Password only returned in PHPUNIT_TEST mode
-        //$this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moodleusermoderator);
+        $moodleuser->password = $user->password; // Password only returned in PHPUNIT_TEST mode.
         $this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser);
         $channel = $this->rocketchatapimanager->get_rocketchat_channel_object($groupid);
         $channel->postMessage('a message');
@@ -273,7 +269,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     }
 
 
-        private function load_rocketchat_test_config() {
+    private function load_rocketchat_test_config() {
         global $CFG;
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
     }

@@ -179,7 +179,7 @@ class mod_rocketchat_tools {
         return $groupname;
     }
 
-    public static function synchronize_group_members($rocketchatid){
+    public static function synchronize_group_members($rocketchatid) {
         global $DB;
         $rocketchatmoduleinstance = $DB->get_record('rocketchat', array('rocketchatid' => $rocketchatid));
         $verbose = get_config('mod_rocketchat', 'verbose_mode');
@@ -188,13 +188,14 @@ class mod_rocketchat_tools {
         $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatmoduleinstance->rocketchatid);
         $members = $group->members($verbose);
         // Kick every body.
-        foreach($members as $member){
-            if($member->username != $rocketchatapiusername){
+        foreach ($members as $member) {
+            if ($member->username != $rocketchatapiusername) {
                 $identifier = new \stdClass();
                 $identifier->username = $member->username;
                 $rocketchatuser = $group->user_info($identifier, $verbose);
                 if (!$group->kick($rocketchatuser->_id, $verbose)) {
-                    error_log("Rockat.Chat API error : user $member->username not kicked from Rocket.Chat group $rocketchatmoduleinstance->rocketchatid");
+                    error_log("Rockat.Chat API error : user $member->username not kicked from Rocket.Chat group"
+                        ." $rocketchatmoduleinstance->rocketchatid");
                 }
             }
         }

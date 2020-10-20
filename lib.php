@@ -120,7 +120,7 @@ function rocketchat_delete_instance($id) {
     }
     // Treat remote Rocket.Chat remote private group depending of.
     $rocketchatapimanager = new rocket_chat_api_manager();
-    list(,$caller) = debug_backtrace(false);
+    list(, $caller) = debug_backtrace(false);
     if ((\tool_recyclebin\course_bin::is_enabled() && $caller['function'] == 'course_delete_module')
         || (\tool_recyclebin\category_bin::is_enabled() && $caller['function'] == 'remove_course_contents')) {
         $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
@@ -158,22 +158,21 @@ function rocketchat_reset_course_form_defaults($course) {
 function rocketchat_reset_userdata($data) {
     global $DB;
     $status = [];
-    // Delete remote Rocket.Chat messages
+    // Delete remote Rocket.Chat messages.
     if (!empty($data->reset_rocketchat)) {
         $sql = 'select cm.id, r.id as instanceid, r.rocketchatid from {course_modules} cm inner join {modules} m on m.id=cm.module '
             .'inner join {rocketchat} r on r.id=cm.instance'
             .' where cm.course=:courseid and m.name=:modname';
         $rocketchats = $DB->get_records_sql($sql,
             array('courseid' => $data->courseid, 'modname' => 'rocketchat'));
-        if($rocketchats){
+        if ($rocketchats) {
             $rocketchatapimanager = new rocket_chat_api_manager();
             foreach ($rocketchats as $rocketchat) {
                 $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchat->rocketchatid);
                 $group->cleanHistory('1970-01-01', 'now', get_config('mod_rocketchat', 'verbose_mode'));
-                $status[] =  array('component' => get_string('modulenameplural', 'rocketchat')
+                $status[] = array('component' => get_string('modulenameplural', 'rocketchat')
                 , 'item' => get_string("removeditem", 'mod_rocketchat', $rocketchat)
                 , 'error' => false);
-                //$rocketchatapimanager->unenroll_all_users_from_group($rocketchat->rocketchatid);
             }
         }
 

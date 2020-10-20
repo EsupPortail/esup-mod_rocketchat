@@ -40,7 +40,7 @@ class rocket_chat_api_manager{
     public function get_admin_user() {
         return $this->adminuser;
     }
-    public function is_verbose(){
+    public function is_verbose() {
         return $this->verbose;
     }
     public function __construct($user=null, $password=null) {
@@ -175,8 +175,8 @@ class rocket_chat_api_manager{
         $group = $this->get_rocketchat_group_object($groupid);
         $user = $group->user_info($identifier, $this->verbose);
         if (!$user) {
-           error_log("User $user->username not exists in Rocket.Chat");
-           return false;
+            error_log("User $user->username not exists in Rocket.Chat");
+            return false;
         }
         $return = $group->kick($user->_id, $this->verbose);
         if (!$return) {
@@ -205,7 +205,7 @@ class rocket_chat_api_manager{
         $rocketchatuserinfos->username = $moodleuser->username;
         $rocketchatuserinfos->password = generate_password();
         $user = $this->adminuser->create($rocketchatuserinfos, $this->verbose);
-        if(PHPUNIT_TEST){
+        if (PHPUNIT_TEST) {
             $user->password = $rocketchatuserinfos->password;
         }
         return $user;
@@ -227,7 +227,7 @@ class rocket_chat_api_manager{
         return $this->adminuser->delete($rocketuser->user->_id, $this->verbose);
     }
 
-    public function unenroll_all_users_from_group($groupid){
+    public function unenroll_all_users_from_group($groupid) {
         $group = $$this->get_rocketchat_group_object($groupid);
         $group->cleanHistory($this->verbose);
         $members = $group->members();

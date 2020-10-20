@@ -58,7 +58,7 @@ class course_reset_testcase extends advanced_testcase{
             'firstname' => $studentusername, 'lastname' => $studentusername));
         $this->studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->userstudent->id, $this->course->id, $this->studentrole->id);
-        $edititingteacherusername = 'moodleusertest'.(time()+1);
+        $edititingteacherusername = 'moodleusertest'.(time() + 1);
         $this->usereditingteacher = $generator->create_user(array('username' => $edititingteacherusername,
             'firstname' => $edititingteacherusername, 'lastname' => $edititingteacherusername));
         $this->editingteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
