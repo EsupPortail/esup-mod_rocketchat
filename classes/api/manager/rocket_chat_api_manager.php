@@ -40,6 +40,9 @@ class rocket_chat_api_manager{
     public function get_admin_user() {
         return $this->adminuser;
     }
+    public function is_verbose(){
+        return $this->verbose;
+    }
     public function __construct($user=null, $password=null) {
         $this->verbose = get_config('mod_rocketchat', 'verbose_mode');
         $this->rocketchatapiconfig = new rocket_chat_api_config();
@@ -65,7 +68,7 @@ class rocket_chat_api_manager{
         }
 
     }
-    public function get_rocketchat_chanel_object($channelid, $channelname='') {
+    public function get_rocketchat_channel_object($channelid, $channelname='') {
         $channel = new \stdClass();
         $channel->_id = $channelid;
         $channel->name = $channelname;
@@ -107,15 +110,6 @@ class rocket_chat_api_manager{
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         return $group->delete();
-    }
-
-    public function delete_all_messages_rocketchat_group($id) {
-        $identifier = new \stdClass();
-        $identifier->_id = $id;
-        $identifier->name = '';
-        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
-            $this->rocketchatapiconfig->get_restapiroot());
-        return $group->deleteAllMessages();
     }
 
     public function archive_rocketchat_group($id) {
@@ -179,19 +173,10 @@ class rocket_chat_api_manager{
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid);
-        if ($createusermode) {
-            $user = $this->create_user_if_not_exists($moodleuser);
-            if (!$user) {
-                error_log("User $user->username not exists in Rocket.Chat and was not succesfully created.");
-            }
-        } else {
-            $user = $group->user_info($identifier, $this->verbose);
-            if (!$user) {
-                error_log("User $user->username not exists in Rocket.Chat");
-            }
-        }
+        $user = $group->user_info($identifier, $this->verbose);
         if (!$user) {
-            return false;
+           error_log("User $user->username not exists in Rocket.Chat");
+           return false;
         }
         $return = $group->kick($user->_id, $this->verbose);
         if (!$return) {
@@ -240,5 +225,15 @@ class rocket_chat_api_manager{
             return false;
         }
         return $this->adminuser->delete($rocketuser->user->_id, $this->verbose);
+    }
+
+    public function unenroll_all_users_from_group($groupid){
+        $group = $$this->get_rocketchat_group_object($groupid);
+        $group->cleanHistory($this->verbose);
+        $members = $group->members();
+        foreach ($members as $member) {
+            $user = $this->get_rocketchat_user_object($member->username);
+            $group->kick($user->_id, $this->verbose);
+        }
     }
 }

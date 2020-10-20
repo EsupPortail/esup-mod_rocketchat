@@ -133,6 +133,55 @@ class Channel extends Client
 		}
 	}
 
+	public function getAllMessages($verbose){
+        $response = Request::get( $this->api . 'channels.history?roomId=' . $this->id )->send();
+
+        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+            $messages = array();
+            foreach($response->body->messages as $message){
+                $messages[$message->_id] = $message;
+            }
+            return messages;
+        } else {
+            if ($verbose){
+                if (isset($response->body->error)){
+                    $this->logger->error($response->body->error . "\n");
+                }
+                else if (isset($response->body->message)) {
+                    $this->logger->error($response->body->message . "\n");
+                }
+            }
+            return false;
+        }
+    }
+
+    public function deleteMessage($messageid,$verbose){
+        $response = Request::get( $this->api . 'chat.delete?roomId=' . $this->id . '&messageId=' . $messageid )->send();
+
+        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+            return true;
+        } else {
+            if ($verbose){
+                if (isset($response->body->error)){
+                    $this->logger->error($response->body->error . "\n");
+                }
+                else if (isset($response->body->message)) {
+                    $this->logger->error($response->body->message . "\n");
+                }
+            }
+            return false;
+        }
+    }
+
+    public function clean($verbose){
+	    $messages = $this->getAllMessages($verbose);
+	    if($messages){
+	        foreach (array_keys($messages) as $messageid){
+	            $this->deleteMessage($messageid, $verbose);
+            }
+        }
+    }
+
 	/**
 	 * Removes the channel from the user’s list of channels.
 	 */

@@ -78,3 +78,4 @@ $string['rocketchat:candefineroles'] = 'Override role mapping through module ins
 $string['rocketchat:change_embedded_display_mode'] = 'Override embedded display mode choice through module instance definition';
 $string['modulenameplural'] = 'Rocket.Chat instances';
 $string['removemessages'] = 'Remove all messages';
+$string['removeditem'] = 'removed messages on {$a->rocketchatid}';

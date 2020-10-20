@@ -38,7 +38,7 @@ class UserManager extends Client {
             $this->adminid = $response->body->data->userId;
             return true;
 		}
-        $this->logger->error( $response->body->message . "\n" );
+        $this->logger->error( $response->body->error . "\n" );
 		return false;
 	}
 

@@ -244,22 +244,32 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->firstname = 'moodleusertestF';
         $moodleuser->lastname = 'moodleusertestL';
         $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
-        $user = $this->rocketchatapimanager->create_user_if_not_exists($moodleusermoderator);
+        /*$user = $this->rocketchatapimanager->create_user_if_not_exists($moodleusermoderator);
         $moodleusermoderator->password = $user->password; // Password only returned in PHPUNIT_TEST mode
+        */
         $user = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
         $moodleuser->password = $user->password; // Password only returned in PHPUNIT_TEST mode
-        $this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moodleusermoderator);
+        //$this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moodleusermoderator);
         $this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser);
-        $channel = $this->rocketchatapimanager->get_rocketchat_chanel_object($groupid);
+        $channel = $this->rocketchatapimanager->get_rocketchat_channel_object($groupid);
         $channel->postMessage('a message');
-        $moderaorrocketchatapimanager =
-            new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleusermoderator->username, $moodleusermoderator->password);
-        $moderaorrocketchatapimanager->get_rocketchat_chanel_object($groupid);
-        $channel->postMessage('a moderator message');
+        $userrocketchatapimanager =
+            new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleuser->username, $moodleuser->password);
+        $channel = $userrocketchatapimanager->get_rocketchat_channel_object($groupid);
+        $channel->postMessage('a user message');
+        $userrocketchatapimanager->close_connection();
+        // Got a bug due to static Request call so reinit apimamanger.
+        $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
+        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid);
+        $channel = $this->rocketchatapimanager->get_rocketchat_channel_object($groupid);
+        $messages = $group->getMessages(true);
+        $this->assertCount(3, $messages); // 2 real messages, 3 messages for actions.
+        $group->cleanHistory(true);
+        $messages = $group->getMessages(true);
+        $this->assertCount(0, $messages);
         $this->rocketchatapimanager->delete_user($moodleusermoderator->username);
         $this->rocketchatapimanager->delete_rocketchat_group($groupid);
         $this->rocketchatapimanager->delete_user($moodleuser->username);
-
     }
 
 
