@@ -118,6 +118,28 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertEmpty($group->info());
     }
 
+    public function test_create_groups_with_same_names() {
+        $this->initiate_environment_and_connection();
+        $groupname1 = 'moodletestgroup'.time();
+        $groupid1 = $this->rocketchatapimanager->create_rocketchat_group($groupname1);
+        $this->assertNotEmpty($groupid1);
+        $group1 = $this->rocketchatapimanager->get_rocketchat_group_object($groupid1, $groupname1);
+        $info1 = $group1->info();
+        $this->assertNotEmpty($info1);
+        // Create same second time
+        $groupid2 = $this->rocketchatapimanager->create_rocketchat_group($groupname1);
+        $this->assertNotEmpty($groupid2);
+        $group2 = $this->rocketchatapimanager->get_rocketchat_group_object($groupid2);
+        $info2 = $group2->info();
+        $this->assertNotEmpty($info2);
+        $groupname2 = $info2->group->name;
+        $this->assertNotEquals($groupname1, $groupname2);
+        $this->assertTrue(strpos($groupname2, $groupname1) == 0);
+        // Clean.
+        $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid1));
+        $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid2));
+    }
+
     public function test_enrol_unenrol_user_to_group() {
         $this->initiate_environment_and_connection();
         $groupname = 'moodletestgroup'.time();
