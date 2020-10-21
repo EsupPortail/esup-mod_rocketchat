@@ -42,8 +42,8 @@ set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Op
 
 ```
 ## Rocket.Chat permission
-* [ID: force-delete-message]
-* [ID: delete-message]
+for moodle Rocket.Chat account
+* view-room-administration
 
 ## License ##
 

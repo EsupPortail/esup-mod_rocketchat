@@ -100,8 +100,8 @@ class rocket_chat_api_manager{
         $group = new \RocketChat\Group($name, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         // Check that group is not already exists.
-        $groupinfo = $group->info(false);
-        if (!$groupinfo) {
+        $groupexists = $group->isGroupAlreadyExists($this->verbose);
+        if (!$groupexists) {
             $group->create($this->verbose);
         } else {
             // Change group name.
