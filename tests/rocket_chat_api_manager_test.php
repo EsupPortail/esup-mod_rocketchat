@@ -126,7 +126,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $group1 = $this->rocketchatapimanager->get_rocketchat_group_object($groupid1, $groupname1);
         $info1 = $group1->info();
         $this->assertNotEmpty($info1);
-        // Create same second time
+        // Create same second time.
         $groupid2 = $this->rocketchatapimanager->create_rocketchat_group($groupname1);
         $this->assertNotEmpty($groupid2);
         $group2 = $this->rocketchatapimanager->get_rocketchat_group_object($groupid2);
