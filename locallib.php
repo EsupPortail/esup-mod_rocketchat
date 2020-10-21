@@ -171,6 +171,8 @@ class mod_rocketchat_tools {
      * @throws dml_exception
      */
     public static function sanitize_groupname($groupname) {
+        // Replace white spaces anyway.
+        $groupname = preg_replace('/\/s/', '_', $groupname);
         $groupname =
             preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupname);
         if (empty($groupname)) {

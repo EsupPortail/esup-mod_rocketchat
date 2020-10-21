@@ -99,7 +99,14 @@ class rocket_chat_api_manager{
     public function create_rocketchat_group($name) {
         $group = new \RocketChat\Group($name, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
-        $group->create($this->verbose);
+        // Check that group is not already exists
+        $groupinfo = $group->info(false);
+        if (!$groupinfo) {
+            $group->create($this->verbose);
+        } else {
+            // Change group name
+            return $this->create_rocketchat_group($name.'_'.time());
+        }
         return $group->id;
     }
 

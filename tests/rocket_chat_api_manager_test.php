@@ -92,9 +92,22 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
 
     public function test_create_group_invalid_groupname() {
         $this->initiate_environment_and_connection();
-        $groupname = 'moodletestgroup '.time();
+        $groupname = 'moodletestgroup/'.time();
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
         $this->assertEmpty($groupid);
+        $sanitizedgroupname = mod_rocketchat_tools::sanitize_groupname($groupname);
+        $groupid = $this->rocketchatapimanager->create_rocketchat_group($sanitizedgroupname);
+        $this->assertNotEmpty($groupid);
+        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $sanitizedgroupname);
+        $this->assertNotEmpty($group->info());
+        $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid));
+        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $groupname);
+        $this->assertEmpty($group->info());
+    }
+
+    public function test_create_group_groupname_with_whitespace() {
+        $this->initiate_environment_and_connection();
+        $groupname = 'moodletestgroup '.time();
         $sanitizedgroupname = mod_rocketchat_tools::sanitize_groupname($groupname);
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($sanitizedgroupname);
         $this->assertNotEmpty($groupid);

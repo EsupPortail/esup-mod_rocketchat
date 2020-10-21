@@ -169,7 +169,7 @@ function rocketchat_reset_userdata($data) {
             $rocketchatapimanager = new rocket_chat_api_manager();
             foreach ($rocketchats as $rocketchat) {
                 $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchat->rocketchatid);
-                $group->cleanHistory('1970-01-01', 'now', get_config('mod_rocketchat', 'verbose_mode'));
+                $group->cleanHistory(get_config('mod_rocketchat', 'verbose_mode'));
                 $status[] = array('component' => get_string('modulenameplural', 'rocketchat')
                 , 'item' => get_string("removeditem", 'mod_rocketchat', $rocketchat)
                 , 'error' => false);

@@ -430,8 +430,7 @@ class Group extends Client {
         }
     }
 
-    public function cleanHistory($oldest='1970-01-01', $latest='now',$verbose=false){
-        //$response = Request::post( $this->api . 'rooms.cleanHistory?roomId=' . $this->id)->send();
+    public function cleanHistory($verbose=false, $oldest='1970-01-01', $latest='now'){
         $oldest = new \DateTime($oldest);
         $latest = new \DateTime($latest);
         $format = 'Y-m-d\TH:i:s.u\Z';
