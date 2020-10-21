@@ -41,9 +41,12 @@ set_config('apipassword','#############','mod_rocketchat');
 set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Optional argument.line.
 
 ```
-## Rocket.Chat permission
+## Rocket.Chat settings
+### permissions
 for moodle Rocket.Chat account
 * view-room-administration
+### Authentication
+* LDAP and CAS account fusion is adviced when moodle user account creation is activated
 
 ## License ##
 
