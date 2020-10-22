@@ -124,8 +124,7 @@ class observers {
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
             $rocketchatapimanager = new rocket_chat_api_manager();
-            $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatrecyclebin->rocketchatid);
-            $group->unarchive();
+            $rocketchatapimanager->unarchive_rocketchat_group($rocketchatrecyclebin->rocketchatid);
             $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
             // Synchronise members.
             \mod_rocketchat_tools::synchronize_group_members($rocketchatrecyclebin->rocketchatid);
@@ -176,8 +175,7 @@ class observers {
             $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
             $rocketchatapimanager = new rocket_chat_api_manager();
             foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {
-                $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchatrecyclebin->rocketchatid);
-                $group->unarchive();
+                $rocketchatapimanager->unarchive_rocketchat_group($rocketchatrecyclebin->rocketchatid);
                 $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id,
                     'rocketchatid' => $rocketchatrecyclebin->rocketchatid));
             }
@@ -190,13 +188,12 @@ class observers {
             $coursemodule = $DB->get_record('course_modules', array('id' => $event->objectid));
             $rocketchat = $DB->get_record('rocketchat', array('id' => $event->other['instanceid']));
             $rocketchatapimanager = new rocket_chat_api_manager();
-            $group = $rocketchatapimanager->get_rocketchat_group_object($rocketchat->rocketchatid);
             if ($rocketchat) {
                 if (!$coursemodule->visible or !$coursemodule->visibleoncoursepage) {
                     // Can't detect visibility changind here.
-                    $group->archive();
+                    $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);
                 } else if ($coursemodule->visible && $coursemodule->visibleoncoursepage) {
-                    $group->unarchive();
+                    $rocketchatapimanager->unarchive_rocketchat_group($rocketchat->rocketchatid);
                 }
             }
         }

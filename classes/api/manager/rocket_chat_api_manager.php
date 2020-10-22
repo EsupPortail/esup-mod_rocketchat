@@ -96,6 +96,11 @@ class rocket_chat_api_manager{
             $this->rocketchatapiconfig->get_restapiroot());
     }
 
+    public function get_rocketchat_client_object() {
+        return new \RocketChat\Client($this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+    }
+
     public function create_rocketchat_group($name) {
         $group = new \RocketChat\Group($name, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
@@ -130,7 +135,8 @@ class rocket_chat_api_manager{
 
     public function unarchive_rocketchat_group($id) {
         $identifier = new \stdClass();
-        $identifier->id = $id;
+        $identifier->_id = $id;
+        $identifier->name = '';
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         return $group->unarchive();
@@ -241,6 +247,44 @@ class rocket_chat_api_manager{
         foreach ($members as $member) {
             $user = $this->get_rocketchat_user_object($member->username);
             $group->kick($user->_id, $this->verbose);
+        }
+    }
+
+    public function clean_history($roomid) {
+        $group = $this->get_rocketchat_group_object($roomid);
+        $group->cleanHistory(get_config('mod_rocketchat', 'verbose_mode'));
+    }
+
+    public function get_groupname($groupid) {
+        $group = $this->get_rocketchat_group_object($groupid);
+        if ($group) {
+            $groupinfo = $group->info();
+            if ($groupinfo) {
+                return $groupinfo->group->name;
+            }
+        }
+        return null;
+    }
+
+    public function get_user_infos($username) {
+        $identifier = new \stdClass();
+        $identifier->username = $username;
+        $client = $this->get_rocketchat_client_object();
+        return $client->user_info($identifier, $this->verbose);
+    }
+
+    public function kick_all_group_members($groupid) {
+        $rocketchatapiusername = get_config('mod_rocketchat', 'apiuser');
+        $group = $this->get_rocketchat_group_object($groupid);
+        $members = $group->members($this->verbose);
+        foreach ($members as $member) {
+            if ($member->username != $rocketchatapiusername) {
+                $rocketchatuser = $this->get_user_infos($member->username);
+                if (!$group->kick($rocketchatuser->_id, $this->verbose)) {
+                    error_log("Rockat.Chat API error : user $member->username not kicked from Rocket.Chat group"
+                        ." $groupid");
+                }
+            }
         }
     }
 }
