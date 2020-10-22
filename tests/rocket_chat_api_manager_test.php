@@ -83,11 +83,9 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $groupname = 'moodletestgroup'.time();
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
         $this->assertNotEmpty($groupid);
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $groupname);
-        $this->assertNotEmpty($group->info());
+        $this->assertTrue($this->rocketchatapimanager->group_exists($groupid));
         $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid));
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $groupname);
-        $this->assertEmpty($group->info());
+        $this->assertFalse($this->rocketchatapimanager->group_exists($groupid));
     }
 
     public function test_create_group_invalid_groupname() {
@@ -98,11 +96,9 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $sanitizedgroupname = mod_rocketchat_tools::sanitize_groupname($groupname);
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($sanitizedgroupname);
         $this->assertNotEmpty($groupid);
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $sanitizedgroupname);
-        $this->assertNotEmpty($group->info());
+        $this->assertTrue($this->rocketchatapimanager->group_exists($groupid));
         $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid));
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $groupname);
-        $this->assertEmpty($group->info());
+        $this->assertFalse($this->rocketchatapimanager->group_exists($groupid));
     }
 
     public function test_create_group_groupname_with_whitespace() {
@@ -111,11 +107,8 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $sanitizedgroupname = mod_rocketchat_tools::sanitize_groupname($groupname);
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($sanitizedgroupname);
         $this->assertNotEmpty($groupid);
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $sanitizedgroupname);
-        $this->assertNotEmpty($group->info());
+        $this->assertTrue($this->rocketchatapimanager->group_exists($groupid));
         $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid));
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid, $groupname);
-        $this->assertEmpty($group->info());
     }
 
     public function test_create_groups_with_same_names() {
@@ -123,14 +116,12 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $groupname1 = 'moodletestgroup'.time();
         $groupid1 = $this->rocketchatapimanager->create_rocketchat_group($groupname1);
         $this->assertNotEmpty($groupid1);
-        $group1 = $this->rocketchatapimanager->get_rocketchat_group_object($groupid1, $groupname1);
-        $info1 = $group1->info();
+        $info1 = $this->rocketchatapimanager->get_group_infos($groupid1);
         $this->assertNotEmpty($info1);
         // Create same second time.
         $groupid2 = $this->rocketchatapimanager->create_rocketchat_group($groupname1);
         $this->assertNotEmpty($groupid2);
-        $group2 = $this->rocketchatapimanager->get_rocketchat_group_object($groupid2);
-        $info2 = $group2->info();
+        $info2 = $this->rocketchatapimanager->get_group_infos($groupid2);
         $this->assertNotEmpty($info2);
         $groupname2 = $info2->group->name;
         $this->assertNotEquals($groupname1, $groupname2);
@@ -282,21 +273,19 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $user = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
         $moodleuser->password = $user->password; // Password only returned in PHPUNIT_TEST mode.
         $this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser);
-        $channel = $this->rocketchatapimanager->get_rocketchat_channel_object($groupid);
-        $channel->postMessage('a message');
-        $userrocketchatapimanager =
+
+         $this->rocketchatapimanager->post_message($groupid, 'a message');
+        // api manager beacause of header persistence
+         $userrocketchatapimanager =
             new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleuser->username, $moodleuser->password);
-        $channel = $userrocketchatapimanager->get_rocketchat_channel_object($groupid);
-        $channel->postMessage('a user message');
+        $userrocketchatapimanager->post_message($groupid, 'a user message');
         $userrocketchatapimanager->close_connection();
         // Got a bug due to static Request call so reinit apimamanger.
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($groupid);
-        $channel = $this->rocketchatapimanager->get_rocketchat_channel_object($groupid);
-        $messages = $group->getMessages(true);
+        $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(3, $messages); // 2 real messages, 3 messages for actions.
-        $group->cleanHistory(true);
-        $messages = $group->getMessages(true);
+        $this->rocketchatapimanager->clean_history($groupid);
+        $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(0, $messages);
         $this->rocketchatapimanager->delete_user($moodleusermoderator->username);
         $this->rocketchatapimanager->delete_rocketchat_group($groupid);

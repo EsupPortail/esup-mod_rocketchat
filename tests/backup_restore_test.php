@@ -90,9 +90,7 @@ class backup_restore_testcase extends advanced_testcase{
         $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->newrocketchat->rocketchatid);
-        $this->assertNotEmpty($group);
-        $this->assertNotEmpty($group->info());
+        $this->assertTrue($rocketchatmanager->group_exists($this->newrocketchat->rocketchatid));
     }
 
     public function test_duplicate_module() {
@@ -103,9 +101,7 @@ class backup_restore_testcase extends advanced_testcase{
         $this->newrocketchat = $DB->get_record('rocketchat', array('id' => $this->newrocketchatmodule->instance));
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->newrocketchat->rocketchatid);
-        $this->assertNotEmpty($group);
-        $this->assertNotEmpty($group->info());
+        $this->assertTrue($rocketchatmanager->group_exists($this->newrocketchat->rocketchatid));
     }
 
     protected function backup_and_restore($course) {

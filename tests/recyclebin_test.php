@@ -64,11 +64,8 @@ class recyclebin_testcase extends advanced_testcase{
         ob_get_contents();
         ob_end_clean();
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertNotEmpty($groupinfo);
-        $this->assertTrue($groupinfo->group->archived);
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertNotEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
@@ -86,10 +83,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertEmpty($groupinfo);
+        $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
     }
 
     public function test_deletion_without_recyclebin() {
@@ -107,10 +101,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertEmpty($groupinfo);
+        $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
         $rocketchatmanager->delete_user($this->userstudent1->username);
         $rocketchatmanager->delete_user($this->userstudent2->username);
 
@@ -128,12 +119,8 @@ class recyclebin_testcase extends advanced_testcase{
         phpunit_util::run_all_adhoc_tasks();
         $rocketchatmanager = new rocket_chat_api_manager();
         // Remote Rocket.Chat private group exists and is archived.
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertTrue($groupinfo->group->archived);
-        $this->assertNotEmpty($groupinfo);
-        $this->assertTrue($groupinfo->group->archived);
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertNotEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
@@ -165,12 +152,9 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         // Remote Rocket.Chat private group exists.
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertNotEmpty($groupinfo);
-        $this->assertFalse($groupinfo->group->archived);
-        $this->assertCount(2, $group->members());
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertFalse($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertCount(2, $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid));
         // Clean Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         $rocketchatmanager->delete_user($this->userstudent1->username);
@@ -190,11 +174,8 @@ class recyclebin_testcase extends advanced_testcase{
         ob_get_contents();
         ob_end_clean();
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertNotEmpty($groupinfo);
-        $this->assertTrue($groupinfo->group->archived);
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
@@ -210,13 +191,10 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertNotEmpty($groupinfo); // Remote group not deleted.
-        $this->assertTrue($groupinfo->group->archived);
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));;
         // Clean remote Rocket.Chat.
-        $group->delete();
+        $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         $rocketchatmanager->delete_user($this->userstudent1->username);
         $rocketchatmanager->delete_user($this->userstudent2->username);
     }
@@ -235,10 +213,7 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertEmpty($groupinfo);
+        $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
         $rocketchatmanager->delete_user($this->userstudent1->username);
         $rocketchatmanager->delete_user($this->userstudent2->username);
 
@@ -255,12 +230,8 @@ class recyclebin_testcase extends advanced_testcase{
         phpunit_util::run_all_adhoc_tasks();
         $rocketchatmanager = new rocket_chat_api_manager();
         // Remote Rocket.Chat private group exists and is archived.
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertTrue($groupinfo->group->archived);
-        $this->assertNotEmpty($groupinfo);
-        $this->assertTrue($groupinfo->group->archived);
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         $rocketchatxrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('rocketchatid' => $this->rocketchat->rocketchatid));
         $this->assertEmpty($rocketchatxrecyclebin);
         $rocketchatrecord = $DB->get_record('rocketchat', array('id' => $this->rocketchat->id));
@@ -278,12 +249,8 @@ class recyclebin_testcase extends advanced_testcase{
         $this->assertEmpty($rocketchatxrecyclebin);
         // Remote Rocket.Chat private group exists.
         $rocketchatmanager = new rocket_chat_api_manager();
-        $group = $rocketchatmanager->get_rocketchat_group_object($this->rocketchat->rocketchatid, '');
-        $this->assertNotEmpty($group);
-        $groupinfo = $group->info();
-        $this->assertNotEmpty($groupinfo);
-        // Rocket.Chat is always archived.
-        $this->assertTrue($groupinfo->group->archived);
+        $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         // Clean Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         $rocketchatmanager->delete_user($this->userstudent1->username);
@@ -303,7 +270,6 @@ class recyclebin_testcase extends advanced_testcase{
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $generator->enrol_user($this->userstudent1->id, $this->course->id, $student->id);
         $generator->enrol_user($this->userstudent2->id, $this->course->id, $student->id);
-        // TODO if possible, try to create a mock that take in charge inner new rocket_chat_api_manager() call
         // Set a groupname for tests.
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_' . time(),

@@ -226,7 +226,15 @@ class rocket_chat_api_manager{
 
     public function get_group_members($groupid, $groupname = '') {
         $group = $this->get_rocketchat_group_object($groupid, $groupname);
-        return $group->members();
+        if ($group) {
+            $members = $group->members();
+            if (!$members) {
+                return array();
+            } else {
+                return $members;
+            }
+        }
+        return array();
     }
 
     public function delete_user($moodleusername) {
@@ -266,6 +274,22 @@ class rocket_chat_api_manager{
         return null;
     }
 
+    public function get_group_infos($groupid) {
+        $group = $this->get_rocketchat_group_object($groupid);
+        if(!empty($group) && !empty($group->info($this->verbose))){
+            return $group->info($this->verbose);
+        }
+        return false;
+    }
+
+    public function group_exists($groupid) {
+        $group = $this->get_rocketchat_group_object($groupid);
+        if(!empty($group) && !empty($group->info($this->verbose))){
+            return true;
+        }
+        return false;
+    }
+
     public function get_user_infos($username) {
         $identifier = new \stdClass();
         $identifier->username = $username;
@@ -286,5 +310,51 @@ class rocket_chat_api_manager{
                 }
             }
         }
+    }
+
+    public function post_message($roomid, $message) {
+        $channel = $this->get_rocketchat_channel_object($roomid);
+        $channel->postMessage($message);
+    }
+
+    public function get_group_messages($groupid) {
+        $group = $this->get_rocketchat_group_object($groupid);
+        return $group->getMessages($this->verbose);
+    }
+
+    public function user_exists($username) {
+        $user = $this->get_rocketchat_user_object($username);
+        if (!empty($user) && !empty($user->info())) {
+            return true;
+        }
+        return false;
+    }
+
+    public function group_archived($groupid){
+        $group = $this->get_rocketchat_group_object($groupid);
+        if (!empty($group)) {
+            $groupinfo = $group->info()->group;
+            if (!empty($groupinfo)) {
+                if (property_exists($groupinfo, 'archived')) {
+                    return $groupinfo->archived;
+                }
+            }
+        } else{
+            error_log("Rocket.Chat API Rest error group $groupid not found");
+        }
+        return false;
+    }
+
+    public function get_group_moderators($groupid) {
+        $group = $this->get_rocketchat_group_object($groupid);
+        if ($group) {
+            $moderators = $group->moderators($this->verbose);
+            if (!$moderators) {
+                return array();
+            } else {
+                return $moderators;
+            }
+        }
+        return array();
     }
 }

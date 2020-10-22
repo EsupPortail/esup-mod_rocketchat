@@ -88,27 +88,23 @@ class course_reset_testcase extends advanced_testcase{
     public function test_course_reset() {
         // Structure created in setUp.
 
-        $channel = $this->rocketchatapimanager->get_rocketchat_channel_object($this->rocketchat->rocketchatid);
-        $channel->postMessage('a message');
-        $channel->postMessage('a second message');
+        $this->rocketchatapimanager->post_message($this->rocketchat->rocketchatid, 'a message');
+        $this->rocketchatapimanager->post_message($this->rocketchat->rocketchatid, 'a second message');
         $data = new stdClass();
         $data->id = $this->course->id;
         $data->unenrol_users = false;
         $data->reset_rocketchat = false;
         reset_course_userdata($data);
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
-        $this->assertCount(3, $group->members());
-        $this->assertCount(5, $group->getMessages());
+        $this->assertCount(3, $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid));
+        $this->assertCount(5, $this->rocketchatapimanager->get_group_messages($this->rocketchat->rocketchatid));
         $data->reset_rocketchat = true;
         reset_course_userdata($data);
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
-        $this->assertCount(3, $group->members());
-        $this->assertCount(0, $group->getMessages());
+        $this->assertCount(3, $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid));
+        $this->assertCount(0, $this->rocketchatapimanager->get_group_messages($this->rocketchat->rocketchatid));
         $roles = tool_uploadcourse_helper::get_role_ids();
         $data->unenrol_users = array($this->studentrole->id, $this->editingteacherrole->id);
         reset_course_userdata($data);
-        $group = $this->rocketchatapimanager->get_rocketchat_group_object($this->rocketchat->rocketchatid);
-        $this->assertCount(1, $group->members()); // Api account is already registered as owner.
-        $this->assertCount(0, $group->getMessages());
+        $this->assertCount(1, $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid));
+        $this->assertCount(0, $this->rocketchatapimanager->get_group_messages($this->rocketchat->rocketchatid));
     }
 }
