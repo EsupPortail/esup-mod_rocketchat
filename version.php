@@ -29,4 +29,4 @@ $plugin->component = 'mod_rocketchat';
 $plugin->release = '1.0.0';
 $plugin->version = 2020101300;
 $plugin->requires = 2018050800;
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->maturity = MATURITY_RC;
