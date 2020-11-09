@@ -126,7 +126,7 @@ if ($ADMIN->fulltree) {
         new admin_setting_configcheckbox('mod_rocketchat/verbose_mode',
             get_string('verbose_mode', 'mod_rocketchat'),
             get_string('verbose_mode_desc', 'mod_rocketchat'),
-            1
+            0
         )
     );
 }
