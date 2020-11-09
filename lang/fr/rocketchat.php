@@ -19,6 +19,7 @@
  *
  * @package     mod_rocketchat
  * @category    string
+ * @author      Celine Pervès <cperves@unistra.fr>
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,9 +36,9 @@ $string['instanceurl_desc'] = 'URL de l\'instance Rocket.Chat (ex: https://rocke
 $string['restapiroot'] = 'Chemin de l\'API Rocket.Chat';
 $string['restapiroot_desc'] = 'Adresse de l\'API Rocket.Chat';
 $string['apiuser'] = 'Utilisateur API Rocket.Chat';
-$string['apiuser_desc'] = 'Utilisateur API Rocket.Chat';
+$string['apiuser_desc'] = 'Utilisateur Rocket.Chat utilisé par Moodle pour interroger l\'API du serveur Rocket.Chat (ne pas mettre de token à cet endroit)';
 $string['apipassword'] = 'Mot de passe API Rocket.Chat';
-$string['apipassword_desc'] = 'Mot de passe API Rocket.Chat';
+$string['apipassword_desc'] = 'Mot de passe de l\'utilisateur renseigné ci-dessus';
 $string['norocketchats'] = 'Aucune instance de module Rocket.Chat';
 $string['groupnametoformat'] = 'Formatage de nom des groupes';
 $string['groupnametoformat_desc'] = 'Les variables utilisables sont les suivantes : moodleid, moodleshortname, moodlefullname, moduleid, modulemoodleid (identifiant unique de la plateforme moodle), courseid, courseshortname, coursefullname';
@@ -57,10 +58,30 @@ $string['userroles'] = 'Rôles Moodle qui auront le rôle d\'utilisateurs Rocket
 $string['defaultuserroles_desc'] = 'Rôles Moodle qui auront le rôle d\'utilisateurs Rocket.Chat';
 $string['rocketchat:addinstance'] = 'Ajouter une ressource Rocket.Chat';
 $string['rocketchat:view'] = 'Voir une ressource Rocket.Chat';
-$string['rocketchat:candefineroles'] = 'Peut définir les roles à propager pour les inscriptions aux groupes privés Rocket.Chat';
+$string['rocketchat:candefineroles'] = 'Peut définir les rôles à propager pour les inscriptions aux groupes privés Rocket.Chat';
 $string['rocketchat:change_embedded_display_mode'] = 'Peut changer le mode d\'affichage de la ressource (menu de gauche visible ou non)';
 $string['rocketchat_nickname'] = '{$a->firstname} {$a->lastname}';
 $string['create_user_account_if_not_exists'] = 'Créer le compte Rocket.Chat';
 $string['create_user_account_if_not_exists_desc'] = 'Lors de l\'inscription d\'un utilisateur, créé l\'utilisateur correspondant dans Rocket.Chat, s\'il n\'existe pas';
-$string['verbose_mode'] = 'Rocket.Chat api rest in verbose mode';
-$string['verbose_mode_desc'] = 'If verbose, Rocket.Chat api rest error messages will be loggued into php error log file.';
+$string['verbose_mode'] = 'Mode debug de l\'API Rocket.Chat';
+$string['verbose_mode_desc'] = 'Permet d\'afficher le debug de l\'API Rocket.Chat dans le fichier des erreurs PHP';
+$string['recyclebin_patch'] = 'Le patch pour la corbeille est-il installé ?';
+$string['recyclebin_patch_desc'] = 'Ce patch du fichier admin/tool/recyclebin/classes/course_bin.php permet de sauvegarder les cmid et instanceid de la ressource Rocket.Chat lors de sa suppression afin d\'en permettre une restauration ultérieure';
+$string['validationgroupnameregex'] = 'Regex de nom de groupe valide';
+$string['validationgroupnameregex_desc'] = 'Moodle remplacera les caractères non autorisés par _. Cette expression régulière est l\'exacte négation de l\'expression régulière paramétrée dans Rocket.Chat.';
+$string['embedded_display_mode'] = 'Mode d\'affichage réduit';
+$string['embedded_display_mode_desc'] = 'Si coché, le menu de gauche de l\'interface Rocket.Chat sera caché, masquant les autres canaux';
+$string['embedded_display_mode_setting'] = 'Mode d\'affichage réduit';
+$string['embedded_display_mode_setting_desc'] = 'Si coché, le menu de gauche de l\'interface Rocket.Chat sera caché, masquant les autres canaux';
+$string['rocketchat:addinstance'] = 'Ajoute une instance Rocket.Chat';
+$string['rocketchat:candefineroles'] = 'Autorise la modification de la définition des rôles dans le paramétrage de chaque instance';
+$string['modulenameplural'] = 'Instances Rocket.Chat';
+$string['removemessages'] = 'Supprime tous les messages';
+$string['removeditem'] = 'messages supprimés dans {$a->rocketchatid}';
+$string['datastransmittedtorc'] = 'Données transmises dans Rocket.Chat';
+$string['privacy:metadata:mod_rocketchat:rocket_chat_server:username'] = 'Login de l\'utilisateur';
+$string['privacy:metadata:mod_rocketchat:rocket_chat_server:firstname'] = 'Prénom de l\'utilisateur';
+$string['privacy:metadata:mod_rocketchat:rocket_chat_server:firstname'] = 'Nom de l\'utilisateur';
+$string['privacy:metadata:mod_rocketchat:rocket_chat_server:email'] = 'Mail de l\'utilisateur';
+$string['privacy:metadata:mod_rocketchat:rocket_chat_server:rocketchatids'] = 'Identifiants des groupes Rocket.Chat où est inscrit l\'utilisateur';
+$string['privacy:metadata:mod_rocketchat:rocket_chat_server'] = 'Données transmises au serveur Rocket.Chat distant';
