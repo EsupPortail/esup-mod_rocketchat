@@ -275,7 +275,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser);
 
          $this->rocketchatapimanager->post_message($groupid, 'a message');
-        // api manager beacause of header persistence
+        // Api manager beacause of header persistence.
          $userrocketchatapimanager =
             new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleuser->username, $moodleuser->password);
         $userrocketchatapimanager->post_message($groupid, 'a user message');

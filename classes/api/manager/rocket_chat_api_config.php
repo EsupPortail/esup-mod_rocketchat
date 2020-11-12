@@ -61,6 +61,10 @@ class rocket_chat_api_config {
 
     public function __construct() {
         if (is_null($this->instanceurl)) {
+            if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
+                global $CFG;
+                require($CFG->dirroot.'/mod/rocketchat/config-test.php');
+            }
             $config = get_config('mod_rocketchat');
             if (empty($config->instanceurl)) {
                 print_error('RocketChat instance url is empty');

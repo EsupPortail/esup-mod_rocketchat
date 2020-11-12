@@ -284,7 +284,7 @@ class rocket_chat_api_manager{
 
     public function group_exists($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
-        if(!empty($group) && !empty($group->info($this->verbose))){
+        if (!empty($group) && !empty($group->info($this->verbose))) {
             return true;
         }
         return false;
@@ -330,7 +330,7 @@ class rocket_chat_api_manager{
         return false;
     }
 
-    public function group_archived($groupid){
+    public function group_archived($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
         if (!empty($group)) {
             $groupinfo = $group->info()->group;
@@ -339,7 +339,7 @@ class rocket_chat_api_manager{
                     return $groupinfo->archived;
                 }
             }
-        } else{
+        } else {
             error_log("Rocket.Chat API Rest error group $groupid not found");
         }
         return false;
