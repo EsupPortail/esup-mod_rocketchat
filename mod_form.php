@@ -105,16 +105,16 @@ class mod_rocketchat_mod_form extends moodleform_mod {
             $rolesoptions);
         $userroles->setMultiple(true);
 
+        $mform->setDefault('moderatorroles'.($rolesreadonly ? 'ro' : ''), get_config('mod_rocketchat', 'defaultmoderatorroles'));
+        $mform->setDefault('userroles'.($rolesreadonly ? 'ro' : ''), get_config('mod_rocketchat', 'defaultuserroles'));
+        $mform->setType('moderatorroles'.($rolesreadonly ? 'ro' : ''), PARAM_RAW);
+        $mform->setType('userroles'.($rolesreadonly ? 'ro' : ''), PARAM_RAW);
         if ($rolesreadonly) {
             $moderatorroles->setAttributes(array('disabled' => 'true'));
             $userroles->setAttributes(array('disabled' => 'true'));
             $mform->addElement('hidden', 'moderatorroles');
             $mform->addElement('hidden', 'userroles');
         }
-        $mform->setDefault('moderatorroles', get_config('mod_rocketchat', 'defaultmoderatorroles'));
-        $mform->setDefault('userroles', get_config('mod_rocketchat', 'defaultuserroles'));
-        $mform->setType('moderatorroles', PARAM_RAW);
-        $mform->setType('userroles', PARAM_RAW);
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
