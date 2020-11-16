@@ -5,6 +5,17 @@ This plugin allows teachers to push students from Moodle into a dedicated Rocket
 ## Main feature
 Adding this activity to a Moodle course will create a channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel. The list of members will then be kept up to date.
 
+## Rocket.Chat settings requirements
+* create a local RocketChat account
+  * other authentification account will not work
+* confirm it through Rocket.Chat administration
+### permissions
+for moodle Rocket.Chat account
+* view-room-administration
+### Authentication
+* LDAP and CAS account fusion is adviced when moodle user account creation is activated
+
+
 ## Installation
 
 ### Moodle plugin
@@ -41,12 +52,6 @@ set_config('apipassword','#############','mod_rocketchat');
 set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Optional argument.line.
 
 ```
-## Rocket.Chat settings
-### permissions
-for moodle Rocket.Chat account
-* view-room-administration
-### Authentication
-* LDAP and CAS account fusion is adviced when moodle user account creation is activated
 
 ## License ##
 
