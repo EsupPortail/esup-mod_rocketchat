@@ -41,7 +41,7 @@ class mod_rocketchat_mod_form extends moodleform_mod {
      * Defines forms elements
      */
     public function definition() {
-        global $CFG;
+        global $CFG, $DB;
         $mform = $this->_form;
         // General Section.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -92,29 +92,43 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                 'noteq', mod_rocketchat_tools::DISPLAY_POPUP);
         }
 
-        $rolesreadonly = !has_capability('mod/rocketchat:candefineroles', $this->get_context());
         $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
-
-        $moderatorroles = $mform->addElement('select', 'moderatorroles'.($rolesreadonly ? 'ro' : ''),
-            get_string('moderatorroles', 'mod_rocketchat'),
-            $rolesoptions);
-        $moderatorroles->setMultiple(true);
-
-        $userroles = $mform->addElement('select', 'userroles'.($rolesreadonly ? 'ro' : ''),
-            get_string('userroles', 'mod_rocketchat'),
-            $rolesoptions);
-        $userroles->setMultiple(true);
-
-        $mform->setDefault('moderatorroles'.($rolesreadonly ? 'ro' : ''), get_config('mod_rocketchat', 'defaultmoderatorroles'));
-        $mform->setDefault('userroles'.($rolesreadonly ? 'ro' : ''), get_config('mod_rocketchat', 'defaultuserroles'));
-        $mform->setType('moderatorroles'.($rolesreadonly ? 'ro' : ''), PARAM_RAW);
-        $mform->setType('userroles'.($rolesreadonly ? 'ro' : ''), PARAM_RAW);
+        $defaultmoderatorroles = get_config('mod_rocketchat', 'defaultmoderatorroles');
+        $defaultuserroles = get_config('mod_rocketchat', 'defaultuserroles');
+        $rolesreadonly = !has_capability('mod/rocketchat:candefineroles', $this->get_context());
+        $moderatorroletext = '';
+        $userroletext = '';
         if ($rolesreadonly) {
-            $moderatorroles->setAttributes(array('disabled' => 'true'));
-            $userroles->setAttributes(array('disabled' => 'true'));
+            if(!empty($this->_instance)){
+                $moderatorroletext = $this->format_roles($this->get_current()->moderatorroles, $rolesoptions);
+                $userroletext = $this->format_roles($this->get_current()->userroles, $rolesoptions);
+            } else{
+                $moderatorroletext = $this->format_roles(get_config('mod_rocketchat', 'defaultmoderatorroles'), $rolesoptions);
+                $userroletext = $this->format_roles(get_config('mod_rocketchat', 'defaultuserroles'), $rolesoptions);
+            }
+            $mform->addElement('static', 'moderatorrolesstatic',
+                get_string('moderatorroles', 'mod_rocketchat'), $moderatorroletext);
             $mform->addElement('hidden', 'moderatorroles');
+            $mform->addElement('static', 'userrolesstatic',
+                get_string('userroles', 'mod_rocketchat'), $userroletext);
             $mform->addElement('hidden', 'userroles');
+        } else {
+            $moderatorroles = $mform->addElement('select', 'moderatorroles',
+                get_string('moderatorroles', 'mod_rocketchat'),
+                $rolesoptions);
+            $moderatorroles->setMultiple(true);
+
+            $userroles = $mform->addElement('select', 'userroles',
+                get_string('userroles', 'mod_rocketchat'),
+                $rolesoptions);
+            $userroles->setMultiple(true);
         }
+        $mform->setType('moderatorroles', PARAM_RAW);
+        $mform->setType('userroles', PARAM_RAW);
+        $mform->setDefault('moderatorroles', get_config('mod_rocketchat', 'defaultmoderatorroles'));
+        $mform->setDefault('userroles', get_config('mod_rocketchat', 'defaultuserroles'));
+
+
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
@@ -130,5 +144,21 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $data->embbeded = !property_exists($data, 'embbeded') ? 0 : $data->embbeded;
     }
 
+    /**
+     * @param string $formattedrole
+     * @param array $rolesoptions
+     */
+    protected function format_roles($roleids, $rolesoptions) {
+        $i = 1;
+        $formattedrole = '';
+        foreach (explode(',', $roleids) as $moderatorroleid) {
+            if ($i > 1) {
+                $formattedrole .= ',';
+            }
+            $formattedrole .= $rolesoptions[$moderatorroleid];
+            $i++;
+        }
+        return $formattedrole;
+    }
 
 }
