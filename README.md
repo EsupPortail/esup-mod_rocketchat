@@ -26,6 +26,8 @@ git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTO
 ```
 2. Visit the notifications page to complete the installation process
 ## Settings
+* apiuser is the RocketChat account username
+* apipassword is the password (do not put any generated token here)
 * recyclebin_patch check this if patch is applied to core moodle file admin/tool/recyclebin/classes/course_bin.php
 * patch is available in patch subdirectory
 * you can apply it with patch command
