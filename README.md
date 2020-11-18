@@ -40,9 +40,10 @@ patch -p1 /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_version/user/c
 
 ## Specials capabilities
 * mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 
-* mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing th emodule instance
+* mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing the module instance
 ## Unit tests
-* to run unit tests that involved Rocket.Chat remote server just create a config-test.php file into the module rocketchat root dorectory
+* in Rocket.Chat you must adjust the Rate Limiter to enable unit tests large amount of requests
+* to run unit tests that involved Rocket.Chat remote server just create a config-test.php file into the module rocketchat root directory
 * fill in with following parameters
 ```php
 <?php

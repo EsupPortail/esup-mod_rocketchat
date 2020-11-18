@@ -168,6 +168,23 @@ class rocket_chat_api_manager{
         return $return ? $group : false;
     }
 
+    public function add_moderator_to_group($groupid, $moodleuser) {
+        $identifier = new \stdClass();
+        $identifier->username = $moodleuser->username;
+        $user = $this->get_user_infos($moodleuser->username);
+        if (!$user) {
+            error_log("User $moodleuser->username not added as moderator to remote Rocket.Chat group");
+            return false;
+        }
+        $group = $this->get_rocketchat_group_object($groupid);
+        if ($group) {
+            return $group->addModerator($user->_id, $this->verbose);
+        } else {
+            error_log("User $moodleuser->username not added as moderator to remote Rocket.Chat group");
+        }
+        return false;
+    }
+
     public function enrol_moderator_to_group($groupid, $moodleuser) {
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
@@ -196,6 +213,18 @@ class rocket_chat_api_manager{
             error_log("User $user->username not removed as user from remote Rocket.Chat group");
         }
         return $return ? $group : false;
+    }
+
+    public function revoke_moderator_in_group($groupid, $moodleuser){
+        $identifier = new \stdClass();
+        $identifier->username = $moodleuser->username;
+        $group = $this->get_rocketchat_group_object($groupid);
+        $user = $group->user_info($identifier, $this->verbose);
+        $return = $group->removeModerator($user->_id, $this->verbose);
+        if (!$return) {
+            error_log("User $user->username not removed as moderator from remote Rocket.Chat group");
+        }
+        return $return;
     }
 
     public function unenrol_moderator_from_group($groupid, $moodleuser) {
@@ -232,6 +261,45 @@ class rocket_chat_api_manager{
                 return array();
             } else {
                 return $members;
+            }
+        }
+        return array();
+    }
+
+    public function get_enriched_group_members($groupid, $groupname = '') {
+        $group = $this->get_rocketchat_group_object($groupid, $groupname);
+        $enrichedmembers = array();
+        if ($group) {
+            $members = $group->members();
+            if (!$members) {
+                return array();
+            } else {
+                foreach($members as $member){
+                    $enrichedmembers[$member->username] = $member;
+                }
+                return $enrichedmembers;
+            }
+        }
+        return array();
+    }
+
+    public function get_enriched_group_members_with_moderators($groupid, $groupname = '') {
+        $group = $this->get_rocketchat_group_object($groupid, $groupname);
+        $enrichedmembers = array();
+        if ($group) {
+            $members = $group->members();
+            if (!$members) {
+                return array();
+            } else {
+                foreach($members as $member){
+                    $member->ismoderator = false;
+                    $enrichedmembers[$member->username] = $member;
+                }
+                $moderators = $this->get_group_moderators($groupid);
+                foreach($moderators as $moderator){
+                    $enrichedmembers[$moderator->username]->ismoderator = true;
+                }
+                return $enrichedmembers;
             }
         }
         return array();

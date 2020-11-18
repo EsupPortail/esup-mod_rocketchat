@@ -47,6 +47,34 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertNotNull($this->rocketchatapimanager->get_admin_user());
     }
 
+    public function test_get_enriched_group_members_with_moderators(){
+        $this->initiate_environment_and_connection();
+        list($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid) = $this->initiate_group_with_user();
+        $enrichedmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($groupid);
+        $this->assertCount(3, $enrichedmembers); // 2 + owner.
+        $this->assertTrue(array_key_exists($rocketchatmoderator->username, $enrichedmembers));
+        $this->assertTrue(array_key_exists($rocketchatuser->username, $enrichedmembers));
+        $this->assertTrue($enrichedmembers[$rocketchatmoderator->username]->ismoderator);
+        $this->assertFalse($enrichedmembers[$rocketchatuser->username]->ismoderator);
+        $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid));
+        $this->assertFalse($this->rocketchatapimanager->group_exists($groupid));
+        $this->assertTrue($this->rocketchatapimanager->delete_user($moderator->username));
+        $this->assertTrue($this->rocketchatapimanager->delete_user($user->username));
+    }
+
+    public function test_get_enriched_group_members(){
+        $this->initiate_environment_and_connection();
+        list($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid) = $this->initiate_group_with_user();
+        $enrichedmembers = $this->rocketchatapimanager->get_enriched_group_members($groupid);
+        $this->assertCount(3, $enrichedmembers); // 2 + owner.
+        $this->assertTrue(array_key_exists($rocketchatmoderator->username, $enrichedmembers));
+        $this->assertTrue(array_key_exists($rocketchatuser->username, $enrichedmembers));
+        $this->assertTrue($this->rocketchatapimanager->delete_rocketchat_group($groupid));
+        $this->assertFalse($this->rocketchatapimanager->group_exists($groupid));
+        $this->assertTrue($this->rocketchatapimanager->delete_user($moderator->username));
+        $this->assertTrue($this->rocketchatapimanager->delete_user($user->username));
+    }
+
     public function test_create_user_if_not_exists_and_delete() {
         $this->initiate_environment_and_connection();
         $moodleuser = new stdClass();
@@ -274,9 +302,9 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->password = $user->password; // Password only returned in PHPUNIT_TEST mode.
         $this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser);
 
-         $this->rocketchatapimanager->post_message($groupid, 'a message');
+        $this->rocketchatapimanager->post_message($groupid, 'a message');
         // Api manager beacause of header persistence.
-         $userrocketchatapimanager =
+        $userrocketchatapimanager =
             new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleuser->username, $moodleuser->password);
         $userrocketchatapimanager->post_message($groupid, 'a user message');
         $userrocketchatapimanager->close_connection();
@@ -298,7 +326,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
     }
 
-    private function initiate_test_environment(): void {
+    private function initiate_test_environment() {
         $this->resetAfterTest(true);
         $this->load_rocketchat_test_config();
     }
@@ -306,5 +334,35 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     private function initiate_environment_and_connection() {
         $this->initiate_test_environment();
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
+    }
+
+    /**
+     * @return array
+     * @throws dml_exception
+     */
+    protected function initiate_group_with_user() {
+        $domainmail = get_config('mod_rocketchat', 'domainmail');
+        $moderator = new stdClass();
+        $moderator->username = 'usertest' . time();
+        $moderator->firstname = 'moodleusertestModeratot';
+        $moderator->lastname = $moderator->firstname;
+        $moderator->email = $moderator->username . '@' . (!empty($domainmail) ? $domainmail : 'moodle.test');
+        $rocketchatmoderator = $this->rocketchatapimanager->create_user_if_not_exists($moderator);
+        $user = new stdClass();
+        $user->username = 'usertest' . time();
+        $user->firstname = 'moodleusertestUser';
+        $user->lastname = $user->firstname;
+        $user->email = $user->username . '@' . (!empty($domainmail) ? $domainmail : 'moodle.test');
+        $rocketchatuser = $this->rocketchatapimanager->create_user_if_not_exists($user);
+        $this->assertNotEmpty($rocketchatmoderator);
+        $this->assertNotEmpty($rocketchatuser);
+        $this->assertTrue(property_exists($rocketchatmoderator, '_id'));
+        $groupname = 'moodletestgroup' . time();
+        $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
+        $this->assertNotEmpty($groupid);
+        $this->assertTrue($this->rocketchatapimanager->group_exists($groupid));
+        $this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moderator);
+        $this->rocketchatapimanager->enrol_user_to_group($groupid, $user);
+        return array($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid);
     }
 }
