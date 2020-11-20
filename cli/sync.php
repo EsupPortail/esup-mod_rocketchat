@@ -50,8 +50,9 @@ Enable to synchronize course enrolments with user and moderator enrolments in re
 
 Options:
 -h, --help          Print out this help
--c, --courseid      Concerned courseid where moodle Rocket.Chat module instance will be synchronised with remote Rocket.Chat associated groups
--m, --cmid      Concerned Rocket.Chat course module id  that  will be synchronised with its remote Rocket.Chat associated group
+-c, --courseid      "
+."Concerned courseid where moodle Rocket.Chat module instance will be synchronised with remote Rocket.Chat associated groups
+-m, --cmid          Concerned Rocket.Chat course module id  that  will be synchronised with its remote Rocket.Chat associated group
 One of courseid or cmid is required
 Example:
 \$ sudo -u www-data /usr/bin/php /var/www/moodle/mod/rocketchat/cli/sync.php --courseid=xxx

@@ -85,3 +85,11 @@ $string['privacy:metadata:mod_rocketchat:rocket_chat_server:firstname'] = 'Nom d
 $string['privacy:metadata:mod_rocketchat:rocket_chat_server:email'] = 'Mail de l\'utilisateur';
 $string['privacy:metadata:mod_rocketchat:rocket_chat_server:rocketchatids'] = 'Identifiants des groupes Rocket.Chat où est inscrit l\'utilisateur';
 $string['privacy:metadata:mod_rocketchat:rocket_chat_server'] = 'Données transmises au serveur Rocket.Chat distant';
+$string['connection-success'] = 'La connexion a été établie avec succès.';
+$string['test_connection'] = 'Tester la connexion à Rocket.Chat';
+$string['testtitle'] = 'Test de connexion Rocket.Chat.';
+$string['testconnectionfailure'] = 'Les paramètres suivants doivent être renseignés dans la configuration du plugin :</br>'
+    .'instanceurl, restapiroot, apiuser and apipassword.</br>Veuillez vérifier que tous ces champs sont renseignés.';
+$string['settings'] = 'Paramétrage de Rocket.Chat';
+$string['errorintestwhilegconnection'] = 'Erreur lors du test de la connection';
+$string['connectiontestresult'] = 'Résultat du test de connexion';

@@ -43,19 +43,20 @@ class rocket_chat_api_manager{
     public function is_verbose() {
         return $this->verbose;
     }
-    public function __construct($user=null, $password=null) {
+    public function __construct($user=null, $password=null, $instanceurl=null, $restapiroot=null) {
         $this->verbose = get_config('mod_rocketchat', 'verbose_mode');
         $this->rocketchatapiconfig = new rocket_chat_api_config();
-        $this->initiate_connection($user, $password);
+        $this->initiate_connection($user, $password, $instanceurl, $restapiroot);
     }
 
-    private function initiate_connection($user = null, $password = null) {
+    private function initiate_connection($user = null, $password = null, $instanceurl=null, $restapiroot=null) {
         // User amanager object , logged to remote Rocket.Chat.
         $this->adminuser = new \RocketChat\UserManager(
             is_null($user) ? $this->rocketchatapiconfig->get_apiuser() : $user,
             is_null($user) ? $this->rocketchatapiconfig->get_apipassword() : $password,
-            $this->rocketchatapiconfig->get_instanceurl(),
-            $this->rocketchatapiconfig->get_restapiroot());
+            is_null($instanceurl) ? $this->rocketchatapiconfig->get_instanceurl() : $instanceurl,
+            is_null($restapiroot) ? $this->rocketchatapiconfig->get_restapiroot() : $restapiroot
+        );
     }
 
     public function close_connection() {
@@ -215,7 +216,7 @@ class rocket_chat_api_manager{
         return $return ? $group : false;
     }
 
-    public function revoke_moderator_in_group($groupid, $moodleuser){
+    public function revoke_moderator_in_group($groupid, $moodleuser) {
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid);
@@ -274,7 +275,7 @@ class rocket_chat_api_manager{
             if (!$members) {
                 return array();
             } else {
-                foreach($members as $member){
+                foreach ($members as $member) {
                     $enrichedmembers[$member->username] = $member;
                 }
                 return $enrichedmembers;
@@ -291,12 +292,12 @@ class rocket_chat_api_manager{
             if (!$members) {
                 return array();
             } else {
-                foreach($members as $member){
+                foreach ($members as $member) {
                     $member->ismoderator = false;
                     $enrichedmembers[$member->username] = $member;
                 }
                 $moderators = $this->get_group_moderators($groupid);
-                foreach($moderators as $moderator){
+                foreach ($moderators as $moderator) {
                     $enrichedmembers[$moderator->username]->ismoderator = true;
                 }
                 return $enrichedmembers;
@@ -344,7 +345,7 @@ class rocket_chat_api_manager{
 
     public function get_group_infos($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
-        if(!empty($group) && !empty($group->info($this->verbose))){
+        if (!empty($group) && !empty($group->info($this->verbose))) {
             return $group->info($this->verbose);
         }
         return false;

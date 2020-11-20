@@ -27,6 +27,21 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
+// Make sure core is loaded.
+
+// Redefine the H5P admin menu entry to be expandable.
+$modrocketchatfolder = new admin_category('modrocketchatfolder',
+    new lang_string('pluginname', 'mod_rocketchat'),
+    $module->is_enabled() === false);
+// Add the Settings admin menu entry.
+$ADMIN->add('modsettings', $modrocketchatfolder);
+$settings->visiblename = new lang_string('settings', 'mod_rocketchat');
+// Add the Libraries admin menu entry.
+$ADMIN->add('modrocketchatfolder', $settings);
+$ADMIN->add('modrocketchatfolder', new admin_externalpage('rocketchatconnectiontest',
+    new lang_string('testconnection', 'mod_rocketchat'),
+    new moodle_url('/mod/rocketchat/test_connection.php')));
+
 if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configtext(
@@ -65,7 +80,6 @@ if ($ADMIN->fulltree) {
             ''
         )
     );
-
     $settings->add(
         new admin_setting_configtext('mod_rocketchat/groupnametoformat',
             get_string('groupnametoformat', 'mod_rocketchat'),
@@ -73,6 +87,7 @@ if ($ADMIN->fulltree) {
             '{$a->moodleid}_{$a->courseshortname}_{$a->moduleid}'
         )
     );
+
     $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
     $editingteachers = get_archetype_roles('editingteacher');
     $student = get_archetype_roles('student');
@@ -130,3 +145,5 @@ if ($ADMIN->fulltree) {
         )
     );
 }
+// Prevent Moodle from adding settings block in standard location.
+$settings = null;

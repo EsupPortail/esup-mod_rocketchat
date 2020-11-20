@@ -47,7 +47,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertNotNull($this->rocketchatapimanager->get_admin_user());
     }
 
-    public function test_get_enriched_group_members_with_moderators(){
+    public function test_get_enriched_group_members_with_moderators() {
         $this->initiate_environment_and_connection();
         list($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid) = $this->initiate_group_with_user();
         $enrichedmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($groupid);
@@ -62,7 +62,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $this->assertTrue($this->rocketchatapimanager->delete_user($user->username));
     }
 
-    public function test_get_enriched_group_members(){
+    public function test_get_enriched_group_members() {
         $this->initiate_environment_and_connection();
         list($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid) = $this->initiate_group_with_user();
         $enrichedmembers = $this->rocketchatapimanager->get_enriched_group_members($groupid);

@@ -111,7 +111,7 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         $this->rocketchat = $generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));
     }
-    public function test_synchronize_group_members(){
+    public function test_synchronize_group_members() {
         $rocketchatid = $this->rocketchat->rocketchatid;
         $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
         $this->check_rocket_chat_group_members($rocketchatmembers);
@@ -125,10 +125,10 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         mod_rocketchat_tools::synchronize_group_members($this->rocketchat);
         $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
         $this->check_rocket_chat_group_members($rocketchatmembers);
-        // Play with moderator status in Rocket.Chat
+        // Play with moderator status in Rocket.Chat.
         $this->rocketchatapimanager->add_moderator_to_group($rocketchatid, $this->student1);
         $this->rocketchatapimanager->revoke_moderator_in_group($rocketchatid, $this->teacher1);
-        // Synchronize
+        // Synchronize.
         mod_rocketchat_tools::synchronize_group_members($this->rocketchat);
         $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
         $this->check_rocket_chat_group_members($rocketchatmembers);

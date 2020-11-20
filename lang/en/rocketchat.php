@@ -85,3 +85,11 @@ $string['privacy:metadata:mod_rocketchat:rocket_chat_server:firstname'] = 'User 
 $string['privacy:metadata:mod_rocketchat:rocket_chat_server:email'] = 'User email';
 $string['privacy:metadata:mod_rocketchat:rocket_chat_server:rocketchatids'] = 'Rocket.Chat remote private groups ids where user is enrolled in';
 $string['privacy:metadata:mod_rocketchat:rocket_chat_server'] = 'Datas transmitted to remote Rocket.Chat servers';
+$string['connection-success'] = 'Connection succesfully establish';
+$string['testconnection'] = 'Test connection to Rocket.Chat';
+$string['testtitle'] = 'Rocket.Chat connection test.';
+$string['testconnectionfailure'] = 'Connection test require following settings :</br>'
+    .'instanceurl, restapiroot, apiuser and apipassword.</br>Please check that theses are all filled in.';
+$string['settings'] = 'Rocket.Chat plugin settings';
+$string['errorintestwhilegconnection'] = 'Error while testing connection';
+$string['connectiontestresult'] = 'Connection test result';

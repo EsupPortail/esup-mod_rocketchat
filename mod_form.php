@@ -99,10 +99,10 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $moderatorroletext = '';
         $userroletext = '';
         if ($rolesreadonly) {
-            if(!empty($this->_instance)){
+            if (!empty($this->_instance)) {
                 $moderatorroletext = $this->format_roles($this->get_current()->moderatorroles, $rolesoptions);
                 $userroletext = $this->format_roles($this->get_current()->userroles, $rolesoptions);
-            } else{
+            } else {
                 $moderatorroletext = $this->format_roles(get_config('mod_rocketchat', 'defaultmoderatorroles'), $rolesoptions);
                 $userroletext = $this->format_roles(get_config('mod_rocketchat', 'defaultuserroles'), $rolesoptions);
             }
@@ -127,8 +127,6 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $mform->setType('userroles', PARAM_RAW);
         $mform->setDefault('moderatorroles', get_config('mod_rocketchat', 'defaultmoderatorroles'));
         $mform->setDefault('userroles', get_config('mod_rocketchat', 'defaultuserroles'));
-
-
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
