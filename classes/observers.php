@@ -71,8 +71,6 @@ class observers {
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
             $courseid = $context->instanceid;
-            $identifier = new \stdClass();
-            $identifier->username = $moodleuser->username;
             if ($context->contextlevel == CONTEXT_COURSE) {
                 $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
                 foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
