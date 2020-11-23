@@ -151,7 +151,7 @@ class rocket_chat_api_manager{
         if ($createusermode) {
             $user = $this->create_user_if_not_exists($moodleuser);
             if (!$user) {
-                error_log("User $user->username not exists in Rocket.Chat and was not succesfully created.");
+                error_log("User $moodleuser->username not exists in Rocket.Chat and was not succesfully created.");
             }
         } else {
             $user = $group->user_info($identifier);
