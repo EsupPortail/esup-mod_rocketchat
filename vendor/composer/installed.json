@@ -1,17 +1,17 @@
 [
     {
         "name": "esup-portail/rocket-chat-rest-client",
-        "version": "dev-config_adjustment",
-        "version_normalized": "dev-config_adjustment",
+        "version": "dev-error_and_config_adjustments",
+        "version_normalized": "dev-error_and_config_adjustments",
         "source": {
             "type": "git",
             "url": "https://github.com/EsupPortail/rocket-chat-rest-client.git",
-            "reference": "c8df6e4306e30097e9b5b8e58debca7b70acd15d"
+            "reference": "40d4c47efec36c992b563d49e763f4cedc102048"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/c8df6e4306e30097e9b5b8e58debca7b70acd15d",
-            "reference": "c8df6e4306e30097e9b5b8e58debca7b70acd15d",
+            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/40d4c47efec36c992b563d49e763f4cedc102048",
+            "reference": "40d4c47efec36c992b563d49e763f4cedc102048",
             "shasum": ""
         },
         "require": {
@@ -21,7 +21,7 @@
         "require-dev": {
             "phpunit/phpunit": "^8"
         },
-        "time": "2020-10-21T12:28:15+00:00",
+        "time": "2020-11-23T15:55:15+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -31,7 +31,7 @@
         },
         "description": "Rocket Chat REST API client in PHP.",
         "support": {
-            "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/config_adjustment"
+            "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/error_and_config_adjustments"
         }
     },
     {
@@ -41,12 +41,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "bbe10b1e28aedde9a28bf7b7cedea622ddddc3ba"
+            "reference": "39637a5d0e98068d98189ce48a87f3dd61455429"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bbe10b1e28aedde9a28bf7b7cedea622ddddc3ba",
-            "reference": "bbe10b1e28aedde9a28bf7b7cedea622ddddc3ba",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/39637a5d0e98068d98189ce48a87f3dd61455429",
+            "reference": "39637a5d0e98068d98189ce48a87f3dd61455429",
             "shasum": ""
         },
         "require": {
@@ -85,7 +85,7 @@
             "rollbar/rollbar": "Allow sending log messages to Rollbar",
             "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
         },
-        "time": "2020-08-23T11:42:45+00:00",
+        "time": "2020-10-29T15:43:01+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -106,11 +106,11 @@
             {
                 "name": "Jordi Boggiano",
                 "email": "j.boggiano@seld.be",
-                "homepage": "http://seld.be"
+                "homepage": "https://seld.be"
             }
         ],
         "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-        "homepage": "http://github.com/Seldaek/monolog",
+        "homepage": "https://github.com/Seldaek/monolog",
         "keywords": [
             "log",
             "logging",

@@ -73,12 +73,11 @@ class observer_testcase extends advanced_testcase{
     protected function tearDown() {
         ob_start();
         if (!empty($this->rocketchat)) {
-            course_delete_module($this->rocketchat->cmid, true);
+            course_delete_module($this->rocketchat->cmid, true); // Delete Rocket.Chat module.
         }
         $rocketchatmanager = new rocket_chat_api_manager();
         $rocketchatmanager->delete_user($this->userstudent->username);
         $rocketchatmanager->delete_user($this->usereditingteacher->username);
-        $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         ob_get_contents();
         ob_end_clean();
         parent::tearDown();
@@ -103,6 +102,7 @@ class observer_testcase extends advanced_testcase{
         course_delete_module($this->rocketchat->cmid);
         $this->assertTrue($rocketchatmanager->user_exists($this->userstudent->username));
         $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertDebuggingCalled();
 
     }
 

@@ -81,6 +81,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertDebuggingCalled();
     }
 
 
@@ -100,6 +101,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertDebuggingCalled();
         $rocketchatmanager->delete_user($this->user->username);
 
     }
@@ -193,6 +195,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         // Remote Rocket.Chat private group is deleted.
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertDebuggingCalled();
         $rocketchatmanager->delete_user($this->user->username);
 
     }

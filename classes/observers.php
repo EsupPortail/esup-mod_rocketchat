@@ -39,11 +39,14 @@ class observers {
             $userid = $event->relateduserid;
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
-            $rocketchatapimanager = new rocket_chat_api_manager();
+            $rocketchatapimanager = null;
             if ($context->contextlevel == CONTEXT_COURSE && is_enrolled($context, $userid)) {
                 $courseid = $context->instanceid;
                 // Search for rocketchat module instances concerned.
                 $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
+                if(!empty($rocketchatmoduleinstances)){
+                    $rocketchatapimanager = new rocket_chat_api_manager();
+                }
                 foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
                     $ismoderator = false;
                     if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
@@ -73,10 +76,13 @@ class observers {
             $courseid = $context->instanceid;
             $identifier = new \stdClass();
             $identifier->username = $moodleuser->username;
+            $rocketchatapimanager = null;
             if ($context->contextlevel == CONTEXT_COURSE) {
                 $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
-                foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
+                if(!empty($rocketchatmoduleinstances)){
                     $rocketchatapimanager = new rocket_chat_api_manager();
+                }
+                foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
                     if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
                         $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                     }
@@ -136,7 +142,7 @@ class observers {
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $courseinfos = $event->other;
             // Check that this is a Rocket.Chat module instance.
-            $sql = 'select * from {course_modules} cm inner join {modules} m on m.id=cm.module '
+            $sql = 'select cm.id, cm.instance from {course_modules} cm inner join {modules} m on m.id=cm.module '
                 .'where cm.course=:courseid and m.name=:modname';
             $rocketchatmodules = $DB->get_records_sql($sql,
                 array('courseid' => $courseinfos['courseid'], 'modname' => 'rocketchat'));
@@ -158,9 +164,12 @@ class observers {
         global $DB;
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
+            $rocketchatapimanager = null;
+            if(!empty($rocketchatrecyclebins)){
+                $rocketchatapimanager = new rocket_chat_api_manager();
+            }
             foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {
                 if ($rocketchatrecyclebin) {
-                    $rocketchatapimanager = new rocket_chat_api_manager();
                     $rocketchatapimanager->delete_rocketchat_group($rocketchatrecyclebin->rocketchatid);
                     $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id,
                         'rocketchatid' => $rocketchatrecyclebin->rocketchatid));
@@ -173,7 +182,10 @@ class observers {
         global $DB;
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
-            $rocketchatapimanager = new rocket_chat_api_manager();
+            $rocketchatapimanager = null;
+            if(!empty($rocketchatrecyclebins)){
+                $rocketchatapimanager = new rocket_chat_api_manager();
+            }
             foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {
                 $rocketchatapimanager->unarchive_rocketchat_group($rocketchatrecyclebin->rocketchatid);
                 $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id,
@@ -187,8 +199,8 @@ class observers {
         if (\mod_rocketchat_tools::rocketchat_enabled() && $event->other['modulename'] == 'rocketchat') {
             $coursemodule = $DB->get_record('course_modules', array('id' => $event->objectid));
             $rocketchat = $DB->get_record('rocketchat', array('id' => $event->other['instanceid']));
-            $rocketchatapimanager = new rocket_chat_api_manager();
             if ($rocketchat) {
+                $rocketchatapimanager = new rocket_chat_api_manager();
                 if (!$coursemodule->visible or !$coursemodule->visibleoncoursepage) {
                     // Can't detect visibility changind here.
                     $rocketchatapimanager->archive_rocketchat_group($rocketchat->rocketchatid);

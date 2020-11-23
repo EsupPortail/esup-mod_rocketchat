@@ -25,6 +25,9 @@
 
 namespace mod_rocketchat\api\manager;
 
+use Horde\Socket\Client\Exception;
+use RocketChat\RocketChatException;
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
@@ -43,31 +46,28 @@ class rocket_chat_api_manager{
     public function is_verbose() {
         return $this->verbose;
     }
-    public function __construct($user=null, $password=null, $instanceurl=null, $restapiroot=null) {
+    public function __construct($user=null, $password=null) {
         $this->verbose = get_config('mod_rocketchat', 'verbose_mode');
         $this->rocketchatapiconfig = new rocket_chat_api_config();
-        $this->initiate_connection($user, $password, $instanceurl, $restapiroot);
+        $this->initiate_connection($user, $password);
     }
 
-    private function initiate_connection($user = null, $password = null, $instanceurl=null, $restapiroot=null) {
+    private function initiate_connection($user = null, $password = null) {
         // User amanager object , logged to remote Rocket.Chat.
         $this->adminuser = new \RocketChat\UserManager(
+            $this->rocketchatapiconfig->get_tokenmode(),
             is_null($user) ? $this->rocketchatapiconfig->get_apiuser() : $user,
-            is_null($user) ? $this->rocketchatapiconfig->get_apipassword() : $password,
-            is_null($instanceurl) ? $this->rocketchatapiconfig->get_instanceurl() : $instanceurl,
-            is_null($restapiroot) ? $this->rocketchatapiconfig->get_restapiroot() : $restapiroot
+            is_null($user) ? $this->rocketchatapiconfig->get_apipassword_or_token() : $password,
+            $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot()
         );
     }
 
     public function close_connection() {
-        $adminuser = new \RocketChat\UserManager($this->rocketchatapiconfig->get_apiuser(),
-            $this->rocketchatapiconfig->get_apipassword(), $this->rocketchatapiconfig->get_instanceurl(),
+        $adminuser = new \RocketChat\UserManager($this->rocketchatapiconfig->get_tokenmode(), $this->rocketchatapiconfig->get_apiuser(),
+            $this->rocketchatapiconfig->get_apipassword_or_token(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         // Log in with save option in order to add id and token to header.
-        if (!$adminuser->logout()) {
-            error_log('Rocket.Chat admin not logged in');
-        }
-
     }
     public function get_rocketchat_channel_object($channelid, $channelname='') {
         $channel = new \stdClass();
@@ -106,14 +106,21 @@ class rocket_chat_api_manager{
         $group = new \RocketChat\Group($name, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         // Check that group is not already exists.
-        $groupexists = $group->isGroupAlreadyExists($this->verbose);
-        if (!$groupexists) {
-            $group->create($this->verbose);
-        } else {
-            // Change group name.
-            return $this->create_rocketchat_group($name.'_'.time());
+        try{
+            $groupexists = $group->isGroupAlreadyExists();
+            if (!$groupexists) {
+                $group->create();
+            } else {
+                // Change group name.
+                return $this->create_rocketchat_group($name.'_'.time());
+            }
+            return $group->id;
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message('', $e, DEBUG_ALL);
+            if(!PHPUNIT_TEST) {
+                print_error(get_string('groupecreationerror','mod_rocketchat'));
+            }
         }
-        return $group->id;
     }
 
     public function delete_rocketchat_group($id, $groupname='') {
@@ -122,7 +129,14 @@ class rocket_chat_api_manager{
         $identifier->name = $groupname;
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
-        return $group->delete();
+        if($group){
+            try{
+                return $group->delete();
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message("Error while deleting Rocket.Chat remote group $group->id", $e, DEBUG_ALL);
+            }
+        }
+        return false;
     }
 
     public function archive_rocketchat_group($id) {
@@ -131,7 +145,12 @@ class rocket_chat_api_manager{
         $identifier->name = '';
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
-        return $group->archive();
+        try{
+            return $group->archive();
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("Error while archiving remote group $group->id", $e, DEBUG_ALL);
+        }
+        return false;
     }
 
     public function unarchive_rocketchat_group($id) {
@@ -140,7 +159,12 @@ class rocket_chat_api_manager{
         $identifier->name = '';
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
-        return $group->unarchive();
+        try{
+            return $group->unarchive();
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("Error while archiving remote group $group->id", $e, DEBUG_ALL);
+        }
+        return false;
     }
 
     public function enrol_user_to_group($groupid, $moodleuser, &$user=null) {
@@ -148,23 +172,29 @@ class rocket_chat_api_manager{
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid);
+        $user = false;
         if ($createusermode) {
-            $user = $this->create_user_if_not_exists($moodleuser);
-            if (!$user) {
-                error_log("User $user->username not exists in Rocket.Chat and was not succesfully created.");
+            try{
+                $user = $this->create_user_if_not_exists($moodleuser);
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message(
+                    "User $moodleuser->username not exists in Rocket.Chat and was not succesfully created.",
+                    $e);
             }
         } else {
-            $user = $group->user_info($identifier);
-            if (!$user) {
-                error_log("User $moodleuser->username not exists in Rocket.Chat");
+            try{
+                $user = $group->user_info($identifier);
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message("User $moodleuser->username not exists in Rocket.Chat", $e);
             }
         }
         if (!$user) {
             return false;
         }
-        $return = $group->invite($user->_id);
-        if (!$return) {
-            error_log("User $moodleuser->username not added as user to remote Rocket.Chat group");
+        try{
+            $return = $group->invite($user->_id);
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("User $moodleuser->username not added as user to remote Rocket.Chat group", $e);
         }
         return $return ? $group : false;
     }
@@ -172,16 +202,13 @@ class rocket_chat_api_manager{
     public function add_moderator_to_group($groupid, $moodleuser) {
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
-        $user = $this->get_user_infos($moodleuser->username);
-        if (!$user) {
-            error_log("User $moodleuser->username not added as moderator to remote Rocket.Chat group");
-            return false;
-        }
-        $group = $this->get_rocketchat_group_object($groupid);
-        if ($group) {
-            return $group->addModerator($user->_id, $this->verbose);
-        } else {
-            error_log("User $moodleuser->username not added as moderator to remote Rocket.Chat group");
+        try{
+            $user = $this->get_user_infos($moodleuser->username);
+            $group = $this->get_rocketchat_group_object($groupid);
+            return $group->addModerator($user->_id);
+        } catch(RocketChatException $e){
+            self::moodle_debugging_message("User $moodleuser->username not added as moderator to remote Rocket.Chat group",
+                $e);
         }
         return false;
     }
@@ -190,11 +217,21 @@ class rocket_chat_api_manager{
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $user = null;
-        $group = $this->enrol_user_to_group($groupid, $moodleuser, $user);
+        $group = false;
+        try{
+            $group = $this->enrol_user_to_group($groupid, $moodleuser, $user);
+        } catch( RocketChatException $e) {
+            self::moodle_debugging_message("User $moodleuser->username was not enrolled to remote Rocket.Chat group"
+                ,$e);
+        }
         if ($group) {
-            return $group->addModerator($user->_id, $this->verbose);
-        } else {
-            error_log("User $moodleuser->username not added as moderator to remote Rocket.Chat group");
+            try{
+                return $group->addModerator($user->_id);
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message(
+                    "User $moodleuser->username not added as moderator to remote Rocket.Chat group"
+                    ,$e);
+            }
         }
         return false;
     }
@@ -204,14 +241,17 @@ class rocket_chat_api_manager{
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid);
-        $user = $group->user_info($identifier, $this->verbose);
-        if (!$user) {
-            error_log("User $user->username not exists in Rocket.Chat");
+        $user = false;
+        try{
+            $user = $group->user_info($identifier);
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("User $user->username not exists in Rocket.Chat", $e);
             return false;
         }
-        $return = $group->kick($user->_id, $this->verbose);
-        if (!$return) {
-            error_log("User $user->username not removed as user from remote Rocket.Chat group");
+        try {
+            $return = $group->kick($user->_id);
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("User $user->username not removed as user from remote Rocket.Chat group", $e);
         }
         return $return ? $group : false;
     }
@@ -220,24 +260,47 @@ class rocket_chat_api_manager{
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid);
-        $user = $group->user_info($identifier, $this->verbose);
-        $return = $group->removeModerator($user->_id, $this->verbose);
-        if (!$return) {
-            error_log("User $user->username not removed as moderator from remote Rocket.Chat group");
+        $user = false;
+        try{
+            $user = $group->user_info($identifier);
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("User $user->username not exists in Rocket.Chat", $e);
+            return false;
         }
-        return $return;
+        try {
+            return $group->removeModerator($user->_id);
+        } catch( RocketChatException $e){
+            self::moodle_debugging_message("User $user->username not removed as moderator from remote Rocket.Chat group",
+                $e);
+        }
+        return false;
     }
 
     public function unenrol_moderator_from_group($groupid, $moodleuser) {
         $identifier = new \stdClass();
         $identifier->username = $moodleuser->username;
         $group = $this->get_rocketchat_group_object($groupid);
-        $user = $group->user_info($identifier, $this->verbose);
-        $return = $group->removeModerator($user->_id, $this->verbose);
-        if (!$return) {
-            error_log("User $user->username not removed as moderator from remote Rocket.Chat group");
+        $user = false;
+        try{
+            $user = $group->user_info($identifier);
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("User $user->username not exists in Rocket.Chat", $e);
+            return false;
         }
-        $return2 = $this->unenrol_user_from_group($groupid, $moodleuser);
+        $return = false;
+        try {
+            $return = $group->removeModerator($user->_id);
+        } catch( RocketChatException $e){
+            self::moodle_debugging_message("User $user->username not removed as moderator from remote Rocket.Chat group",
+                $e);
+        }
+        $return2 = false;
+        try {
+            $this->unenrol_user_from_group($groupid, $moodleuser);
+        } catch( RocketChatException $e){
+            self::moodle_debugging_message("User $user->username not unenrolled from remote Rocket.Chat group",
+                $e);
+        }
         return $return && $return2;
     }
 
@@ -247,7 +310,7 @@ class rocket_chat_api_manager{
         $rocketchatuserinfos->email = $moodleuser->email;
         $rocketchatuserinfos->username = $moodleuser->username;
         $rocketchatuserinfos->password = generate_password();
-        $user = $this->adminuser->create($rocketchatuserinfos, $this->verbose);
+        $user = $this->adminuser->create($rocketchatuserinfos);
         if (PHPUNIT_TEST) {
             $user->password = $rocketchatuserinfos->password;
         }
@@ -257,7 +320,12 @@ class rocket_chat_api_manager{
     public function get_group_members($groupid, $groupname = '') {
         $group = $this->get_rocketchat_group_object($groupid, $groupname);
         if ($group) {
-            $members = $group->members();
+            $members = false;
+            try{
+                $members = $group->members();
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message("Error while retrieving group members", $e);
+            }
             if (!$members) {
                 return array();
             } else {
@@ -271,7 +339,12 @@ class rocket_chat_api_manager{
         $group = $this->get_rocketchat_group_object($groupid, $groupname);
         $enrichedmembers = array();
         if ($group) {
-            $members = $group->members();
+            $members = false;
+            try{
+                $members = $group->members();
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message("Error while retrieving group members", $e);
+            }
             if (!$members) {
                 return array();
             } else {
@@ -288,7 +361,12 @@ class rocket_chat_api_manager{
         $group = $this->get_rocketchat_group_object($groupid, $groupname);
         $enrichedmembers = array();
         if ($group) {
-            $members = $group->members();
+            $members = false;
+            try{
+                $members = $group->members();
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message("Error while retrieving group members", $e);
+            }
             if (!$members) {
                 return array();
             } else {
@@ -309,35 +387,48 @@ class rocket_chat_api_manager{
     public function delete_user($moodleusername) {
         $rocketuser = new \stdClass();
         $rocketuser->username = $moodleusername;
-        $rocketuser = $this->adminuser->info($rocketuser);
+        try{
+            $rocketuser = $this->adminuser->info($rocketuser);
+        } catch(RocketChatException $e){
+            self::moodle_debugging_message("user $moodleusername not found in Rocket.Chat while attempt to delete", $e);
+        }
         if (!$rocketuser || !isset($rocketuser->user->_id)) {
-            error_log("user $moodleusername not found in Rocket.Chat while attempt to delete");
             return false;
         }
-        return $this->adminuser->delete($rocketuser->user->_id, $this->verbose);
+        try {
+            return $this->adminuser->delete($rocketuser->user->_id);
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("user $rocketuser->user not deleted", $e);
+        }
     }
 
     public function unenroll_all_users_from_group($groupid) {
         $group = $$this->get_rocketchat_group_object($groupid);
-        $group->cleanHistory($this->verbose);
-        $members = $group->members();
-        foreach ($members as $member) {
-            $user = $this->get_rocketchat_user_object($member->username);
-            $group->kick($user->_id, $this->verbose);
+        try{
+            $group->cleanHistory();
+            $members = $group->members();
+            foreach ($members as $member) {
+                $user = $this->get_rocketchat_user_object($member->username);
+                $group->kick($user->_id);
+            }
+        } catch(RocketChatException $e) {
+            self::moodle_debugging_message("unenroll_all_users_from_group error", $e);
         }
     }
 
     public function clean_history($roomid) {
         $group = $this->get_rocketchat_group_object($roomid);
-        $group->cleanHistory(get_config('mod_rocketchat', 'verbose_mode'));
+        $group->cleanHistory();
     }
 
     public function get_groupname($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
         if ($group) {
-            $groupinfo = $group->info();
-            if ($groupinfo) {
+            try{
+                $groupinfo = $group->info();
                 return $groupinfo->group->name;
+            } catch(RocketChatException $e){
+                self::moodle_debugging_message("groupname error", $e);
             }
         }
         return null;
@@ -345,16 +436,30 @@ class rocket_chat_api_manager{
 
     public function get_group_infos($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
-        if (!empty($group) && !empty($group->info($this->verbose))) {
-            return $group->info($this->verbose);
+        if ($group) {
+            try{
+                $groupinfo = $group->info();
+                if(!empty($groupinfo)){
+                    return $groupinfo;
+                }
+            } catch(RocketChatException $e){
+                self::moodle_debugging_message("group info error", $e);
+            }
         }
         return false;
     }
 
     public function group_exists($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
-        if (!empty($group) && !empty($group->info($this->verbose))) {
-            return true;
+        if ($group) {
+            try{
+                $groupinfo = $group->info();
+                if(!empty($groupinfo)){
+                    return true;
+                }
+            } catch(RocketChatException $e){
+                self::moodle_debugging_message("group_exists", $e);
+            }
         }
         return false;
     }
@@ -363,19 +468,29 @@ class rocket_chat_api_manager{
         $identifier = new \stdClass();
         $identifier->username = $username;
         $client = $this->get_rocketchat_client_object();
-        return $client->user_info($identifier, $this->verbose);
+        return $client->user_info($identifier);
     }
 
     public function kick_all_group_members($groupid) {
         $rocketchatapiusername = get_config('mod_rocketchat', 'apiuser');
         $group = $this->get_rocketchat_group_object($groupid);
-        $members = $group->members($this->verbose);
+        $members = false;
+        try{
+            $members = $group->members();
+        } catch (RocketChatException $e){
+            self::moodle_debugging_message("error while retrieving group members", $e);
+        }
         foreach ($members as $member) {
             if ($member->username != $rocketchatapiusername) {
-                $rocketchatuser = $this->get_user_infos($member->username);
-                if (!$group->kick($rocketchatuser->_id, $this->verbose)) {
-                    error_log("Rockat.Chat API error : user $member->username not kicked from Rocket.Chat group"
-                        ." $groupid");
+                try{
+                    $rocketchatuser = $this->get_user_infos($member->username);
+                    if (!$group->kick($rocketchatuser->_id)) {
+                    }
+                }catch(RocketChatException $e){
+                    self::moodle_debugging_message(
+                        "Rockat.Chat API error : user $member->username not kicked from Rocket.Chat group $groupid",
+                        $e);
+
                 }
             }
         }
@@ -383,18 +498,31 @@ class rocket_chat_api_manager{
 
     public function post_message($roomid, $message) {
         $channel = $this->get_rocketchat_channel_object($roomid);
-        $channel->postMessage($message);
+        try{
+            $channel->postMessage($message);
+        }catch(RocketChatException $e){
+            debugging('', $e);
+        }
     }
 
     public function get_group_messages($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
-        return $group->getMessages($this->verbose);
+        try{
+            return $group->getMessages();
+        }catch(RocketChatException $e){
+            debugging('', $e);
+        }
+        return array();
     }
 
     public function user_exists($username) {
-        $user = $this->get_rocketchat_user_object($username);
-        if (!empty($user) && !empty($user->info())) {
-            return true;
+        try{
+            $user = $this->get_rocketchat_user_object($username);
+            if (!empty($user) && !empty($user->info())) {
+                return true;
+            }
+        } catch (RocketChatException $e){
+            self::moodle_debugging_message('', $e);
         }
         return false;
     }
@@ -402,14 +530,16 @@ class rocket_chat_api_manager{
     public function group_archived($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
         if (!empty($group)) {
-            $groupinfo = $group->info()->group;
-            if (!empty($groupinfo)) {
-                if (property_exists($groupinfo, 'archived')) {
-                    return $groupinfo->archived;
+            try{
+                $groupinfo = $group->info()->group;
+                if (!empty($groupinfo)) {
+                    if (property_exists($groupinfo, 'archived')) {
+                        return $groupinfo->archived;
+                    }
                 }
+            } catch(RocketChatException $e) {
+                self::moodle_debugging_message("Rocket.Chat API Rest error group $groupid not found",$e);
             }
-        } else {
-            error_log("Rocket.Chat API Rest error group $groupid not found");
         }
         return false;
     }
@@ -417,13 +547,33 @@ class rocket_chat_api_manager{
     public function get_group_moderators($groupid) {
         $group = $this->get_rocketchat_group_object($groupid);
         if ($group) {
-            $moderators = $group->moderators($this->verbose);
-            if (!$moderators) {
-                return array();
-            } else {
-                return $moderators;
+            try {
+                $moderators = $group->moderators();
+                if (!$moderators) {
+                    return array();
+                } else {
+                    return $moderators;
+                }
+            } catch (RocketChatException $e) {
+                self::moodle_debugging_message('', $e);
             }
         }
         return array();
+    }
+
+    public function get_adminuser_info(){
+        return $this->adminuser->me();
+    }
+
+    /**
+     * @param $moodleuser
+     * @param $e
+     */
+    protected static function moodle_debugging_message($message, $e, $level = DEBUG_DEVELOPER) {
+        if(!empty($message)){
+            debugging($message."\n"."Rocket.chat api Error ".$e->getCode()." : ".$e->getMessage(), $level);
+        } else {
+            debugging("Rocket.chat api Error ".$e->getCode()." : ".$e->getMessage(), DEBUG_DEVELOPER);
+        }
     }
 }

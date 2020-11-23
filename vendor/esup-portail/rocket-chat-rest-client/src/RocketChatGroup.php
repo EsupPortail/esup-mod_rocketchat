@@ -45,7 +45,7 @@ class Group extends Client {
 	/**
 	* Creates a new private group.
 	*/
-	public function create($verbose=false){
+	public function create(){
 		// get user ids for members
 		$members_id = array();
 		foreach($this->members as $member) {
@@ -60,22 +60,18 @@ class Group extends Client {
 			->body(array('name' => $this->name, 'members' => $members_id, 'archived' => $this->archived, 'readonly' => $this->readonly))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$this->id = $response->body->group->_id;
 			return $response->body->group;
 		} else {
-			if($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
 	/**
 	* Retrieves the information about the private group, only if you’re part of the group.
 	*/
-	public function info($verbose=false) {
+	public function info() {
 		if (isset($this->id )){
 			// If the id is defined, we use it
 			$response = Request::get( $this->api . 'groups.info?roomId=' . $this->id )->send();
@@ -84,7 +80,7 @@ class Group extends Client {
 			$response = Request::get( $this->api . 'groups.info?roomName=' . $this->name )->send();
 		}
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response)) {
 			$this->id = $response->body->group->_id;
 			if (isset($response->body->group->archived) && $response->body->group->archived == true) {
 				$this->archived = true;
@@ -98,11 +94,7 @@ class Group extends Client {
 			}
 			return $response->body;
 		} else {
-			if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -119,12 +111,10 @@ class Group extends Client {
 			->body( array_merge(array('channel' => '#'.$this->name), $message) )
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -138,15 +128,11 @@ class Group extends Client {
 			->body( array_merge(array('roomId' => $this->id), $message) )
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$this->announcement = $text;
 			return true;
 		} else {
-			if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -159,12 +145,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -176,13 +160,11 @@ class Group extends Client {
 			->body(array('roomId' => $this->id))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$this->archived = true;
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -194,13 +176,11 @@ class Group extends Client {
 			->body(array('roomId' => $this->id))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$this->archived = false;
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -212,12 +192,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -232,14 +210,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id, 'userId' => $userId))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -254,14 +228,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id, 'userId' => $userId))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			if ($verbose) {
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -276,12 +246,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id, 'userId' => $userId))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -296,12 +264,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id, 'userId' => $userId))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group ".__FUNCTION__." error".$message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -316,14 +282,10 @@ class Group extends Client {
 			->body(array('roomId' => $this->id, 'userId' => $userId))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			if ($verbose) {
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group addModerator error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -338,24 +300,20 @@ class Group extends Client {
 			->body(array('roomId' => $this->id, 'userId' => $userId))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			if ($verbose) {
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group removemoderator error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
 	/**
 	* Lists the users or participants of a private group.
 	*/
-	public function members($verbose=false){
+	public function members(){
 		$response = Request::get( $this->api . 'groups.members?roomId=' . $this->id )->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$members = array();
 			foreach($response->body->members as $member){
 				$user = new User($member->username, null, get_object_vars($member), $this->instanceurl, $this->restroot);
@@ -364,33 +322,25 @@ class Group extends Client {
 			}
 			return $members;
 		} else {
-			if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group members error".$message . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
-    public function moderators($verbose=false){
-        $response = Request::get( $this->api . 'groups.moderators?roomId=' . $this->id )->send();
+	public function moderators(){
+		$response = Request::get( $this->api . 'groups.moderators?roomId=' . $this->id )->send();
 
-        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
-            $moderators = array();
-            foreach($response->body->moderators as $moderator){
-                $user = new User($moderator->username, null, get_object_vars($moderator), $this->instanceurl, $this->restroot);
-                $user->info();
-                $moderators[] = $user;
-            }
-            return $moderators;
-        } else {
-            if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Can't list moderators of this group. Error : ".$message . "\n" );
-            }
-            return false;
-        }
-    }
+		if( self::success($response) ) {
+			$moderators = array();
+			foreach($response->body->moderators as $moderator){
+				$user = new User($moderator->username, null, get_object_vars($moderator), $this->instanceurl, $this->restroot);
+				$user->info();
+				$moderators[] = $user;
+			}
+			return $moderators;
+		} else {
+			throw new RocketChatException($response);
+		}
+	}
 
 	/**
 	* Create a link to invite users to this group
@@ -403,73 +353,61 @@ class Group extends Client {
 			->body(array('rid' => $this->id, 'days' => $days, 'maxUses' => $maxUses ))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return $response->body->url;
 		} else {
-            $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-            $this->logger->error( "Group getInviteLink error".$message . "\n" );
+			throw new RocketChatException($response);
+		}
+	}
+
+	public function getMessages(){
+		$response = Request::get( $this->api . 'groups.messages?roomId=' . $this->id )->send();
+
+		if( self::success($response) ) {
+			$messages = array();
+			foreach($response->body->messages as $message){
+				$messages[$message->_id] = $message;
+			}
+			return $messages;
+		} else {
+			throw new RocketChatException($response);
 			return false;
 		}
 	}
 
-	public function getMessages($verbose=false){
-        $response = Request::get( $this->api . 'groups.messages?roomId=' . $this->id )->send();
+	public function cleanHistory($oldest='1970-01-01', $latest='now'){
+		$oldest = new \DateTime($oldest);
+		$latest = new \DateTime($latest);
+		$format = 'Y-m-d\TH:i:s.u\Z';
 
-        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
-            $messages = array();
-            foreach($response->body->messages as $message){
-                $messages[$message->_id] = $message;
-            }
-            return $messages;
-        } else {
-            if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group getMessages error ".$message . "\n" );
-            }
-            return false;
-        }
-    }
+		$response = Request::post( $this->api . 'rooms.cleanHistory')
+		->body(array('roomId' => $this->id, 'oldest' => $oldest->format($format), 'latest' => $latest->format($format)))->send();
+		if( $response->code != 200 || !isset($response->body->success) || $response->body->success != true ) {
+			throw new RocketChatException($response);
+		}
+	}
 
-    public function cleanHistory($verbose=false, $oldest='1970-01-01', $latest='now'){
-        $oldest = new \DateTime($oldest);
-        $latest = new \DateTime($latest);
-        $format = 'Y-m-d\TH:i:s.u\Z';
-
-        $response = Request::post( $this->api . 'rooms.cleanHistory')
-        ->body(array('roomId' => $this->id, 'oldest' => $oldest->format($format), 'latest' => $latest->format($format)))->send();
-        if( $response->code != 200 || !isset($response->body->success) || $response->body->success != true ) {
-            if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Delete all messages ".$message . "\n" );
-            }
-        }
-    }
-
-    public function isGroupAlreadyExists($verbose=false){
-        if(isset($this->id)) {
-            $response = Request::get( $this->api . 'rooms.adminRooms?filter=' . $this->id )->send();
-        } else {
-            $response = Request::get( $this->api . 'rooms.adminRooms?filter=' . $this->name )->send();
-        }
+	public function isGroupAlreadyExists(){
+		if(isset($this->id)) {
+			$response = Request::get( $this->api . 'rooms.adminRooms?filter=' . $this->id )->send();
+		} else {
+			$response = Request::get( $this->api . 'rooms.adminRooms?filter=' . $this->name )->send();
+		}
 
 
-        if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
-            foreach($response->body->rooms as $room){
-                if(isset($this->id)){
-                    return true; // RoomId is unique
-                } else {
-                    // Need to check that roomName is exactly the same.
-                    if($this->name == $room->name) {
-                        return true;
-                    }
-                }
-            }
-        } else {
-            if ($verbose){
-                $message = isset($response->body->error) ? $response->body->error : $response->body->message;
-                $this->logger->error( "Group isGroupAlreadyExists error ".$message . "\n" );
-            }
-            return false;
-        }
-    }
+		if( self::success($response) ) {
+			foreach($response->body->rooms as $room){
+				if(isset($this->id)){
+					return true; // RoomId is unique
+				} else {
+					// Need to check that roomName is exactly the same.
+					if($this->name == $room->name) {
+						return true;
+					}
+				}
+			}
+		} else {
+			throw new RocketChatException($response);
+		}
+	}
 }

@@ -61,6 +61,14 @@ if ($ADMIN->fulltree) {
             PARAM_RAW_TRIMMED
         )
     );
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_rocketchat/tokenmode',
+            get_string('tokenmode', 'mod_rocketchat'),
+            get_string('tokenmode_desc', 'mod_rocketchat'),
+            0
+        )
+    );
 
     $settings->add(
         new admin_setting_configtext(
