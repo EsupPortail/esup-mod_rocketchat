@@ -25,14 +25,6 @@ class UserManager extends Client {
 			->addHeader('X-Auth-Token', $authtoken)
 			->addHeader('X-User-Id', $userid);
 		Request::ini( $tmp );
-		$response = Request::post( $this->api . 'login' )
-			->body(array( 'resume' => $authtoken))
-			->send();
-
-		if(self::success($response)){
-			return true;
-		}
-		throw new RocketChatException($response);
 		return true;
 	}
 
