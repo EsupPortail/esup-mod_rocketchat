@@ -6,59 +6,64 @@ use Httpful\Request;
 use RocketChat\Client;
 
 class UserManager extends Client {
-	public $adminusername;
-	private $adminpassword;
-	public $adminid;
 
-	public function __construct($adminusername, $adminpassword = null, $instanceurl = null, $restroot = null){
+	public function __construct($tokenmode, $adminusernameorid, $adminpasswordortoken = null, $instanceurl = null, $restroot = null){
 		if(!is_null($instanceurl) && !is_null($restroot)){
 			parent::__construct($instanceurl, $restroot);
 		}else {
 			parent::__construct();
 		}
-		$this->adminusername = $adminusername;
-		$this->adminpassword = $adminpassword;
-		$this->login();
+		if ($tokenmode){
+			$this->prepare_connection_with_token($adminusernameorid, $adminpasswordortoken);
+		} else {
+			$this->login($adminusernameorid, $adminpasswordortoken);
+		}
+	}
+	public function prepare_connection_with_token($userid, $authtoken){
+		// Save auth token for future requests
+		$tmp = Request::init()
+			->addHeader('X-Auth-Token', $authtoken)
+			->addHeader('X-User-Id', $userid);
+		Request::ini( $tmp );
+		return true;
 	}
 
 	/**
 	* Authenticate with the REST API.
 	*/
-	public function login() {
+	public function login($adminusername, $adminpassword) {
 		$response = Request::post( $this->api . 'login' )
-			->body(array( 'user' => $this->adminusername, 'password' => $this->adminpassword ))
+			->body(array( 'user' => $adminusername, 'password' => $adminpassword ))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->status) && $response->body->status == 'success' ) {
-		    // save auth token for future requests
-            $tmp = Request::init()
-                ->addHeader('X-Auth-Token', $response->body->data->authToken)
-                ->addHeader('X-User-Id', $response->body->data->userId);
-            Request::ini( $tmp );
-            $this->adminid = $response->body->data->userId;
-            return true;
+		if( self::success($response) ) {
+			// save auth token for future requests
+			$tmp = Request::init()
+				->addHeader('X-Auth-Token', $response->body->data->authToken)
+				->addHeader('X-User-Id', $response->body->data->userId);
+			Request::ini( $tmp );
+			return true;
+		} else {
+			throw new RocketChatException($response);
 		}
-        $this->logger->error( $response->body->error . "\n" );
-		return false;
 	}
 
 	public function logout() {
 		$response = Request::post( $this->api . 'logout' )
 			->send();
 
-		if( $response->code == 200 && isset($response->body->status) && $response->body->status == 'success' ) {
+		if( self::success($response) ) {
 			Request::resetIni();
 			return true;
 		} else {
-			$this->logger->error( $response->body->message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
 	/**
 	* Gets a user’s information, limited to the caller’s permissions.
 	*/
-	public function info($user, $verbose = false ) {
+	public function info($user) {
 		if (isset($user->id )){
 			// If the id is defined, we use it
 			$response = Request::get( $this->api . 'users.info?userId=' . $user->id )->send();
@@ -67,23 +72,25 @@ class UserManager extends Client {
 			$response = Request::get( $this->api . 'users.info?username=' . $user->username )->send();
 		}
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return $response->body;
 		} else {
-			if ($verbose) {
-				$this->logger->error( $response->body->error . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
 	/**
 	 * Create a new user.
 	 */
-	public function create($user, $verbose = false ) {
-		$info = $this->info($user);
-		if ($info and isset($info->user)) return $info->user;
-
+	public function create($user) {
+		try{
+			$info = $this->info($user);
+			if ($info and isset($info->user)){
+				
+			} return $info->user;
+		} catch(RocketChatException $e){
+			// No error trigger here
+		}
 		$response = Request::post( $this->api . 'users.create' )
 			->body(array(
 				'name' => $user->nickname,
@@ -93,13 +100,10 @@ class UserManager extends Client {
 			))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return $response->body->user;
 		} else {
-			if ($verbose) {
-				$this->logger->error( $response->body->error . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -111,11 +115,10 @@ class UserManager extends Client {
 			->body(array('userId' => $userid))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			$this->logger->error( $response->body->error . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 }

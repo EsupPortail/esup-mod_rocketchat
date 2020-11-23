@@ -37,7 +37,7 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new moodle_url('/mod/rocketchat/test_rocketchat_connection.php'));
 $PAGE->set_title(get_string('testconnection', 'mod_rocketchat'));
 $PAGE->set_heading(get_string('testconnection', 'mod_rocketchat'));
-$PAGE->set_pagelayout('system');
+$PAGE->set_pagelayout('admin');
 
 $site = get_site();
 
@@ -53,11 +53,15 @@ echo $OUTPUT->container_start('center');
 
 $result = true;
 try {
-    $rocketchatapimanager = new rocket_chat_api_manager($apiuser, $apipassword, $instanceurl, $restapiroot);
+    $rocketchatapimanager = new rocket_chat_api_manager();
+    if($config->tokenmode){
+        $result = $rocketchatapimanager->get_adminuser_info();
+    }
 } catch (Exception $e) {
     $result = false;
-    echo html_writer::tag('h2', get_string('errorwhiletestingconnection', 'mod_rocketchat'));
-    echo html_writer::div($e->getMessage(), 'error');
+    echo html_writer::tag('h2', get_string('errorintestwhilegconnection', 'mod_rocketchat'));
+    echo html_writer::div(get_string('testerrorcode','mod_rocketchat',$e->getCode()), 'error');
+    echo html_writer::div(get_string('testerrormessage','mod_rocketchat',$e->getMessage()), 'error');
 }
 if ($result) {
     echo html_writer::tag('h2', get_string('connectiontestresult', 'mod_rocketchat'));

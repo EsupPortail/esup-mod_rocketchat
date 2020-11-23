@@ -9,6 +9,7 @@ return array(
     'RocketChat\\Channel' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatChannel.php',
     'RocketChat\\Client' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatClient.php',
     'RocketChat\\Group' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatGroup.php',
+    'RocketChat\\RocketChatException' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatException.php',
     'RocketChat\\Settings' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatSettings.php',
     'RocketChat\\User' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatUser.php',
     'RocketChat\\UserManager' => $vendorDir . '/esup-portail/rocket-chat-rest-client/src/RocketChatUserManager.php',

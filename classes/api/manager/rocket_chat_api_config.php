@@ -29,7 +29,8 @@ class rocket_chat_api_config {
     private $instanceurl;
     private $restapiroot;
     private $apiuser;
-    private $apipassword;
+    private $apipasswordortoken;
+    private $tokenmode;
 
     /**
      * @return mixed
@@ -55,8 +56,15 @@ class rocket_chat_api_config {
     /**
      * @return mixed
      */
-    public function get_apipassword() {
-        return $this->apipassword;
+    public function get_apipassword_or_token() {
+        return $this->apipasswordortoken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_tokenmode() {
+        return $this->tokenmode;
     }
 
     public function __construct() {
@@ -81,7 +89,8 @@ class rocket_chat_api_config {
             $this->instanceurl = $config->instanceurl;
             $this->restapiroot = $config->restapiroot;
             $this->apiuser = $config->apiuser;
-            $this->apipassword = $config->apipassword;
+            $this->apipasswordortoken = $config->apipassword;
+            $this->tokenmode = $config->tokenmode;
         }
     }
 

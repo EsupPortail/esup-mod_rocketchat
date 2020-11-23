@@ -13,11 +13,11 @@ class User extends Client {
 	public $email;
 
 	public function __construct($username, $password = null, $fields = array(), $instanceurl = null, $restroot = null){
-	    if(!is_null($instanceurl) && !is_null($restroot)){
-            parent::__construct($instanceurl, $restroot);
-        }else {
-            parent::__construct();
-        }
+		if(!is_null($instanceurl) && !is_null($restroot)){
+			parent::__construct($instanceurl, $restroot);
+		}else {
+			parent::__construct();
+		}
 		$this->username = $username;
 		$this->password = $password;
 		if( isset($fields['_id']) ) {
@@ -50,28 +50,26 @@ class User extends Client {
 			$this->id = $response->body->data->userId;
 			return true;
 		} else {
-			$this->logger->error( $response->body->message . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
-    public function logout() {
-        $response = Request::post( $this->api . 'logout' )
-            ->send();
+	public function logout() {
+		$response = Request::post( $this->api . 'logout' )
+			->send();
 
-        if( $response->code == 200 && isset($response->body->status) && $response->body->status == 'success' ) {
-            Request::resetIni();
-            return true;
-        } else {
-            $this->logger->error( $response->body->message . "\n" );
-            return false;
-        }
-    }
+		if( $response->code == 200 && isset($response->body->status) && $response->body->status == 'success' ) {
+			Request::resetIni();
+			return true;
+		} else {
+			throw new RocketChatException($response);
+		}
+	}
 
 	/**
 	* Gets a user’s information, limited to the caller’s permissions.
 	*/
-	public function info( $verbose = false ) {
+	public function info() {
 		if (isset($this->id )){
 			// If the id is defined, we use it
 			$response = Request::get( $this->api . 'users.info?userId=' . $this->id )->send();
@@ -80,7 +78,7 @@ class User extends Client {
 			$response = Request::get( $this->api . 'users.info?username=' . $this->username )->send();
 		}
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$this->id = $response->body->user->_id;
 			$this->nickname = $response->body->user->name;
 			if (isset($response->body->user->emails[0])) {
@@ -88,17 +86,14 @@ class User extends Client {
 			}
 			return $response->body;
 		} else {
-			if ($verbose) {
-				$this->logger->error( $response->body->error . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
 	/**
 	* Create a new user.
 	*/
-	public function create( $verbose = false ) {
+	public function create() {
 		$info = $this->info();
 		if ($info) return $info;
 
@@ -111,14 +106,11 @@ class User extends Client {
 			))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			$this->id = $response->body->user->_id;
 			return $response->body->user;
 		} else {
-			if ($verbose) {
-				$this->logger->error( $response->body->error . "\n" );
-			}
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -135,11 +127,10 @@ class User extends Client {
 			->body(array('userId' => $this->id))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			$this->logger->error( $response->body->error . "\n" );
-			return false;
+			throw new RocketChatException($response);
 		}
 	}
 

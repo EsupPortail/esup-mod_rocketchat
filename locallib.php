@@ -234,13 +234,14 @@ class mod_rocketchat_tools {
     }
 
     public static function get_group_link($rocketchatid, $embbeded = 0) {
-        $rocketchatmanager = new rocket_chat_api_manager();
-        $groupname = $rocketchatmanager->get_groupname($rocketchatid);
-        if (!isset($groupname)) {
-            print_error('Remote Rocket.Chat group can\'t be retrieved.');
+        try{
+            $rocketchatmanager = new rocket_chat_api_manager();
+            $groupname = $rocketchatmanager->get_groupname($rocketchatid);
+            return $rocketchatmanager->get_instance_url() . '/group/' .$groupname.
+                (empty($embbeded) ? '' : '?layout=embedded');
+        } catch (\RocketChat\RocketChatException $re) {
+            print_error(get_string('rcgrouperror', 'mod_rocketchat', $re->getCode()));
         }
-        return $rocketchatmanager->get_instance_url() . '/group/' .$groupname.
-            (empty($embbeded) ? '' : '?layout=embedded');
     }
 
     /**

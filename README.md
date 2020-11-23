@@ -26,8 +26,6 @@ git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTO
 ```
 2. Visit the notifications page to complete the installation process
 ## Settings
-* apiuser is the RocketChat account username
-* apipassword is the password (do not put any generated token here)
 * recyclebin_patch check this if patch is applied to core moodle file admin/tool/recyclebin/classes/course_bin.php
 * patch is available in patch subdirectory
 * you can apply it with patch command
@@ -37,6 +35,16 @@ patch -p1 /moodlepath/admin/tool/recyclebin/classes/category_bin.php < /moodlepa
 patch -p1 /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_version/user/classes/output/user_roles_editable.php  < /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_uds/patch/user_classes_output_user_roles_editable.patch
 
 ```
+### Authentication settings 
+### user/password mode
+* apiuser is the RocketChat account username
+* apipassword is the password (do not put any generated token here)
+### token mode
+* if token mode is checked
+* apiuser will be rocket-chat userid
+* apipassword a token generated on Rocket.Chat for the apiuser
+  * can be generated on Rocket.Chat for apiuser on Profile -> My Account -> Security -> Personal Access Tokens menu
+  * don't forget to enable create-personal-access-tokens permission for the apiuser through its role
 
 ## Specials capabilities
 * mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 

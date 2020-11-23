@@ -31,10 +31,10 @@ class Settings extends Client {
 	public function get( $id ){
 		$response = Request::get( $this->api . 'settings/' . $id )->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return $response->body->value;
 		} else {
-			$this->logger->error( $response->body->error . "\n" );
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -46,10 +46,10 @@ class Settings extends Client {
 			->body(array("value" => $value))
 			->send();
 
-		if( $response->code == 200 && isset($response->body->success) && $response->body->success == true ) {
+		if( self::success($response) ) {
 			return true;
 		} else {
-			$this->logger->error( $response->body->error . "\n" );
+			throw new RocketChatException($response);
 		}
 	}
 
@@ -63,7 +63,7 @@ class Settings extends Client {
 		fclose($f);
 
 		if( $settings === null ) {
-			echo "Erreur de décodage json pour le fichier {$this->file}\n";
+			echo "decode json error for file {$this->file}\n";
 			return;
 		}
 
