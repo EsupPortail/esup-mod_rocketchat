@@ -50,6 +50,7 @@ patch -p1 /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_version/user/c
 * mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 
 * mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing the module instance
 ## Unit tests
+### settings
 * in Rocket.Chat you must adjust the Rate Limiter to enable unit tests large amount of requests
 * to run unit tests that involved Rocket.Chat remote server just create a config-test.php file into the module rocketchat root directory
 * fill in with following parameters
@@ -61,9 +62,40 @@ set_config('apiuser','your_user_on_rocket.chat','mod_rocketchat');
 set_config('apipassword','#############','mod_rocketchat');
 // fake config test to avoird email domain troubles
 set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Optional argument.line.
+```
+### requirements
+* see [moodle documentation](https://docs.moodle.org/dev/PHPUnit)
+
+### Provided tests
+* don't forget to init phpunit moodle tests environment (requirements) 
+```bash
+cd /www_moodle_path
+/www_moodle_path/vendor/bin/phpunit "backup_restore_testcase" mod/rocketchat/tests/backup_restore_test.php
+/www_moodle_path/vendor/bin/phpunit "course_reset_testcase" mod/rocketchat/tests/course_reset_test.php
+/www_moodle_path/vendor/bin/phpunit "observer_testcase" mod/rocketchat/tests/observer_test.php
+/www_moodle_path/vendor/bin/phpunit   "mod_rocketchat_api_manager_testcase" mod/rocketchat/tests/rocket_chat_api_manager_test.php
+/www_moodle_path/vendor/bin/phpunit "recyclebin_category_testcase" mod/rocketchat/tests/recyclebin_category_test.php
+/www_moodle_path/vendor/bin/phpunit "recyclebin_testcase" mod/rocketchat/tests/recyclebin_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_privacy_testcase" mod/rocketchat/tests/privacy_provider_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_tools_testcase" mod/rocketchat/tests/mod_rocketchat_tools_test.php
+```
+## Functional tests with behat
+### Requirements
+* see [moodle documentation](https://docs.moodle.org/dev/Running_acceptance_test)
+### Settings
+* see phpunit settings section
+### Provided tests
+* don't forget to init behat moodle tests environment (requirements)
+```shell script
+cd /www_moodle_path
+vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml --tags mod_rocketchat
+```
+for behat funcitonal tests by file
+```shell script
+cd /www_moodle_path
+vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_activity_synchronization.feature
 
 ```
-
 ## License ##
 
 2020 ESUP-Portail (https://www.esup-portail.org)
