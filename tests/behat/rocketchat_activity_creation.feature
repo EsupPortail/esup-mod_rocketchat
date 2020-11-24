@@ -1,6 +1,6 @@
 @mod @mod_rocketchat
 Feature: mod_rocketchat
-  Rocket.Chat remote private group synchronization
+  Rocket.Chat remote private group creation, deletion to clean Rocket.Chat test server
 
   Background:
     Given the following config values are set as admin:

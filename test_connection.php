@@ -28,6 +28,9 @@
 
 require_once('../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
+if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
+    require_once('./config-test.php');
+}
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 require_login();
 
