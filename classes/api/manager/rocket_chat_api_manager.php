@@ -64,10 +64,7 @@ class rocket_chat_api_manager{
     }
 
     public function close_connection() {
-        $adminuser = new \RocketChat\UserManager($this->rocketchatapiconfig->get_tokenmode(), $this->rocketchatapiconfig->get_apiuser(),
-            $this->rocketchatapiconfig->get_apipassword_or_token(), $this->rocketchatapiconfig->get_instanceurl(),
-            $this->rocketchatapiconfig->get_restapiroot());
-        // Log in with save option in order to add id and token to header.
+        $this->adminuser->logout();
     }
     public function get_rocketchat_channel_object($channelid, $channelname='') {
         $channel = new \stdClass();
@@ -248,6 +245,7 @@ class rocket_chat_api_manager{
             self::moodle_debugging_message("User $user->username not exists in Rocket.Chat", $e);
             return false;
         }
+        $return = false;
         try {
             $return = $group->kick($user->_id);
         } catch(RocketChatException $e) {
@@ -501,7 +499,7 @@ class rocket_chat_api_manager{
         try{
             $channel->postMessage($message);
         }catch(RocketChatException $e){
-            debugging('', $e);
+            self::moodle_debugging_message('', $e);
         }
     }
 
@@ -510,7 +508,7 @@ class rocket_chat_api_manager{
         try{
             return $group->getMessages();
         }catch(RocketChatException $e){
-            debugging('', $e);
+            self::moodle_debugging_message('', $e);
         }
         return array();
     }

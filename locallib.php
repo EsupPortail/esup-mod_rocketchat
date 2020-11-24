@@ -186,7 +186,8 @@ class mod_rocketchat_tools {
         // Remove remaining Rocket.Chat members no more enrolled in course.
         foreach ($rocketchatmembers as $rocketchatmember) {
             // Prevent moodle Rocket.Chat account unenrolment.
-            if ($rocketchatmember->username != get_config('mod_rocketchat', 'apiuser')) {
+            if ($rocketchatmember->username != get_config('mod_rocketchat', 'apiuser')
+                && $rocketchatmember->id != get_config('mod_rocketchat', 'apiuser')) {
                 $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $rocketchatmember);
             }
         }

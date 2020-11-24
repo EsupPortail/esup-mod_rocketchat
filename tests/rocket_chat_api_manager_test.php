@@ -51,7 +51,6 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     public function test_get_enriched_group_members_with_moderators() {
         $this->initiate_environment_and_connection();
         list($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid) = $this->initiate_group_with_user();
-        $this->waitForSecond();
         $enrichedmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($groupid);
         $this->assertCount(3, $enrichedmembers); // 2 + owner.
         $this->assertTrue(array_key_exists($rocketchatmoderator->username, $enrichedmembers));
@@ -68,7 +67,6 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     public function test_get_enriched_group_members() {
         $this->initiate_environment_and_connection();
         list($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid) = $this->initiate_group_with_user();
-        $this->waitForSecond();
         $enrichedmembers = $this->rocketchatapimanager->get_enriched_group_members($groupid);
         $this->assertCount(3, $enrichedmembers); // 2 + owner.
         $this->assertTrue(array_key_exists($rocketchatmoderator->username, $enrichedmembers));
@@ -305,12 +303,16 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(1, $messages); // User enrolments generate a message
         $this->rocketchatapimanager->post_message($groupid, 'a message');
-        // Api manager beacause of header persistence.
+        // Api manager because of header persistence.
+        // need to remove token mode for this
+        $initialtokenmode = get_config('mod_rocketchat', 'tokenmode');
+        set_config('tokenmode', 0, 'mod_rocketchat');
         $userrocketchatapimanager =
             new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleuser->username, $moodleuser->password);
         $userrocketchatapimanager->post_message($groupid, 'a user message');
         $userrocketchatapimanager->close_connection();
         // Got a bug due to static Request call so reinit apimamanger.
+        set_config('tokenmode', $initialtokenmode, 'mod_rocketchat');
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(3, $messages); // 2 real messages, 1 message for enrollment
@@ -362,6 +364,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
         $this->assertNotEmpty($groupid);
         $this->assertTrue($this->rocketchatapimanager->group_exists($groupid));
+        $this->waitForSecond(); // Some times seems that Rocket.Chat server is too long.
         $this->assertTrue($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moderator));
         $this->assertNotEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $user));
         return array($moderator, $rocketchatmoderator, $user, $rocketchatuser, $groupid);
