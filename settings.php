@@ -146,9 +146,9 @@ if ($ADMIN->fulltree) {
         )
     );
     $settings->add(
-        new admin_setting_configcheckbox('mod_rocketchat/verbose_mode',
-            get_string('verbose_mode', 'mod_rocketchat'),
-            get_string('verbose_mode_desc', 'mod_rocketchat'),
+        new admin_setting_configcheckbox('mod_rocketchat/usernamehook',
+            get_string('usernamehook', 'mod_rocketchat'),
+            get_string('usernamehook_desc', 'mod_rocketchat'),
             0
         )
     );

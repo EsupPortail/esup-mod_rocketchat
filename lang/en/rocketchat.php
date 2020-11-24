@@ -66,8 +66,6 @@ $string['rocketchat:change_embedded_display_mode'] = 'Can change the display mod
 $string['rocketchat_nickname'] = '{$a->firstname} {$a->lastname}';
 $string['create_user_account_if_not_exists'] = 'Create Rocket.Chat user account';
 $string['create_user_account_if_not_exists_desc'] = 'While enrolling user, create Rocket.Chat corresponding user account(username) if not exists';
-$string['verbose_mode'] = 'Rocket.Chat api rest verbose mode';
-$string['verbose_mode_desc'] = 'If checked, Rocket.Chat api rest error messages will be loggued into php error log file';
 $string['recyclebin_patch'] = 'Is recyclebin moodle core patch installed?';
 $string['recyclebin_patch_desc'] = 'the mod rocketchat recyclebin patch is a patch locate in admin/tool/recyclebin/classes/course_bin.php file enabling to pass cmid and module instanceid to recyclebin item created event. It enables to delete remote Rocket.Chat groups';
 $string['validationgroupnameregex'] = 'Rocket.Chat group validation name regular expression to remove invalid characters';
@@ -100,3 +98,9 @@ $string['groupecreationerror'] = "Error while creating Rocket.Chat remote group"
 $string['testerrormessage'] = 'Error message :</br>{$a}';
 $string['testerrorcode'] = 'Error code : {$a}';
 $string['rcgrouperror'] = 'Remote Rocket.Chat group can\'t be retrieved. Please contact your system administrator. Error code {$a}.';
+$string['usernamehook'] = 'Activate username hook.';
+$string['usernamehook_desc'] =
+    'By activating this option it will be possible to chang moodle username to fit Rocket.Chat username.'
+    .'</br>Create a hooklib.php file in the module rocketchat installation directory.'
+    .'</br>code a moodle_username_to_rocketchat function that will return the transformed moodle username to fit Rocket.Chat one.'
+    .'</br>hooklib-example.php is given as example.';

@@ -13,20 +13,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Plugin version and other meta-data are defined here.
+ * hookfile
  *
  * @package     mod_rocketchat
+ * @category    config test file
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @author Céline Pervès<cperves@unistra.fr>
+ * from Pascal Rigaux <Pascal.Rigaux@univ-paris1.fr> suggestion
+ * regexp from https://github.com/RocketChat/Rocket.Chat/blob/develop/app/lib/server/functions/saveUser.js#L109
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'mod_rocketchat';
-$plugin->release = '1.0.0';
-$plugin->version = 2020112400;
-$plugin->requires = 2018050800;
-$plugin->maturity = MATURITY_RC;
+function moodle_username_to_rocketchat($moodleuser) {
+    return preg_replace(
+        '/[^0-9a-zA-Z-_.]/', '__',
+        preg_replace('/@univ-paris1[.]fr$/', '', $moodleuser->username));
+}

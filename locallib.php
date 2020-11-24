@@ -153,8 +153,10 @@ class mod_rocketchat_tools {
         $userroleids = explode(',', $rocketchatmoduleinstance->userroles);
         foreach ($moodlemembers as $moodlemember) {
             // Is even in Rocket.Chat.
-            if (array_key_exists($moodlemember->username, $rocketchatmembers)) {
-                $rocketchatmember = $rocketchatmembers[$moodlemember->username];
+
+            $rocketchatusername = self::rocketchat_username($moodlemember->username);
+            if (array_key_exists($rocketchatusername, $rocketchatmembers)) {
+                $rocketchatmember = $rocketchatmembers[$rocketchatusername];
                 $ismoderator = self::has_rocket_chat_moderator_role($moderatorroleids, $moodlemember, $coursecontext);
                 if ($ismoderator != $rocketchatmember->ismoderator) {
                     if ($ismoderator) {
@@ -181,7 +183,7 @@ class mod_rocketchat_tools {
                     $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid, $moodlemember);
                 }
             }
-            unset($rocketchatmembers[$moodlemember->username]);
+            unset($rocketchatmembers[$rocketchatusername]);
         }
         // Remove remaining Rocket.Chat members no more enrolled in course.
         foreach ($rocketchatmembers as $rocketchatmember) {
@@ -287,6 +289,16 @@ class mod_rocketchat_tools {
             }
         }
         return $isuser;
+    }
+
+    public static function rocketchat_username($moodleusername){
+        global $CFG;
+        $hook = get_config('mod_rocketchat', 'usernamehook');
+        if($hook){
+            require_once($CFG->dirroot.'/mod/rocketchat/hooklib.php');
+            return moodle_username_to_rocketchat($moodleusername);
+        }
+        return $moodleusername;
     }
 
     /**
