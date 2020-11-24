@@ -24,8 +24,8 @@
  * regexp from https://github.com/RocketChat/Rocket.Chat/blob/develop/app/lib/server/functions/saveUser.js#L109
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function moodle_username_to_rocketchat($moodleuser) {
+function moodle_username_to_rocketchat($moodleusername) {
     return preg_replace(
         '/[^0-9a-zA-Z-_.]/', '__',
-        preg_replace('/@univ-paris1[.]fr$/', '', $moodleuser->username));
+        preg_replace('/@univ-paris1[.]fr$/', '', $moodleusername));
 }
