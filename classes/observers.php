@@ -40,10 +40,10 @@ class observers {
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
             $backenrolmentsmethods = array_filter(
-                explode(',',get_config('mod_rocketchat', 'background_enrolment_task')
+                    explode(',', get_config('mod_rocketchat', 'background_enrolment_task')
                 ));
             $component = empty($event->other['component']) ? 'enrol_manual' : $event->other['component'];
-            if( in_array($component, $backenrolmentsmethods)) {
+            if ( in_array($component, $backenrolmentsmethods)) {
                 $taskenrolment = new \mod_rocketchat\task\enrol_role_assign();
                 $taskenrolment->set_custom_data(
                     array(
@@ -67,10 +67,10 @@ class observers {
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
             $backenrolmentsmethods = array_filter(
-                explode(',',get_config('mod_rocketchat', 'background_enrolment_task'))
+                explode(',', get_config('mod_rocketchat', 'background_enrolment_task'))
             );
             $component = empty($event->other['component']) ? 'enrol_manual' : $event->other['component'];
-            if( in_array($component, $backenrolmentsmethods)) {
+            if ( in_array($component, $backenrolmentsmethods)) {
                 $taskunenrolment = new \mod_rocketchat\task\enrol_role_unassign();
                 $taskunenrolment->set_custom_data(
                     array(
@@ -158,7 +158,7 @@ class observers {
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
             $rocketchatapimanager = null;
-            if(!empty($rocketchatrecyclebins)){
+            if (!empty($rocketchatrecyclebins)) {
                 $rocketchatapimanager = new rocket_chat_api_manager();
             }
             foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {
@@ -176,7 +176,7 @@ class observers {
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $rocketchatrecyclebins = $DB->get_records('rocketchatxrecyclebin', array('binid' => $event->objectid));
             $rocketchatapimanager = null;
-            if(!empty($rocketchatrecyclebins)){
+            if (!empty($rocketchatrecyclebins)) {
                 $rocketchatapimanager = new rocket_chat_api_manager();
             }
             foreach ($rocketchatrecyclebins as $rocketchatrecyclebin) {

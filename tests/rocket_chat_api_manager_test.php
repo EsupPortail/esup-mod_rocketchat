@@ -39,7 +39,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
         $this->initiate_test_environment();
-        set_config('create_user_account_if_not_exists',1,'mod_rocketchat');
+        set_config('create_user_account_if_not_exists', 1, 'mod_rocketchat');
     }
 
     public function test_initiate_connection() {
@@ -270,7 +270,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->firstname = 'moodleusertestF';
         $moodleuser->lastname = 'moodleusertestL';
         $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
-        // Creation Not allowed
+        // Creation Not allowed.
         $this->assertFalse($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moodleusermoderator));
         $this->assertDebuggingCalled();
         $this->assertFalse($this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser));
@@ -301,10 +301,10 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $moodleuser->password = $user->password; // Password only returned in PHPUNIT_TEST mode.
         $this->rocketchatapimanager->enrol_user_to_group($groupid, $moodleuser);
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
-        $this->assertCount(1, $messages); // User enrolments generate a message
+        $this->assertCount(1, $messages); // User enrolments generate a message.
         $this->rocketchatapimanager->post_message($groupid, 'a message');
         // Api manager because of header persistence.
-        // need to remove token mode for this
+        // Need to remove token mode for this.
         $initialtokenmode = get_config('mod_rocketchat', 'tokenmode');
         set_config('tokenmode', 0, 'mod_rocketchat');
         $userrocketchatapimanager =
@@ -315,7 +315,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         set_config('tokenmode', $initialtokenmode, 'mod_rocketchat');
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
-        $this->assertCount(3, $messages); // 2 real messages, 1 message for enrollment
+        $this->assertCount(3, $messages); // 2 real messages, 1 message for enrollment.
         $this->rocketchatapimanager->clean_history($groupid);
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(0, $messages);

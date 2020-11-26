@@ -47,7 +47,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
         // User Creation mode.
-        set_config('create_user_account_if_not_exists',1,'mod_rocketchat');
+        set_config('create_user_account_if_not_exists', 1, 'mod_rocketchat');
         $this->datagenerator = $this->getDataGenerator();
         $this->course = $this->datagenerator->create_course();
         $username = 'moodleusertest'.time();
@@ -74,7 +74,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
 
 
     public function test_enrol_unenrol_user_no_background() {
-        // No enrolment method in background
+        // No enrolment method in background.
         set_config('background_enrolment_task', '', 'mod_rocketchat');
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members); // Only Owner.
@@ -94,7 +94,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $this->datagenerator->enrol_user($this->user->id, $this->course->id, $this->studentrole->id);
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members);
-        // Need to trigger adhoc tasks to enrol
+        // Need to trigger adhoc tasks to enrol.
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(2, $members);
@@ -102,7 +102,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         self::unenrol_user($enrolmethod, $this->course->id, $this->user->id);
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(2, $members);
-        // Need to trigger adhoc tasks to unenrol
+        // Need to trigger adhoc tasks to unenrol.
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members);
@@ -127,7 +127,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $this->datagenerator->enrol_user($this->user2->id, $this->course->id, $this->studentrole->id);
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(2, $members); // Owner.and user2
-        // Need to trigger adhoc tasks to enrol
+        // Need to trigger adhoc tasks to enrol.
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
@@ -135,7 +135,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         self::unenrol_user($enrolmethod, $this->course->id, $this->user->id);
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
-        // Need to trigger adhoc tasks to unenrol
+        // Need to trigger adhoc tasks to unenrol.
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(2, $members);

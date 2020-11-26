@@ -237,7 +237,7 @@ class mod_rocketchat_tools {
     }
 
     public static function get_group_link($rocketchatid, $embbeded = 0) {
-        try{
+        try {
             $rocketchatmanager = new rocket_chat_api_manager();
             $groupname = $rocketchatmanager->get_groupname($rocketchatid);
             return $rocketchatmanager->get_instance_url() . '/group/' .$groupname.
@@ -291,10 +291,10 @@ class mod_rocketchat_tools {
         return $isuser;
     }
 
-    public static function rocketchat_username($moodleusername){
+    public static function rocketchat_username($moodleusername) {
         global $CFG;
         $hook = get_config('mod_rocketchat', 'usernamehook');
-        if($hook){
+        if ($hook) {
             require_once($CFG->dirroot.'/mod/rocketchat/hooklib.php');
             return moodle_username_to_rocketchat($moodleusername);
         }
@@ -312,7 +312,7 @@ class mod_rocketchat_tools {
         if ($context->contextlevel == CONTEXT_COURSE && is_enrolled($context, $moodleuser->id)) {
             $courseid = $context->instanceid;
             // Search for rocketchat module instances concerned.
-            $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
+            $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
             if (!empty($rocketchatmoduleinstances)) {
                 $rocketchatapimanager = new rocket_chat_api_manager();
             }
@@ -342,7 +342,7 @@ class mod_rocketchat_tools {
     public static function role_unassign(\context $context, int $roleid, $moodleuser): void {
         $courseid = $context->instanceid;
         if ($context->contextlevel == CONTEXT_COURSE) {
-            $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
+            $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
             if (!empty($rocketchatmoduleinstances)) {
                 $rocketchatapimanager = new rocket_chat_api_manager();
             }

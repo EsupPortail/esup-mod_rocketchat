@@ -154,11 +154,11 @@ if ($ADMIN->fulltree) {
         )
     );
 
-    $enabledenrolmentplugins =  enrol_get_plugins(true);
+    $enabledenrolmentplugins = enrol_get_plugins(true);
     $enabledenrolmentplugins = array_keys($enabledenrolmentplugins);
     array_walk($enabledenrolmentplugins,
         function(&$value, $key){
-            $value= 'enrol_'.$value;
+            $value = 'enrol_'.$value;
         }
     );
     $enabledenrolmentplugins = array_combine($enabledenrolmentplugins, $enabledenrolmentplugins);
