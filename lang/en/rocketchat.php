@@ -107,4 +107,4 @@ $string['usernamehook_desc'] =
 $string['background_enrolment_task'] = 'Pass user enrolment/unenrolments in remote Rocket.Chat as background tasks.';
 $string['background_enrolment_task_desc'] = 'These to solve performance issue while enrolling large amounts of users.'
     .'</br>This will prevent the enroller to wait on course enrolment page while enrolling/unenrolling large amount of users.'
-    .'</br>Choice of enrol cohort, if enabled, is strongly advised';
+    .'</br>Choice of enrol cohort and flatfile, if enabled, are strongly advised';

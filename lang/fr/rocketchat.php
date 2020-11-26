@@ -93,3 +93,22 @@ $string['testconnectionfailure'] = 'Les paramètres suivants doivent être rense
 $string['settings'] = 'Paramétrage de Rocket.Chat';
 $string['errorintestwhilegconnection'] = 'Erreur lors du test de la connection';
 $string['connectiontestresult'] = 'Résultat du test de connexion';
+$string['groupecreationerror'] = "Error de la création du group distant sur Rocket.Chat";
+$string['testerrormessage'] = 'Message d\'erreur :</br>{$a}';
+$string['testerrorcode'] = 'Code erreur : {$a}';
+$string['rcgrouperror'] = 'Le groupe distant Rocket.Chat ne peut être récupéré. Veuillez contacter votre administrateur système. Code erreur {$a}.';
+$string['usernamehook'] = 'Activer le hook du username.';
+$string['usernamehook_desc'] =
+    'En activant cette option, il est alors possible de transformer le nom d\'utilisateur moodle pour'
+    .' qu\'il corresponde à celui sur Rocket.Chat.'
+    .'</br>Créez un fichier hooklib.php file dans le répertoire d\'installation du module rocketchat.'
+    .'</br>codez y un fonction moodle_username_to_rocketchat function qui doit retourner le username moodle transformé '
+    .'pour correspondre à celui sur Rocket.Chat.'
+    .'</br>le fichier hooklib-example.php est fourni à titre d\'example.';
+$string['background_enrolment_task'] = 'Passer les inscriptions/desinscriptions de cours en tâche différée '
+    .'pour les méthodes d\'inscription sélectionnées.';
+$string['background_enrolment_task_desc'] = 'Ceci permet de résoudre des problèmes de performances '
+    .'lors de l\'inscription de grandes quantités d\'utilisateurs.'
+    .'</br>Cela emêchera que l\'utilisateur inscrivant attende trop longtemps sur la page d\'inscriptions aux cours.'
+    .'</br> ce paramètre agit en différant, tâche en arrière plan, les inscriptions/desinscriptions au server Rcoket.Chat distant'
+    .'</br>Nous vous conseillons fortement de sélectionner les méthodes flatfile et cohort si elles sont activées.';

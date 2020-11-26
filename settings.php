@@ -162,11 +162,15 @@ if ($ADMIN->fulltree) {
         }
     );
     $enabledenrolmentplugins = array_combine($enabledenrolmentplugins, $enabledenrolmentplugins);
+    $default = array(
+        'enrol_flatfile' => 'enrol_flatfile',
+        'enrol_cohort' => 'enrol_cohort'
+    );
     $settings->add(
         new admin_setting_configmultiselect('mod_rocketchat/background_enrolment_task',
             get_string('background_enrolment_task', 'mod_rocketchat'),
             get_string('background_enrolment_task_desc', 'mod_rocketchat'),
-            'enrol_cohort',
+            $default,
             $enabledenrolmentplugins
         )
     );
