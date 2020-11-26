@@ -302,6 +302,62 @@ class mod_rocketchat_tools {
     }
 
     /**
+     * @param \context $context
+     * @param int $userid
+     * @param int $roleid
+     * @param $moodleuser
+     */
+    public static function role_assign(\context $context, int $roleid, $moodleuser): void {
+        $rocketchatapimanager = null;
+        if ($context->contextlevel == CONTEXT_COURSE && is_enrolled($context, $moodleuser->id)) {
+            $courseid = $context->instanceid;
+            // Search for rocketchat module instances concerned.
+            $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
+            if (!empty($rocketchatmoduleinstances)) {
+                $rocketchatapimanager = new rocket_chat_api_manager();
+            }
+            foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
+                $ismoderator = false;
+                if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
+                    $return =
+                        $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid,
+                            $moodleuser);
+                    $ismoderator = true;
+                }
+                if (!$ismoderator) {
+                    if (in_array($roleid, explode(',', $rocketchatmoduleinstance->userroles))) {
+                        $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * @param \context $context
+     * @param int $roleid
+     * @param $moodleuser
+     */
+    public static function role_unassign(\context $context, int $roleid, $moodleuser): void {
+        $courseid = $context->instanceid;
+        if ($context->contextlevel == CONTEXT_COURSE) {
+            $rocketchatmoduleinstances = \mod_rocketchat_tools::get_rocketchat_module_instances($courseid);
+            if (!empty($rocketchatmoduleinstances)) {
+                $rocketchatapimanager = new rocket_chat_api_manager();
+            }
+            foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
+                if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
+                    $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+                }
+                if (in_array($roleid, explode(',', $rocketchatmoduleinstance->userroles))) {
+                    $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+                }
+            }
+        }
+    }
+
+    /**
      * @param array $moderatorroleids
      * @param $moodlemember
      * @param context_course $coursecontext

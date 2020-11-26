@@ -70,6 +70,7 @@ set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Op
 * don't forget to init phpunit moodle tests environment (requirements) 
 ```bash
 cd /www_moodle_path
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_background_enrolments_testcase" mod/rocketchat/tests/backup_enrolments_test.php
 /www_moodle_path/vendor/bin/phpunit "backup_restore_testcase" mod/rocketchat/tests/backup_restore_test.php
 /www_moodle_path/vendor/bin/phpunit "course_reset_testcase" mod/rocketchat/tests/course_reset_test.php
 /www_moodle_path/vendor/bin/phpunit "observer_testcase" mod/rocketchat/tests/observer_test.php

@@ -27,6 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
+require_once($CFG->libdir.'/enrollib.php');
 // Make sure core is loaded.
 
 // Redefine the H5P admin menu entry to be expandable.
@@ -150,6 +151,23 @@ if ($ADMIN->fulltree) {
             get_string('usernamehook', 'mod_rocketchat'),
             get_string('usernamehook_desc', 'mod_rocketchat'),
             0
+        )
+    );
+
+    $enabledenrolmentplugins =  enrol_get_plugins(true);
+    $enabledenrolmentplugins = array_keys($enabledenrolmentplugins);
+    array_walk($enabledenrolmentplugins,
+        function(&$value, $key){
+            $value= 'enrol_'.$value;
+        }
+    );
+    $enabledenrolmentplugins = array_combine($enabledenrolmentplugins, $enabledenrolmentplugins);
+    $settings->add(
+        new admin_setting_configmultiselect('mod_rocketchat/background_enrolment_task',
+            get_string('background_enrolment_task', 'mod_rocketchat'),
+            get_string('background_enrolment_task_desc', 'mod_rocketchat'),
+            'enrol_cohort',
+            $enabledenrolmentplugins
         )
     );
 }
