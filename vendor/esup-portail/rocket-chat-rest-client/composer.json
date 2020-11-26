@@ -6,8 +6,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "nategood/httpful": "*",
-        "monolog/monolog": "*"
+        "nategood/httpful": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"

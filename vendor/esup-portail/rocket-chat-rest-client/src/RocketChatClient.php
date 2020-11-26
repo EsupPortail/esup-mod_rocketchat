@@ -2,17 +2,13 @@
 
 namespace RocketChat;
 
-use Httpful\Exception\JsonParseException;
 use Httpful\Request;
-use Monolog\Handler\ErrorLogHandler;
-use Monolog\Logger;
 
 class Client{
 
 	public $api;
 	protected $instanceurl;
 	public $restroot;
-	protected $logger;
 
 	function __construct(){
 		$this->logger = new Logger('Rocket.Chat.Rest.Api');
