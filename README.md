@@ -30,9 +30,9 @@ git clone https://github.com/EsupPortail/esup-mod_rocketchat MOODLE_ROOT_DIRECTO
 * patch is available in patch subdirectory
 * you can apply it with patch command
 ```bash
-patch -p1 /moodlepath/admin/tool/recyclebin/classes/course_bin.php < /moodlepath/patch/admin_tool_recyclebin_classes_course_bin.patch
-patch -p1 /moodlepath/admin/tool/recyclebin/classes/category_bin.php < /moodlepath/patch/admin_tool_recyclebin_classes_category_bin.patch
-patch -p1 /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_version/user/classes/output/user_roles_editable.php  < /datas/dev/moodle/moodle_gitworkspaces/moodle35/moodle2_uds/patch/user_classes_output_user_roles_editable.patch
+patch -p1 /moodlepath/admin/tool/recyclebin/classes/course_bin.php < /moodlepath//mod/rocketchat/patch/admin_tool_recyclebin_classes_course_bin.patch
+patch -p1 /moodlepath/admin/tool/recyclebin/classes/category_bin.php < /moodlepath/mod/rocketchat/patch/admin_tool_recyclebin_classes_category_bin.patch
+patch -p1 /moodlepath/user/classes/output/user_roles_editable.php  < /moodlepath/mod/rocketchat/patch/user_classes_output_user_roles_editable.patch
 
 ```
 ### Authentication settings 
