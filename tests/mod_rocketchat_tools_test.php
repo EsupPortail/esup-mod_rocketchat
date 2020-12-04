@@ -179,7 +179,7 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         $this->assertTrue($rocketchatmembers[$this->teacher2->username]->ismoderator);
     }
 
-    private function create_group(){
+    private function create_group() {
         $groupname = mod_rocketchat_tools::rocketchat_group_name(0, $this->course);
         $this->rocketchat = $this->generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));

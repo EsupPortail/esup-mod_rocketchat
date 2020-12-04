@@ -229,7 +229,7 @@ class recyclebin_testcase extends advanced_testcase{
         $rocketchatmanager->delete_user($this->userstudent1->username);
         $rocketchatmanager->delete_user($this->userstudent2->username);
     }
-    
+
     public function test_deletion_with_recyclebin_without_patch() {
         global $DB;
         set_config('recyclebin_patch', 0, 'mod_rocketchat');

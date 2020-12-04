@@ -92,7 +92,7 @@ class backup_restore_testcase extends advanced_testcase{
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertTrue($rocketchatmanager->group_exists($this->newrocketchat->rocketchatid));
-        $this->assertCount(2,$rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
+        $this->assertCount(2, $rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
     }
 
     public function test_backup_restore_with_background_task() {
@@ -107,12 +107,12 @@ class backup_restore_testcase extends advanced_testcase{
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertTrue($rocketchatmanager->group_exists($this->newrocketchat->rocketchatid));
-        $this->assertCount(1,$rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
+        $this->assertCount(1, $rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
         ob_start();
         phpunit_util::run_all_adhoc_tasks();
         ob_get_contents();
         ob_end_clean();
-        $this->assertCount(2,$rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
+        $this->assertCount(2, $rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
     }
 
     public function test_duplicate_module() {
@@ -125,7 +125,7 @@ class backup_restore_testcase extends advanced_testcase{
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertTrue($rocketchatmanager->group_exists($this->newrocketchat->rocketchatid));
-        $this->assertCount(2,$rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
+        $this->assertCount(2, $rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
     }
 
     public function test_duplicate_module_with_background_task() {
@@ -138,12 +138,12 @@ class backup_restore_testcase extends advanced_testcase{
         $this->assertNotEquals($this->rocketchat->rocketchatid, $this->newrocketchat->rocketchatid);
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertTrue($rocketchatmanager->group_exists($this->newrocketchat->rocketchatid));
-        $this->assertCount(1,$rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
+        $this->assertCount(1, $rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
         ob_start();
         phpunit_util::run_all_adhoc_tasks();
         ob_get_contents();
         ob_end_clean();
-        $this->assertCount(2,$rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
+        $this->assertCount(2, $rocketchatmanager->get_group_members($this->newrocketchat->rocketchatid));
     }
 
     protected function backup_and_restore($course) {
