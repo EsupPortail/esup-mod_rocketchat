@@ -92,7 +92,8 @@ class restore_rocketchat_activity_structure_step extends restore_activity_struct
             // Need to enrol users.
             // Course information to fit ton function needs.
             $rocketchat->course = $course->id;
-            mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($rocketchat);
+            mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($rocketchat,
+                get_config('mod_rocketchat', 'background_restore'));
         }
         return;
     }

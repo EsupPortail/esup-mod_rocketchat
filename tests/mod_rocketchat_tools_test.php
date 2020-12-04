@@ -39,6 +39,8 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
     private $teacher1;
     private $teacher2;
     private $teacher3;
+    private $generator;
+
     public function setUp() {
         global $DB;
         parent::setUp();
@@ -79,39 +81,39 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         $this->setAdminUser();
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $editingteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
-        $generator = $this->getDataGenerator();
-        $this->course = $generator->create_course();
+        $this->generator = $this->getDataGenerator();
+        $this->course = $this->generator->create_course();
         $studentusername1 = 'moodleuserteststudent1_'.time();
         $studentusername2 = 'moodleuserteststudent2_'.time();
         $studentusername3 = 'moodleuserteststudent3_'.time();
-        $this->student1 = $generator->create_user(array('username' => $studentusername1,
+        $this->student1 = $this->generator->create_user(array('username' => $studentusername1,
             'firstname' => $studentusername1, 'lastname' => $studentusername1));
-        $this->student2 = $generator->create_user(array('username' => $studentusername2,
+        $this->student2 = $this->generator->create_user(array('username' => $studentusername2,
             'firstname' => $studentusername2, 'lastname' => $studentusername2));
-        $this->student3 = $generator->create_user(array('username' => $studentusername3,
+        $this->student3 = $this->generator->create_user(array('username' => $studentusername3,
             'firstname' => $studentusername3, 'lastname' => $studentusername3));
-        $generator->enrol_user($this->student1->id, $this->course->id, $studentrole->id);
-        $generator->enrol_user($this->student2->id, $this->course->id, $studentrole->id);
+        $this->generator->enrol_user($this->student1->id, $this->course->id, $studentrole->id);
+        $this->generator->enrol_user($this->student2->id, $this->course->id, $studentrole->id);
         $teacherusername1 = 'moodleusertestteachert1_'.time();
         $teacherusername2 = 'moodleusertestteachert2_'.time();
         $teacherusername3 = 'moodleusertestteachert3_'.time();
-        $this->teacher1 = $generator->create_user(array('username' => $teacherusername1,
+        $this->teacher1 = $this->generator->create_user(array('username' => $teacherusername1,
             'firstname' => $teacherusername1, 'lastname' => $teacherusername1));
-        $this->teacher2 = $generator->create_user(array('username' => $teacherusername2,
+        $this->teacher2 = $this->generator->create_user(array('username' => $teacherusername2,
             'firstname' => $teacherusername2, 'lastname' => $teacherusername2));
-        $this->teacher3 = $generator->create_user(array('username' => $teacherusername3,
+        $this->teacher3 = $this->generator->create_user(array('username' => $teacherusername3,
             'firstname' => $teacherusername3, 'lastname' => $teacherusername3));
-        $generator->enrol_user($this->teacher1->id, $this->course->id, $editingteacherrole->id);
-        $generator->enrol_user($this->teacher2->id, $this->course->id, $editingteacherrole->id);
+        $this->generator->enrol_user($this->teacher1->id, $this->course->id, $editingteacherrole->id);
+        $this->generator->enrol_user($this->teacher2->id, $this->course->id, $editingteacherrole->id);
         // Set a groupname for tests.
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_'.time(),
             'mod_rocketchat');
-        $groupname = mod_rocketchat_tools::rocketchat_group_name(0, $this->course);
-        $this->rocketchat = $generator->create_module('rocketchat',
-            array('course' => $this->course->id, 'groupname' => $groupname));
+
     }
     public function test_synchronize_group_members() {
+        set_config('background_add_instance', 0, 'mod_rocketchat');
+        $this->create_group();
         $rocketchatid = $this->rocketchat->rocketchatid;
         $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
         $this->check_rocket_chat_group_members($rocketchatmembers);
@@ -134,6 +136,34 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         $this->check_rocket_chat_group_members($rocketchatmembers);
     }
 
+    public function test_synchronize_group_members_with_background_task() {
+        set_config('background_add_instance', 1, 'mod_rocketchat');
+        $this->create_group();
+        // Need to trigger adhoc tasks to enrol.
+        phpunit_util::run_all_adhoc_tasks();
+        $rocketchatid = $this->rocketchat->rocketchatid;
+        $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
+        $this->check_rocket_chat_group_members($rocketchatmembers);
+        // Manually enrol teacher3  and student3 to Rocket.Chat.
+        $this->rocketchatapimanager->enrol_user_to_group($rocketchatid, $this->student3);
+        $this->rocketchatapimanager->enrol_moderator_to_group($rocketchatid, $this->teacher3);
+        // Remove student2 and teacher2 from Rocket.Chat.
+        $this->rocketchatapimanager->unenrol_user_from_group($rocketchatid, $this->student2);
+        $this->rocketchatapimanager->unenrol_user_from_group($rocketchatid, $this->teacher2);
+        // Synchronize in backgroud.
+        mod_rocketchat_tools::synchronize_group_members($this->rocketchat, true);
+        $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
+        $this->assertCount(5, $rocketchatmembers);
+        $this->assertTrue(array_key_exists($this->student3->username, $rocketchatmembers));
+        $this->assertTrue(array_key_exists($this->teacher3->username, $rocketchatmembers));
+        $this->assertTrue($rocketchatmembers[$this->teacher3->username]->ismoderator);
+        $this->assertFalse(array_key_exists($this->teacher2->username, $rocketchatmembers));
+        $this->assertFalse(array_key_exists($this->student2->username, $rocketchatmembers));
+        phpunit_util::run_all_adhoc_tasks();
+        $rocketchatmembers = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($rocketchatid);
+        $this->check_rocket_chat_group_members($rocketchatmembers);
+    }
+
     /**
      * @param $rocketchatmembers
      */
@@ -147,6 +177,12 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         $this->assertTrue($rocketchatmembers[$this->teacher1->username]->ismoderator);
         $this->assertTrue(array_key_exists($this->teacher2->username, $rocketchatmembers));
         $this->assertTrue($rocketchatmembers[$this->teacher2->username]->ismoderator);
+    }
+
+    private function create_group(){
+        $groupname = mod_rocketchat_tools::rocketchat_group_name(0, $this->course);
+        $this->rocketchat = $this->generator->create_module('rocketchat',
+            array('course' => $this->course->id, 'groupname' => $groupname));
     }
 
 }

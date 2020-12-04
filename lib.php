@@ -83,7 +83,7 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
         $group->archive();
     }
     $id = $DB->insert_record('rocketchat', $moduleinstance);
-    mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($moduleinstance);
+    mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($moduleinstance, get_config('mod_rocketchat', 'background_add_instance'));
     return $id;
 }
 

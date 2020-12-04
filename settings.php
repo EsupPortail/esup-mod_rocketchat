@@ -174,6 +174,24 @@ if ($ADMIN->fulltree) {
             $enabledenrolmentplugins
         )
     );
+    $settings->add(new admin_setting_configcheckbox(
+        'mod_rocketchat/background_add_instance', get_string('background_add_instance', 'mod_rocketchat'),
+        get_string('background_add_instance_desc', 'mod_rocketchat'),
+        1
+    ));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'mod_rocketchat/background_restore', get_string('background_restore', 'mod_rocketchat'),
+        get_string('background_restore_desc', 'mod_rocketchat'),
+        1
+    ));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'mod_rocketchat/background_synchronize', get_string('background_synchronize', 'mod_rocketchat'),
+        get_string('background_synchronize_desc', 'mod_rocketchat'),
+        1
+    ));
+
 }
 // Prevent Moodle from adding settings block in standard location.
 $settings = null;

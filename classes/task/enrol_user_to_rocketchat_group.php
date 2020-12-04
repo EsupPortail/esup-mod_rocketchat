@@ -13,20 +13,34 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Plugin version and other meta-data are defined here.
- *
+ * adhoc task file file
  * @package     mod_rocketchat
+ * @category    observer
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_rocketchat\task;
 
-$plugin->component = 'mod_rocketchat';
-$plugin->release = '1.0.0';
-$plugin->version = 2020120300;
-$plugin->requires = 2018050800;
-$plugin->maturity = MATURITY_RC;
+defined('MOODLE_INTERNAL') || die();
+global $CFG;
+require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
+
+class enrol_user_to_rocketchat_group extends \core\task\adhoc_task {
+    public function execute() {
+        $data = $this->get_custom_data();
+        $rocketchatid =
+        $coursecontextid = $data->coursecontextid;
+        \mod_rocketchat_tools::enrol_user_to_rocketchat_group($data->rocketchatid,
+            $data->moderatorroles,
+            $data->userroles,
+            $data->userid,
+            $data->coursecontextid);
+    }
+
+}
+
+
+
