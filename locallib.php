@@ -168,8 +168,8 @@ class mod_rocketchat_tools {
                 array(
                     'rocketchatid' => $rocketchatmoduleinstance->rocketchatid,
                     'moodlemembers' => $moodlemembers,
-                    'moderatorrolesids' => $rocketchatmoduleinstance->moderatorroles,
-                    'userrolesids' => $rocketchatmoduleinstance->userroles,
+                    'moderatorrolesids' => $moderatorroleids,
+                    'userrolesids' => $userroleids,
                     'coursecontextid' => $coursecontext->id
                 )
             );
