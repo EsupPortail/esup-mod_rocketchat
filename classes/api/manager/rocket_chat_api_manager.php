@@ -540,7 +540,7 @@ class rocket_chat_api_manager{
                 return true;
             }
         } catch (RocketChatException $e) {
-            self::moodle_debugging_message('', $e);
+            return false;
         }
         return false;
     }

@@ -70,7 +70,8 @@ class observers {
             $userid = $event->relateduserid;
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
-            if ($context->contextlevel == CONTEXT_COURSE && \mod_rocketchat_tools::has_rocketchat_module_instances($context->instanceid)) {
+            if ($context->contextlevel == CONTEXT_COURSE
+                && \mod_rocketchat_tools::has_rocketchat_module_instances($context->instanceid)) {
                 $backenrolmentsmethods = array_filter(
                     explode(',', get_config('mod_rocketchat', 'background_enrolment_task'))
                 );
@@ -89,8 +90,6 @@ class observers {
                     \mod_rocketchat_tools::role_unassign($context->instanceid, $roleid, $moodleuser);
                 }
             }
-
-
         }
     }
 

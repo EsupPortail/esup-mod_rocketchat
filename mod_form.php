@@ -149,7 +149,7 @@ class mod_rocketchat_mod_form extends moodleform_mod {
     protected function format_roles($roleids, $rolesoptions) {
         $i = 1;
         $formattedrole = '';
-        foreach (explode(',', $roleids) as $moderatorroleid) {
+        foreach (array_filter(explode(',', $roleids)) as $moderatorroleid) {
             if ($i > 1) {
                 $formattedrole .= ',';
             }

@@ -101,11 +101,16 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
  */
 function rocketchat_update_instance($moduleinstance, $mform = null) {
     global $DB;
-
+    $data = $mform->get_data();
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
-
-    return $DB->update_record('rocketchat', $moduleinstance);
+    $return = $DB->update_record('rocketchat', $moduleinstance);
+    if ($return) {
+        $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleinstance->id));
+        \mod_rocketchat_tools::synchronize_group_members($rocketchat->rocketchatid,
+            get_config('mod_rocketchat', 'background_synchronize'));
+    }
+    return $return;
 }
 
 /**

@@ -159,9 +159,9 @@ class mod_rocketchat_tools {
         $moodlemembers = get_enrolled_users($coursecontext);
         $rocketchatid = $rocketchatmoduleinstance->rocketchatid;
         $moderatorroles = $rocketchatmoduleinstance->moderatorroles;
-        $moderatorroleids = explode(',', $moderatorroles);
+        $moderatorroleids = array_filter(explode(',', $moderatorroles));
         $userroles = $rocketchatmoduleinstance->userroles;
-        $userroleids = explode(',', $userroles);
+        $userroleids = array_filter(explode(',', $userroles));
         if ($background) {
             $tasksynchronize = new \mod_rocketchat\task\synchronize_group();
             $tasksynchronize->set_custom_data(
@@ -301,14 +301,14 @@ class mod_rocketchat_tools {
         }
         foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
             $ismoderator = false;
-            if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
+            if (in_array($roleid, array_filter(explode(',', $rocketchatmoduleinstance->moderatorroles)))) {
                 $return =
                     $rocketchatapimanager->enrol_moderator_to_group($rocketchatmoduleinstance->rocketchatid,
                         $moodleuser);
                 $ismoderator = true;
             }
             if (!$ismoderator) {
-                if (in_array($roleid, explode(',', $rocketchatmoduleinstance->userroles))) {
+                if (in_array($roleid, array_filter(explode(',', $rocketchatmoduleinstance->userroles)))) {
                     $rocketchatapimanager->enrol_user_to_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                 }
             }
@@ -328,10 +328,10 @@ class mod_rocketchat_tools {
             $rocketchatapimanager = new rocket_chat_api_manager();
         }
         foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
-            if (in_array($roleid, explode(',', $rocketchatmoduleinstance->moderatorroles))) {
+            if (in_array($roleid, array_filter(explode(',', $rocketchatmoduleinstance->moderatorroles)))) {
                 $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
             }
-            if (in_array($roleid, explode(',', $rocketchatmoduleinstance->userroles))) {
+            if (in_array($roleid, array_filter(explode(',', $rocketchatmoduleinstance->userroles)))) {
                 $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
             }
         }
@@ -366,7 +366,7 @@ class mod_rocketchat_tools {
         $rocketchatapimanager = new rocket_chat_api_manager();
         $user = $DB->get_record('user' , array('id' => $userid));
         if ($user) {
-            $moderatorroleids = explode(',', $moderatorroles);
+            $moderatorroleids = array_filter(explode(',', $moderatorroles));
             $ismoderator = false;
             foreach ($moderatorroleids as $moderatorroleid) {
                 if (user_has_role_assignment($userid, $moderatorroleid, $coursecontextid)) {
@@ -374,7 +374,7 @@ class mod_rocketchat_tools {
                 }
             }
             if (!$ismoderator) {
-                $userroleids = explode(',', $userroles);
+                $userroleids = array_filter(explode(',', $userroles));
                 foreach ($userroleids as $userroleid) {
                     if (user_has_role_assignment($userid, $userroleid, $coursecontextid)) {
                         $rocketchatapimanager->enrol_user_to_group($rocketchatid, $user);

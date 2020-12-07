@@ -79,6 +79,7 @@ cd /www_moodle_path
 /www_moodle_path/vendor/bin/phpunit "recyclebin_testcase" mod/rocketchat/tests/recyclebin_test.php
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_privacy_testcase" mod/rocketchat/tests/privacy_provider_test.php
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_tools_testcase" mod/rocketchat/tests/mod_rocketchat_tools_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_moderator_and_user_roles_testcase" mod/rocketchat/tests/moderator_and_user_roles_test.php
 ```
 ## Functional tests with behat
 ### Requirements
