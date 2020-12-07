@@ -45,6 +45,8 @@ class recyclebin_category_testcase extends advanced_testcase{
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
         $this->resetAfterTest();
         $this->setAdminUser();
+        set_config('background_enrolment_task', '', 'mod_rocketchat');
+        set_config('background_add_instance', 0, 'mod_rocketchat');
 
     }
 
@@ -54,6 +56,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         // We want the category bin to be enabled.
         set_config('categorybinenable', 1, 'tool_recyclebin');
         set_config('categorybinexpiry', 1, 'tool_recyclebin');
+        set_config('background_restore', 0, 'mod_rocketchat');
         $this->set_up_moodle_datas();
         delete_course($this->course->id, false);
         ob_start(); // Prevent echo output for tests.
@@ -112,6 +115,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         // We want the category bin to be enabled.
         set_config('categorybinenable', 1, 'tool_recyclebin');
         set_config('categorybinexpiry', 1, 'tool_recyclebin');
+        set_config('background_restore', 0, 'mod_rocketchat');
         $this->set_up_moodle_datas();
         delete_course($this->course->id, false);
         // Now, run the course module deletion adhoc task.
@@ -139,6 +143,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
         $this->assertFalse($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertCount(2, $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid));
         // Clean Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         $rocketchatmanager->delete_user($this->user->username);
@@ -175,6 +180,7 @@ class recyclebin_category_testcase extends advanced_testcase{
         $rocketchatmanager = new rocket_chat_api_manager();
         $this->assertTrue($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
         $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        // Can't check group members since group is archived.
         // Clean remote Rocket.Chat.
         $rocketchatmanager->delete_rocketchat_group($this->rocketchat->rocketchatid);
         $rocketchatmanager->delete_user($this->user->username);

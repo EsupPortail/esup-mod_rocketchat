@@ -54,6 +54,8 @@ class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testc
     public function setUp() {
         global $DB, $CFG;
         parent::setUp();
+        set_config('background_enrolment_task', '', 'mod_rocketchat');
+        set_config('background_add_instance', 0, 'mod_rocketchat');
         // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;

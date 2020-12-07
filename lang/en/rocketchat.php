@@ -108,3 +108,9 @@ $string['background_enrolment_task'] = 'Pass user enrolment/unenrolments in remo
 $string['background_enrolment_task_desc'] = 'These to solve performance issue while enrolling large amounts of users.'
     .'</br>This will prevent the enroller to wait on course enrolment page while enrolling/unenrolling large amount of users.'
     .'</br>Choice of enrol cohort and flatfile, if enabled, are strongly advised';
+$string['background_add_instance'] = 'Pass Rocket.Chat enrolments to background task while creating a new module instance';
+$string['background_add_instance_desc'] = 'This will prevent to wait on the module creation page';
+$string['background_restore'] = 'Pass Rocket.Chat enrolments to background task while dupplicating a rocket.chat modules';
+$string['background_restore_desc'] = 'This will prevent to wait while dupplicating a Rocket.Chat module';
+$string['background_synchronize'] = 'Pass Rocket.Chat enrolments to background task while synchronizing enrollees.';
+$string['background_synchronize_desc'] = 'This occurs after a course or a Rocket.Chat module is restored from recyclebin,  ';

@@ -112,3 +112,10 @@ $string['background_enrolment_task_desc'] = 'Ceci permet de résoudre des probl�
     .'</br>Cela emêchera que l\'utilisateur inscrivant attende trop longtemps sur la page d\'inscriptions aux cours.'
     .'</br> ce paramètre agit en différant, tâche en arrière plan, les inscriptions/desinscriptions au server Rcoket.Chat distant'
     .'</br>Nous vous conseillons fortement de sélectionner les méthodes flatfile et cohort si elles sont activées.';
+$string['background_add_instance'] = 'Passer les inscriptions à Rocket.Chat'
+    .' en tâche d\'arrière plan à la création d\'une nouvelle instance';
+$string['background_add_instance_desc'] = 'Ceci améliorera le délai d\'attente à la création d\'une nouvelle instance';
+$string['background_restore'] = 'Passer les inscriptions à Rocket.Chat en tâche d\'arrière plan à la duplication du module.';
+$string['background_restore_desc'] = 'Ceci améliorera le délai d\'attente à la duplication d\'un module Rocket.Chat.';
+$string['background_synchronize'] = 'Passer les inscriptions à Rocket.Chat en tâche d\'arrière plan lors de la sychronisation des inscriptions.';
+$string['background_synchronize_desc'] = 'Arrive après le retour de corbeil d\èun cours ou d\'un module Rocket.Chat';

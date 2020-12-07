@@ -28,10 +28,19 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 
-class enrol_role_assign extends \core\task\adhoc_task {
+class enrol_user_to_rocketchat_group extends \core\task\adhoc_task {
     public function execute() {
         $data = $this->get_custom_data();
-        \mod_rocketchat_tools::role_assign($data->courseid, $data->roleid, $data->moodleuser);
+        $rocketchatid =
+        $coursecontextid = $data->coursecontextid;
+        \mod_rocketchat_tools::enrol_user_to_rocketchat_group($data->rocketchatid,
+            $data->moderatorroles,
+            $data->userroles,
+            $data->userid,
+            $data->coursecontextid);
     }
 
 }
+
+
+

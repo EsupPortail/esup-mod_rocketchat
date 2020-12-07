@@ -28,10 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 
-class enrol_role_assign extends \core\task\adhoc_task {
+class synchronize_group extends \core\task\adhoc_task {
     public function execute() {
         $data = $this->get_custom_data();
-        \mod_rocketchat_tools::role_assign($data->courseid, $data->roleid, $data->moodleuser);
+        $context = \context::instance_by_id($data->coursecontextid);
+        \mod_rocketchat_tools::synchronize_group($data->rocketchatid, (array)$data->moodlemembers,
+            (array)$data->moderatorrolesids, (array)$data->userrolesids, $context);
     }
 
 }

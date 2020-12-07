@@ -50,7 +50,8 @@ class course_reset_testcase extends advanced_testcase{
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
         $this->resetAfterTest();
         $this->setAdminUser();
-
+        set_config('background_enrolment_task', '', 'mod_rocketchat');
+        set_config('background_add_instance', 0, 'mod_rocketchat');
         $generator = $this->getDataGenerator();
         $this->course = $generator->create_course();
         $studentusername = 'moodleusertest'.time();

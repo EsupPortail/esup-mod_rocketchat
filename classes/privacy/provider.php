@@ -83,8 +83,8 @@ class provider implements
         $ctxids = array();
         foreach ($records as $record) {
             $roles = array();
-            $roles = array_merge($roles, explode(',', $record->moderatorroles));
-            $roles = array_merge($roles, explode(',', $record->userroles));
+            $roles = array_merge($roles, array_filter(explode(',', $record->moderatorroles)));
+            $roles = array_merge($roles, array_filter(explode(',', $record->userroles)));
             foreach ($roles as $roleid) {
                 if (user_has_role_assignment($userid, $roleid, $record->contextid )) {
                     $ctxids[$record->contextid] = $record->contextid;
@@ -112,9 +112,9 @@ class provider implements
                 .' inner join {modules} m on m.id=cm.module where cm.id=:cmid', array('cmid' => $context->instanceid));
             if ($rocketchat) {
                 list($moderatorrolesinsql, $moderatorrolesinparams) =
-                    $DB->get_in_or_equal(explode(',', $rocketchat->moderatorroles), SQL_PARAMS_NAMED);
+                    $DB->get_in_or_equal(array_filter(explode(',', $rocketchat->moderatorroles)), SQL_PARAMS_NAMED);
                 list($userrolesinsql, $userrolesinparams) =
-                    $DB->get_in_or_equal(explode(',', $rocketchat->userroles), SQL_PARAMS_NAMED);
+                    $DB->get_in_or_equal(array_filter(explode(',', $rocketchat->userroles)), SQL_PARAMS_NAMED);
                 $sql = 'select ra.userid,cm.id,ctx.id as contextid,r.moderatorroles, r.userroles'
                     .' from {course_modules} cm inner join {modules} m on m.id=cm.module'
                     .' inner join {rocketchat} r on r.id=cm.instance'
@@ -151,9 +151,9 @@ class provider implements
                     .' inner join {modules} m on m.id=cm.module where cm.id=:cmid', array('cmid' => $context->instanceid));
                 if ($rocketchat) {
                     list($moderatorrolesinsql, $moderatorrolesinparams) =
-                        $DB->get_in_or_equal(explode(',', $rocketchat->moderatorroles), SQL_PARAMS_NAMED);
+                        $DB->get_in_or_equal(array_filter(explode(',', $rocketchat->moderatorroles)), SQL_PARAMS_NAMED);
                     list($userrolesinsql, $userrolesinparams) =
-                        $DB->get_in_or_equal(explode(',', $rocketchat->userroles), SQL_PARAMS_NAMED);
+                        $DB->get_in_or_equal(array_filter(explode(',', $rocketchat->userroles)), SQL_PARAMS_NAMED);
                     $sql = 'select distinct r.rocketchatid'
                         .' from {course_modules} cm inner join {modules} m on m.id=cm.module'
                         .' inner join {rocketchat} r on r.id=cm.instance'

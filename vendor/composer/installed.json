@@ -1,8 +1,8 @@
 [
     {
         "name": "esup-portail/rocket-chat-rest-client",
-        "version": "dev-error_and_config_adjustments",
-        "version_normalized": "dev-error_and_config_adjustments",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/EsupPortail/rocket-chat-rest-client.git",

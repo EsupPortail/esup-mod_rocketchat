@@ -39,22 +39,26 @@ class observers {
             $userid = $event->relateduserid;
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
-            $backenrolmentsmethods = array_filter(
-                    explode(',', get_config('mod_rocketchat', 'background_enrolment_task')
-                ));
-            $component = empty($event->other['component']) ? 'enrol_manual' : $event->other['component'];
-            if ( in_array($component, $backenrolmentsmethods)) {
-                $taskenrolment = new \mod_rocketchat\task\enrol_role_assign();
-                $taskenrolment->set_custom_data(
-                    array(
-                        'contextid' => $context->id,
-                        'roleid' => $roleid,
-                        'moodleuser' => $moodleuser
-                    )
-                );
-                \core\task\manager::queue_adhoc_task($taskenrolment);
-            } else {
-                \mod_rocketchat_tools::role_assign($context, $roleid, $moodleuser);
+            if ($context->contextlevel == CONTEXT_COURSE && is_enrolled($context, $moodleuser->id)) {
+                if (\mod_rocketchat_tools::has_rocketchat_module_instances($context->instanceid)) {
+                    $backenrolmentsmethods = array_filter(
+                        explode(',', get_config('mod_rocketchat', 'background_enrolment_task')
+                        ));
+                    $component = empty($event->other['component']) ? 'enrol_manual' : $event->other['component'];
+                    if (in_array($component, $backenrolmentsmethods)) {
+                        $taskenrolment = new \mod_rocketchat\task\enrol_role_assign();
+                        $taskenrolment->set_custom_data(
+                            array(
+                                'courseid' => $context->instanceid,
+                                'roleid' => $roleid,
+                                'moodleuser' => $moodleuser
+                            )
+                        );
+                        \core\task\manager::queue_adhoc_task($taskenrolment);
+                    } else {
+                        \mod_rocketchat_tools::role_assign($context->instanceid, $roleid, $moodleuser);
+                    }
+                }
             }
         }
     }
@@ -66,24 +70,26 @@ class observers {
             $userid = $event->relateduserid;
             $moodleuser = $DB->get_record('user', array('id' => $userid));
             $roleid = $event->objectid;
-            $backenrolmentsmethods = array_filter(
-                explode(',', get_config('mod_rocketchat', 'background_enrolment_task'))
-            );
-            $component = empty($event->other['component']) ? 'enrol_manual' : $event->other['component'];
-            if ( in_array($component, $backenrolmentsmethods)) {
-                $taskunenrolment = new \mod_rocketchat\task\enrol_role_unassign();
-                $taskunenrolment->set_custom_data(
-                    array(
-                        'contextid' => $context->id,
-                        'roleid' => $roleid,
-                        'moodleuser' => $moodleuser
-                    )
+            if ($context->contextlevel == CONTEXT_COURSE
+                && \mod_rocketchat_tools::has_rocketchat_module_instances($context->instanceid)) {
+                $backenrolmentsmethods = array_filter(
+                    explode(',', get_config('mod_rocketchat', 'background_enrolment_task'))
                 );
-                \core\task\manager::queue_adhoc_task($taskunenrolment);
-            } else {
-                \mod_rocketchat_tools::role_unassign($context, $roleid, $moodleuser);
+                $component = empty($event->other['component']) ? 'enrol_manual' : $event->other['component'];
+                if ( in_array($component, $backenrolmentsmethods)) {
+                    $taskunenrolment = new \mod_rocketchat\task\enrol_role_unassign();
+                    $taskunenrolment->set_custom_data(
+                        array(
+                            'courseid' => $context->instanceid,
+                            'roleid' => $roleid,
+                            'moodleuser' => $moodleuser
+                        )
+                    );
+                    \core\task\manager::queue_adhoc_task($taskunenrolment);
+                } else {
+                    \mod_rocketchat_tools::role_unassign($context->instanceid, $roleid, $moodleuser);
+                }
             }
-
         }
     }
 
@@ -126,7 +132,8 @@ class observers {
             $rocketchatapimanager->unarchive_rocketchat_group($rocketchatrecyclebin->rocketchatid);
             $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
             // Synchronise members.
-            \mod_rocketchat_tools::synchronize_group_members($rocketchatrecyclebin->rocketchatid);
+            \mod_rocketchat_tools::synchronize_group_members($rocketchatrecyclebin->rocketchatid,
+                get_config('mod_rocketchat', 'background_synchronize'));
         }
     }
 

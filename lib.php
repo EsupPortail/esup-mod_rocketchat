@@ -83,7 +83,9 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
         $group->archive();
     }
     $id = $DB->insert_record('rocketchat', $moduleinstance);
-    mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group($moduleinstance);
+    mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group(
+        $moduleinstance,
+        get_config('mod_rocketchat', 'background_add_instance'));
     return $id;
 }
 
@@ -99,11 +101,16 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
  */
 function rocketchat_update_instance($moduleinstance, $mform = null) {
     global $DB;
-
+    $data = $mform->get_data();
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
-
-    return $DB->update_record('rocketchat', $moduleinstance);
+    $return = $DB->update_record('rocketchat', $moduleinstance);
+    if ($return) {
+        $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleinstance->id));
+        \mod_rocketchat_tools::synchronize_group_members($rocketchat->rocketchatid,
+            get_config('mod_rocketchat', 'background_synchronize'));
+    }
+    return $return;
 }
 
 /**

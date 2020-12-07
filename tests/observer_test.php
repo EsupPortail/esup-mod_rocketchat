@@ -50,6 +50,8 @@ class observer_testcase extends advanced_testcase{
         $this->setAdminUser();
         // Disable recyclebin.
         set_config('coursebinenable', 0, 'tool_recyclebin');
+        set_config('background_enrolment_task', '', 'mod_rocketchat');
+        set_config('background_add_instance', 0, 'mod_rocketchat');
         $generator = $this->getDataGenerator();
         $this->course = $generator->create_course();
         $studentusername = 'moodleusertest'.time();
