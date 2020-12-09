@@ -36,18 +36,21 @@ class observer_testcase extends advanced_testcase{
     private $rocketchat;
     private $userstudent;
     private $usereditingteacher;
+    private $rocketchatmanager;
 
     protected function setUp() {
         global $CFG, $DB;
         parent::setUp();
+
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
+        $this->resetAfterTest();
+        $this->setAdminUser();
         // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
-        $this->resetAfterTest();
-        $this->setAdminUser();
+        $this->rocketchatmanager = new rocket_chat_api_manager();
         // Disable recyclebin.
         set_config('coursebinenable', 0, 'tool_recyclebin');
         set_config('background_enrolment_task', '', 'mod_rocketchat');
@@ -77,9 +80,8 @@ class observer_testcase extends advanced_testcase{
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true); // Delete Rocket.Chat module.
         }
-        $rocketchatmanager = new rocket_chat_api_manager();
-        $rocketchatmanager->delete_user($this->userstudent->username);
-        $rocketchatmanager->delete_user($this->usereditingteacher->username);
+        $this->rocketchatmanager->delete_user($this->userstudent->username);
+        $this->rocketchatmanager->delete_user($this->usereditingteacher->username);
         ob_get_contents();
         ob_end_clean();
         parent::tearDown();
@@ -87,60 +89,56 @@ class observer_testcase extends advanced_testcase{
 
     public function test_user_delete() {
         // Structure created in setUp.
-        $rocketchatmanager = new rocket_chat_api_manager();
-        $members = $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
         delete_user($this->userstudent);
-        $this->assertTrue($rocketchatmanager->user_exists($this->userstudent->username));
-        $members = $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertTrue($this->rocketchatmanager->user_exists($this->userstudent->username));
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(2, $members);
     }
 
     public function test_module_delete() {
         // Structure created in setUp.
-        $rocketchatmanager = new rocket_chat_api_manager();
-        $members = $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
         course_delete_module($this->rocketchat->cmid);
-        $this->assertTrue($rocketchatmanager->user_exists($this->userstudent->username));
-        $this->assertFalse($rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
+        $this->assertTrue($this->rocketchatmanager->user_exists($this->userstudent->username));
+        $this->assertFalse($this->rocketchatmanager->group_exists($this->rocketchat->rocketchatid));
         $this->assertDebuggingCalled();
 
     }
 
     public function test_module_visibility() {
         // Structure created in setUp.
-        $rocketchatmanager = new rocket_chat_api_manager();
         list($course, $cm) = get_course_and_cm_from_cmid($this->rocketchat->cmid);
-        $this->assertFalse($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertFalse($this->rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         set_coursemodule_visible($this->rocketchat->cmid, 0, 1);
         // Need to trigger event manually.
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
-        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertTrue($this->rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         set_coursemodule_visible($this->rocketchat->cmid, 1, 1);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
-        $this->assertFalse($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertFalse($this->rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         set_coursemodule_visible($this->rocketchat->cmid, 0, 0);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
-        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertTrue($this->rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
         set_coursemodule_visible($this->rocketchat->cmid, 1, 1);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
         set_coursemodule_visible($this->rocketchat->cmid, 1, 0);
         \core\event\course_module_updated::create_from_cm($cm)->trigger();
         rebuild_course_cache($cm->course, true);
-        $this->assertTrue($rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
+        $this->assertTrue($this->rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
     }
 
     public function test_user_role_changes() {
         global $DB;
-        $rocketchatmanager = new rocket_chat_api_manager();
-        $members = $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
-        $moderators = $rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
         $this->assertCount(1, $moderators);
         $moderator = $moderators[0];
         $this->assertEquals($this->usereditingteacher->username, $moderator->username);
@@ -157,17 +155,55 @@ class observer_testcase extends advanced_testcase{
         // Enrol as student.
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($this->usereditingteacher->id, $this->course->id, $student->id);
-        $moderators = $rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
-        $members = $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
         $this->assertCount(0, $moderators);
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
         $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
         $this->getDataGenerator()->enrol_user($this->usereditingteacher->id, $this->course->id, $editingteacher->id);
-        $moderators = $rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
-        $members = $rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
         $this->assertCount(1, $moderators);
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
+    }
+
+    public function test_user_updated(){
+        set_config('background_user_update', 0, 'mod_rocketchat');
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3,$members);
+        $this->assertTrue(array_key_exists($this->userstudent->username, $members));
+        $this->userstudent->suspended = 1;
+        user_update_user($this->userstudent, false, true);
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(2,$members);
+        $this->assertFalse(array_key_exists($this->userstudent->username, $members));
+        $this->userstudent->suspended = 0;
+        user_update_user($this->userstudent, false, true);
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3,$members);
+        $this->assertTrue(array_key_exists($this->userstudent->username, $members));
+
+        // Background task.
+        set_config('background_user_update', 1, 'mod_rocketchat');
+        $this->userstudent->suspended = 1;
+        user_update_user($this->userstudent, false, true);
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3,$members);
+        $this->assertTrue(array_key_exists($this->userstudent->username, $members));
+        phpunit_util::run_all_adhoc_tasks();
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(2,$members);
+        $this->assertFalse(array_key_exists($this->userstudent->username, $members));
+        $this->userstudent->suspended = 0;
+        user_update_user($this->userstudent, false, true);
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(2,$members);
+        $this->assertFalse(array_key_exists($this->userstudent->username, $members));
+        phpunit_util::run_all_adhoc_tasks();
+        $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3,$members);
+        $this->assertTrue(array_key_exists($this->userstudent->username, $members));
     }
 }

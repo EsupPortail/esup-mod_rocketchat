@@ -63,5 +63,9 @@ $observers = array(
     array(
         'eventname' => '\core\event\course_module_updated',
         'callback' => '\mod_rocketchat\observers::course_module_updated',
+    ),
+    array(
+        'eventname' => '\core\event\user_updated',
+        'callback' => '\mod_rocketchat\observers::user_updated',
     )
 );

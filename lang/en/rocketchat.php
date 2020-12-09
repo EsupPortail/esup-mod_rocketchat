@@ -114,3 +114,7 @@ $string['background_restore'] = 'Pass Rocket.Chat enrolments to background task 
 $string['background_restore_desc'] = 'This will prevent to wait while dupplicating a Rocket.Chat module';
 $string['background_synchronize'] = 'Pass Rocket.Chat enrolments to background task while synchronizing enrollees.';
 $string['background_synchronize_desc'] = 'This occurs after a course or a Rocket.Chat module is restored from recyclebin,  ';
+$string['background_user_update'] = 'Pass Rocket.Chat enrolments to background task whiele updating user informations such like'
+    .' activation/deactivation.';
+$string['background_user_update_desc'] = 'Pass Rocket.Chat enrolments to background task whiele updating user informations such like'
+    .' activation/deactivation.';

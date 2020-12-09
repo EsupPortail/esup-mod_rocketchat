@@ -192,6 +192,11 @@ if ($ADMIN->fulltree) {
         1
     ));
 
+    $settings->add(new admin_setting_configcheckbox(
+        'mod_rocketchat/background_user_update', get_string('background_user_update', 'mod_rocketchat'),
+        get_string('background_user_update_desc', 'mod_rocketchat'),
+        1
+    ));
 }
 // Prevent Moodle from adding settings block in standard location.
 $settings = null;
