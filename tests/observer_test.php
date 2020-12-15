@@ -169,20 +169,20 @@ class observer_testcase extends advanced_testcase{
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
     }
 
-    public function test_user_updated(){
+    public function test_user_updated() {
         set_config('background_user_update', 0, 'mod_rocketchat');
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(3,$members);
+        $this->assertCount(3, $members);
         $this->assertTrue(array_key_exists($this->userstudent->username, $members));
         $this->userstudent->suspended = 1;
         user_update_user($this->userstudent, false, true);
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(2,$members);
+        $this->assertCount(2, $members);
         $this->assertFalse(array_key_exists($this->userstudent->username, $members));
         $this->userstudent->suspended = 0;
         user_update_user($this->userstudent, false, true);
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(3,$members);
+        $this->assertCount(3, $members);
         $this->assertTrue(array_key_exists($this->userstudent->username, $members));
 
         // Background task.
@@ -190,20 +190,20 @@ class observer_testcase extends advanced_testcase{
         $this->userstudent->suspended = 1;
         user_update_user($this->userstudent, false, true);
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(3,$members);
+        $this->assertCount(3, $members);
         $this->assertTrue(array_key_exists($this->userstudent->username, $members));
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(2,$members);
+        $this->assertCount(2, $members);
         $this->assertFalse(array_key_exists($this->userstudent->username, $members));
         $this->userstudent->suspended = 0;
         user_update_user($this->userstudent, false, true);
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(2,$members);
+        $this->assertCount(2, $members);
         $this->assertFalse(array_key_exists($this->userstudent->username, $members));
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatmanager->get_enriched_group_members($this->rocketchat->rocketchatid);
-        $this->assertCount(3,$members);
+        $this->assertCount(3, $members);
         $this->assertTrue(array_key_exists($this->userstudent->username, $members));
     }
 }

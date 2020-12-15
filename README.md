@@ -8,7 +8,7 @@ Adding this activity to a Moodle course will create a channel in Rocket.Chat and
 ## Rocket.Chat settings requirements
 * create a local RocketChat account
   * other authentification account will not work
-* confirm it through Rocket.Chat administration
+* confirm it (verified button) through Rocket.Chat administration
 ### permissions
 for moodle Rocket.Chat account
 * view-room-administration

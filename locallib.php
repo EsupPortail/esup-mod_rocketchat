@@ -248,7 +248,7 @@ class mod_rocketchat_tools {
         return $groupname;
     }
 
-    public static function unenrol_user_everywhere($userid){
+    public static function unenrol_user_everywhere($userid) {
         global $DB;
         $user = $DB->get_record('user', array('id' => $userid));
         $rocketchatapimanager = new rocket_chat_api_manager();
@@ -257,9 +257,9 @@ class mod_rocketchat_tools {
         }
         $courseenrolments = self::course_enrolments($userid);
         $rocketchatusername = self::rocketchat_username($user->username);
-        if ($rocketchatapimanager->user_exists($rocketchatusername)){
+        if ($rocketchatapimanager->user_exists($rocketchatusername)) {
             $rocketchatuser = $rocketchatapimanager->get_user_infos($rocketchatusername);
-            foreach($courseenrolments as $courseenrolment){
+            foreach ($courseenrolments as $courseenrolment) {
                 $rocketchatapimanager->unenrol_user_from_group($courseenrolment->rocketchatid, $rocketchatuser);
             }
         }
@@ -275,20 +275,20 @@ class mod_rocketchat_tools {
         // Due to the fact that userroles is a string and role_assignments is an int,
         // No possibility to make a sql query without specific sql functions linked to database language.
         $courseenrolments = self::course_enrolments($userid);
-        foreach($courseenrolments as $courseenrolment){
+        foreach ($courseenrolments as $courseenrolment) {
             $moderatorrolesids = array_filter(explode(',', $courseenrolment->moderatorroles));
             $userrolesids = array_filter(explode(',', $courseenrolment->userroles));
             $rocketchatmembers = $rocketchatapimanager->get_group_members($courseenrolment->rocketchatid);
             $rocketchatuser = self::synchronize_rocketchat_member($courseenrolment->rocketchatid,
                 context_course::instance($courseenrolment->courseid),
-                $user, $moderatorrolesids, $userrolesids,$rocketchatmembers);
+                $user, $moderatorrolesids, $userrolesids, $rocketchatmembers);
             if (isset($rocketchatuser)
                 && array_key_exists($rocketchatuser->username, $rocketchatmembers)
                 && $rocketchatuser->username) {
-                    if ($rocketchatuser->username != get_config('mod_rocketchat', 'apiuser')
-                        && $rocketchatuser->id != get_config('mod_rocketchat', 'apiuser')) {
-                        $rocketchatapimanager->unenrol_user_from_group($courseenrolment->rocketchatid, $rocketchatuser);
-                    }
+                if ($rocketchatuser->username != get_config('mod_rocketchat', 'apiuser')
+                    && $rocketchatuser->id != get_config('mod_rocketchat', 'apiuser')) {
+                    $rocketchatapimanager->unenrol_user_from_group($courseenrolment->rocketchatid, $rocketchatuser);
+                }
             }
         }
     }
@@ -435,9 +435,13 @@ class mod_rocketchat_tools {
             $rocketchatid);
 
         foreach ($moodlemembers as $moodlemember) {
-            $rocketchatuser = self::synchronize_rocketchat_member($rocketchatid, $coursecontext, $moodlemember, $moderatorroleids, $userroleids
-                    ,$rocketchatmembers);
-            if(!empty($rocketchatuser)){
+            $rocketchatuser = self::synchronize_rocketchat_member($rocketchatid,
+                $coursecontext,
+                $moodlemember,
+                $moderatorroleids,
+                $userroleids,
+                $rocketchatmembers);
+            if (!empty($rocketchatuser)) {
                 unset($rocketchatmembers[$rocketchatuser->username]);
             }
         }
@@ -486,9 +490,9 @@ class mod_rocketchat_tools {
             }
         } else {
             // If not exits yet need to create user in Rocket.Chat.
-            if($rocketchatapimanager->user_exists($rocketchatusername)){
+            if ($rocketchatapimanager->user_exists($rocketchatusername)) {
                 $rocketchatuser = $rocketchatapimanager->get_user_infos($rocketchatusername);
-            } else if ( get_config('mod_rocketchat', 'create_user_account_if_not_exists')){
+            } else if ( get_config('mod_rocketchat', 'create_user_account_if_not_exists')) {
                 $rocketchatuser = $rocketchatapimanager->create_user_if_not_exists($moodleuser);
             } else {
                 return null;
