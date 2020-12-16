@@ -12,6 +12,11 @@ Adding this activity to a Moodle course will create a channel in Rocket.Chat and
 ### permissions
 for moodle Rocket.Chat account
 * view-room-administration
+* if necessary add api-bypass-rate-limit in case of error with request limit
+* CAS authentication
+  * In case of user account creation in Rocket.Chat through moodle plugin you must activate following settings
+    * Trust CAS username
+    * Authorize user creation
 ### Authentication
 * LDAP and CAS account fusion is adviced when moodle user account creation is activated
 
@@ -35,6 +40,7 @@ patch -p1 /moodlepath/admin/tool/recyclebin/classes/category_bin.php < /moodlepa
 patch -p1 /moodlepath/user/classes/output/user_roles_editable.php  < /moodlepath/mod/rocketchat/patch/user_classes_output_user_roles_editable.patch
 
 ```
+
 ### Authentication settings 
 ### user/password mode
 * apiuser is the RocketChat account username
@@ -81,24 +87,30 @@ cd /www_moodle_path
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_tools_testcase" mod/rocketchat/tests/mod_rocketchat_tools_test.php
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_moderator_and_user_roles_testcase" mod/rocketchat/tests/moderator_and_user_roles_test.php
 ```
+
 ## Functional tests with behat
+
 ### Requirements
 * see [moodle documentation](https://docs.moodle.org/dev/Running_acceptance_test)
+
 ### Settings
 * see phpunit settings section
+
 ### Provided tests
 * don't forget to init behat moodle tests environment (requirements)
 ```shell script
 cd /www_moodle_path
 vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml --tags mod_rocketchat
 ```
+
 for behat funcitonal tests by file
+
 ```shell script
 cd /www_moodle_path
 vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_activity_creation.feature
 vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_create_deletion.feature
-
 ```
+
 ## License ##
 
 2020 ESUP-Portail (https://www.esup-portail.org)
