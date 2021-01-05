@@ -30,6 +30,14 @@ $string['description'] = 'Module de synchronisation entre Rockat.Chat et Moodle'
 $string['modulename'] = 'Rocket.Chat';
 $string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
+$string['modulename_help'] = 'En ajoutant cette activitée à un  cours Moodle , un canal privé Rocket.Chat serra uatomatique créé.
+
+Les utilisateurs associés , en fonction leur rôle dans le cours, y serront inscrit et mise à jour automatiquement.
+
+Le canal Rocket.Chat serra alors accessible directement depuis moodle ou via tout autre client Rocket.Chat.
+
+Les fonctionnalités de restriction d\'accès au moodle ne sont pas disponibles.';
+$string['modulename_link'] = 'mod/rocketchat';
 $string['name'] = 'Nom de l\'instance (dans le cours)';
 $string['instanceurl'] = 'URL de l\'instance Rocket.Chat';
 $string['instanceurl_desc'] = 'URL de l\'instance Rocket.Chat (ex: https://rocketchat.univ.fr)';

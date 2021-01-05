@@ -30,14 +30,21 @@ $string['description'] = 'Module interfacing Rockat.Chat and Moodle';
 $string['modulename'] = 'Rocket.Chat';
 $string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
+$string['modulename_help'] = 'Adding this activity to a Moodle course will create a private channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel.
+
+The list of members will then be kept up to date.
+
+It will be possible to access to this Rocket.Chat channel directly from Moodle or through any Rocket.Chat client.
+
+Module restrictions through avaibility  are not available at the moment.';
+$string['modulename_link'] = 'mod/rocketchat';
 $string['name'] = 'Instance name (in the course)';
 $string['instanceurl'] = 'Rocket.Chat instance URL';
 $string['instanceurl_desc'] = 'Rocket.Chat instance URL (ex: https://rocketchat.univ.fr)';
 $string['restapiroot'] = 'Rocket.Chat REST API root';
 $string['restapiroot_desc'] = 'Rocket.Chat REST API root';
 $string['tokenmode'] = 'Token mode';
-$string['tokenmode_desc'] = 'If token mode is activated apiuser will be a Rocket.Chat id and token will be a valid Rocket.Chat token'
-    .' associated to this Rocket.Chat User';
+$string['tokenmode_desc'] = 'If token mode is activated apiuser will be a Rocket.Chat id and token will be a valid Rocket.Chat token associated to this Rocket.Chat User';
 $string['apiuser'] = 'Rocket.Chat API user';
 $string['apiuser_desc'] = 'Rocket.Chat API user / Token mode : Rocket.Chat User Id ';
 $string['apipassword'] = 'Rocket.Chat API password';
