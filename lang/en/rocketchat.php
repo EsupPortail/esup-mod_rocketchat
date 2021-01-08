@@ -31,7 +31,7 @@ $string['modulename'] = 'Rocket.Chat';
 $string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
 $string['modulename_help'] = 'Adding this activity to a Moodle course will create a private channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel.
-
+main
 The list of members will then be kept up to date.
 
 It will be possible to access to this Rocket.Chat channel directly from Moodle or through any Rocket.Chat client.

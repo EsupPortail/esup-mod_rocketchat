@@ -34,6 +34,16 @@ final class GroupTest extends TestCase
     /**
     * @depends testCanCreateGroup
     */
+    public function testCanTestGroupExistence($group): void
+    {
+      $this->assertTrue($group->isGroupAlreadyExists());
+      $faux_groupe = new Group("uastieanstaudtnrestui");
+      $this->assertFalse($faux_groupe->isGroupAlreadyExists());
+    }
+
+    /**
+    * @depends testCanCreateGroup
+    */
     public function testCanArchiveGroup($group): Group
     {
       $this->assertTrue($group->archive());
@@ -55,10 +65,18 @@ final class GroupTest extends TestCase
     /**
     * @depends testCanCreateGroup
     */
-    public function testCanInviteGroup($group): Group
+    public function testCantInviteInexistantUserInGroup($group): Group
     {
+      $this->expectException("RocketChat\RocketChatException");
       // On ne peut pas inviter un utilisateur inexistant
-      $this->assertFalse($group->invite("test_objet_user"));
+      $group->invite("test_objet_user");
+    }
+
+    /**
+    * @depends testCanCreateGroup
+    */
+    public function testCanInviteUserInGroup($group): Group
+    {
       $objet_user = new User("test_objet_user", "resu_tejbo_tset", array("email"=>"test_objet_user@test.org", "nickname" => "Test Objet_user"));
       $this->assertNotFalse($objet_user->create(),"We should be able to create a missing user before inviting him");
       $this->assertTrue($group->invite($objet_user), "Can't invite a user through object");
@@ -75,13 +93,54 @@ final class GroupTest extends TestCase
     }
 
     /**
-    * @depends testCanInviteGroup
+    * @depends testCanInviteUserInGroup
     */
-    public function testCanKickGroup($group): void
+    public function testCanAddModerator($group): Group
     {
       $objet_user = new User("test_objet_user");
       $objet_user->info();
-      $this->assertTrue($group->kick($objet_user, true), "Can't kick user from group");
+      $this->assertTrue($group->addModerator($objet_user), "Can't add 'test_objet_user' as moderator to group");
+
+      $moderators = $group->moderators();
+      $test_user_is_moderator = false;
+      foreach ($moderators as $moderator) {
+        if ($moderator->username == 'test_objet_user') {
+          $test_user_is_moderator = true;
+        }
+      }
+
+      $this->assertTrue($test_user_is_moderator);
+      return $group;
+    }
+
+    /**
+    * @depends testCanAddModerator
+    */
+    public function testCanRemoveModerator($group): void
+    {
+      $objet_user = new User("test_objet_user");
+      $objet_user->info();
+      $this->assertTrue($group->removeModerator($objet_user), "Can't remove 'test_objet_user' as moderator to group");
+
+      $moderators = $group->moderators();
+      $test_user_is_moderator = false;
+      foreach ($moderators as $moderator) {
+        if ($moderator->username == 'test_objet_user') {
+          $test_user_is_moderator = true;
+        }
+      }
+
+      $this->assertFalse($test_user_is_moderator);
+    }
+
+    /**
+    * @depends testCanInviteUserInGroup
+    */
+    public function testCanKickUserFromGroup($group): void
+    {
+      $objet_user = new User("test_objet_user");
+      $objet_user->info();
+      $this->assertTrue($group->kick($objet_user), "Can't kick user from group");
 
       $members = $group->members();
       $test_objet_user_exists = false;
@@ -102,9 +161,9 @@ final class GroupTest extends TestCase
     */
     public function testCanMakeAnnouncement($group): void
     {
-        $this->assertTrue($group->setAnnouncement("Test announcement", true), "Can't set announcement");
+        $this->assertTrue($group->setAnnouncement("Test announcement"), "Can't set announcement");
         $this->assertIsString($group->announcement, "Announcement is not a string");
-        $this->assertTrue($group->setAnnouncement("", true), "Can't empty announcement");
+        $this->assertTrue($group->setAnnouncement(""), "Can't empty announcement");
         $this->assertStringMatchesFormat("", $group->announcement, "Announcement is not an empty string");
     }
 
@@ -115,6 +174,15 @@ final class GroupTest extends TestCase
     {
       $this->assertStringMatchesFormat( ROCKET_CHAT_INSTANCE.'/invite/%s',$group->getInviteLink());
     }
+
+    /**
+    * @depends testCanCreateGroup
+    */
+    public function testCanCleanHistory($group): void
+    {
+      $this->assertNull($group->cleanHistory('yesterday'));
+    }
+
 
     /**
     * @depends testCanCreateGroup

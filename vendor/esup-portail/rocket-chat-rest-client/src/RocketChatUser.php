@@ -94,9 +94,13 @@ class User extends Client {
 	* Create a new user.
 	*/
 	public function create() {
-		$info = $this->info();
-		if ($info) return $info;
-
+		try {
+				$info = $this->info();
+				return $info;
+		} catch (RocketChatException $rce) {
+			# L'utilisateur n'existe pas, on va le créer
+		}
+		# If the user doesn't exist, we create it
 		$response = Request::post( $this->api . 'users.create' )
 			->body(array(
 				'name' => $this->nickname,

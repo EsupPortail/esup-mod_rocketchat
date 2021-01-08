@@ -56,9 +56,10 @@ final class UserTest extends TestCase
 		  $this->assertSame($attributes["email"], $user_returned->emails[0]->address);
 		  $this->assertSame($attributes["nickname"], $user_returned->name);
 		} else {
-		  $this->assertFalse($user->create());
-        }
+		  $this->expectException("RocketChat\RocketChatException");
+			$user->create();
     }
+  }
 
     /**
     * @depends testCanCreateUser
@@ -71,7 +72,8 @@ final class UserTest extends TestCase
         $user->info();
         $this->assertTrue($user->delete());
       } else {
-        $this->assertFalse($user->info());
+			  $this->expectException("RocketChat\RocketChatException");
+        $user->info();
       }
     }
 
