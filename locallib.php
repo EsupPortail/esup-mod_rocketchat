@@ -110,12 +110,29 @@ class mod_rocketchat_tools {
         return $moduleinstances;
     }
 
+    public static function get_rocketchat_module_instance($cmid) {
+        global $DB;
+        $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles'
+            .' from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance '
+            .'where m.name=:rocketchat and cm.id=:cmid';
+        $moduleinstances = $DB->get_records_sql($sql , array('cmid' => $cmid, 'rocketchat' => 'rocketchat'));
+        return $moduleinstances;
+    }
+
     public static function has_rocketchat_module_instances($courseid) {
         global $DB;
         $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles'
             .' from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance '
             .'where m.name=:rocketchat and cm.course=:courseid';
         return $DB->record_exists_sql($sql , array('courseid' => $courseid, 'rocketchat' => 'rocketchat'));
+    }
+
+    public static function is_module_a_rocketchat_instance($cmid){
+        global $DB;
+        $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles'
+            .' from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance '
+            .'where m.name=:rocketchat and cm.id=:cmid';
+        return $DB->record_exists_sql($sql , array('cmid' => $cmid, 'rocketchat' => 'rocketchat'));
     }
 
     public static function enrol_all_concerned_users_to_rocketchat_group($rocketchatmoduleinstance, $background=false) {
@@ -326,10 +343,14 @@ class mod_rocketchat_tools {
      * @param int $roleid
      * @param $moodleuser
      */
-    public static function role_assign($courseid, int $roleid, $moodleuser): void {
-        $rocketchatapimanager = null;
-        // Search for rocketchat module instances concerned.
-        $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
+    public static function role_assign($courseid, int $roleid, $moodleuser, $context) {
+        $rocketchatapimanager = array();
+        $rocketchatmoduleinstances = null;
+        if ($context->contextlevel == CONTEXT_COURSE) {
+            $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
+        } else {
+            $rocketchatmoduleinstances = self::get_rocketchat_module_instance($context->instanceid);
+        }
         if (!empty($rocketchatmoduleinstances)) {
             $rocketchatapimanager = new rocket_chat_api_manager();
         }
@@ -356,8 +377,13 @@ class mod_rocketchat_tools {
      * @param int $roleid
      * @param $moodleuser
      */
-    public static function role_unassign($courseid, int $roleid, $moodleuser, $contextid) {
-        $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
+    public static function role_unassign($courseid, int $roleid, $moodleuser, $context) {
+        $rocketchatmoduleinstances = array();
+        if ($context->contextlevel == CONTEXT_COURSE) {
+            $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
+        } else {
+            $rocketchatmoduleinstances = self::get_rocketchat_module_instance($context->instanceid);
+        }
         if (!empty($rocketchatmoduleinstances)) {
             $rocketchatapimanager = new rocket_chat_api_manager();
         }
@@ -370,7 +396,7 @@ class mod_rocketchat_tools {
             // Has other moderator moodle roles?
             foreach ($moderaorroles as $moderatorrole) {
                 if ($moderatorrole != $roleid) {
-                    if (user_has_role_assignment($moodleuser->id, $moderatorrole, $contextid)) {
+                    if (user_has_role_assignment($moodleuser->id, $moderatorrole, $context->id)) {
                         $hasothermoderatorrole = true;
                         break;
                     }
@@ -379,7 +405,7 @@ class mod_rocketchat_tools {
             // Has other user moodle roles?
             foreach ($userroles as $userrole) {
                 if ($userrole != $roleid) {
-                    if (user_has_role_assignment($moodleuser->id, $userrole, $contextid)) {
+                    if (user_has_role_assignment($moodleuser->id, $userrole, $context->id)) {
                         $hasotheruserrole = true;
                         break;
                     }
@@ -398,7 +424,7 @@ class mod_rocketchat_tools {
                     if (!$hasotheruserrole) {
                         $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                     }
-                } else if($wasmoderator) {
+                } else if($wasmoderator && !$hasotheruserrole) {
                     $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                 }
             }

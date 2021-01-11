@@ -282,4 +282,29 @@ class observer_testcase extends advanced_testcase{
         $this->assertCount(3, $members);
         $this->assertTrue(array_key_exists($this->userstudent->username, $members));
     }
+
+    public function test_user_role_changes_override_module_context() {
+        global $DB;
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $this->assertCount(1, $moderators);
+        $moderator = $moderators[0];
+        $this->assertEquals($this->usereditingteacher->username, $moderator->username);
+        $coursecontext = context_course::instance($this->course->id);
+        $student = $DB->get_record('role', array('shortname' => 'student'));
+        $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        // Assign student as editingteacher in module context.
+        $modulecontext = context_module::instance($this->rocketchat->cmid);
+        role_assign($editingteacher->id, $this->userstudent->id, $modulecontext->id);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $this->assertCount(2, $moderators);
+        role_unassign($editingteacher->id, $this->userstudent->id, $modulecontext->id);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $this->assertCount(1, $moderators);
+    }
 }
