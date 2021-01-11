@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 class enrol_role_unassign extends \core\task\adhoc_task {
     public function execute() {
         $data = $this->get_custom_data();
-        \mod_rocketchat_tools::role_unassign($data->courseid, $data->roleid, $data->moodleuser);
+        \mod_rocketchat_tools::role_unassign($data->courseid, $data->roleid, $data->moodleuser, $data->contextid);
     }
 
 }

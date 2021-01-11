@@ -41,9 +41,9 @@ class observer_testcase extends advanced_testcase{
     protected function setUp() {
         global $CFG, $DB;
         parent::setUp();
-
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
         $this->resetAfterTest();
+        $this->preventResetByRollback();
         $this->setAdminUser();
         // Enable rocketchat module.
         $modulerecord = $DB->get_record('modules', ['name' => 'rocketchat']);
@@ -134,7 +134,7 @@ class observer_testcase extends advanced_testcase{
         $this->assertTrue($this->rocketchatmanager->group_archived($this->rocketchat->rocketchatid));
     }
 
-    public function test_user_role_changes() {
+    public function test_user_role_changes_unenrol() {
         global $DB;
         $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(3, $members);
@@ -167,6 +167,82 @@ class observer_testcase extends advanced_testcase{
         $this->assertCount(3, $members);
         $this->assertCount(1, $moderators);
         $enrol->unenrol_user($instance, $this->usereditingteacher->id);
+    }
+
+    public function test_user_role_changes() {
+        global $DB;
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $this->assertCount(1, $moderators);
+        $moderator = $moderators[0];
+        $this->assertEquals($this->usereditingteacher->username, $moderator->username);
+        $coursecontext = context_course::instance($this->course->id);
+        $student = $DB->get_record('role', array('shortname' => 'student'));
+        $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        // Change role for usereditingteacher.
+        $enrol = enrol_get_plugin('manual');
+        $enrolinstances = enrol_get_instances($this->course->id, true);
+        foreach ($enrolinstances as $courseenrolinstance) {
+            if ($courseenrolinstance->enrol == "manual") {
+                $instance = $courseenrolinstance;
+                break;
+            }
+        }
+        role_unassign($editingteacher->id, $this->usereditingteacher->id, $coursecontext->id);
+        // Enrol as student.
+        $this->getDataGenerator()->enrol_user($this->usereditingteacher->id, $this->course->id, $student->id);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $this->assertCount(0, $moderators);
+        role_unassign($editingteacher->id, $this->usereditingteacher->id, $coursecontext->id);
+        $this->getDataGenerator()->enrol_user($this->usereditingteacher->id, $this->course->id, $editingteacher->id);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $this->assertCount(1, $moderators);
+        role_unassign($editingteacher->id, $this->usereditingteacher->id, $coursecontext->id);
+    }
+
+    public function test_double_user_role_changes() {
+        global $DB;
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $this->assertCount(1, $moderators);
+        $moderator = $moderators[0];
+        $this->assertEquals($this->usereditingteacher->username, $moderator->username);
+        $enrol = enrol_get_plugin('manual');
+        $enrolinstances = enrol_get_instances($this->course->id, true);
+        foreach ($enrolinstances as $courseenrolinstance) {
+            if ($courseenrolinstance->enrol == "manual") {
+                $instance = $courseenrolinstance;
+                break;
+            }
+        }
+        // add editingteacher to student -> 2 roles
+        $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        $student = $DB->get_record('role', array('shortname' => 'student'));
+        $this->getDataGenerator()->enrol_user($this->userstudent->id, $this->course->id, $editingteacher->id);
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $this->assertCount(2, $moderators);
+
+        // Unassign as student.
+        $coursecontext = context_course::instance($this->course->id);
+        role_unassign($student->id, $this->userstudent->id, $coursecontext->id );
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+        $this->assertCount(2, $moderators);
+        // Unassign as moderator , since last role will be removed from Rocket.Chat group.
+        role_unassign($editingteacher->id, $this->userstudent->id, $coursecontext->id );
+        $moderators = $this->rocketchatmanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $members = $this->rocketchatmanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(2, $members);
+        $this->assertCount(1, $moderators);
     }
 
     public function test_user_updated() {

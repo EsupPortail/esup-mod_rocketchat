@@ -97,12 +97,13 @@ class observers {
                             array(
                                 'courseid' => $coursecontext->instanceid,
                                 'roleid' => $roleid,
-                                'moodleuser' => $moodleuser
+                                'moodleuser' => $moodleuser,
+                                'contextid' => $context->id
                             )
                         );
                         \core\task\manager::queue_adhoc_task($taskunenrolment);
                     } else {
-                        \mod_rocketchat_tools::role_unassign($coursecontext->instanceid, $roleid, $moodleuser);
+                        \mod_rocketchat_tools::role_unassign($coursecontext->instanceid, $roleid, $moodleuser, $context->id);
                     }
                 }
             }

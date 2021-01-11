@@ -356,17 +356,51 @@ class mod_rocketchat_tools {
      * @param int $roleid
      * @param $moodleuser
      */
-    public static function role_unassign($courseid, int $roleid, $moodleuser): void {
+    public static function role_unassign($courseid, int $roleid, $moodleuser, $contextid) {
         $rocketchatmoduleinstances = self::get_rocketchat_module_instances($courseid);
         if (!empty($rocketchatmoduleinstances)) {
             $rocketchatapimanager = new rocket_chat_api_manager();
         }
         foreach ($rocketchatmoduleinstances as $rocketchatmoduleinstance) {
-            if (in_array($roleid, array_filter(explode(',', $rocketchatmoduleinstance->moderatorroles)))) {
-                $rocketchatapimanager->unenrol_moderator_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+            $moderaorroles = explode(',', $rocketchatmoduleinstance->moderatorroles);
+            $userroles = explode(',', $rocketchatmoduleinstance->userroles);
+            $hasothermoderatorrole = false;
+            $hasotheruserrole = false;
+            $wasmoderator = false;
+            // Has other moderator moodle roles?
+            foreach ($moderaorroles as $moderatorrole) {
+                if ($moderatorrole != $roleid) {
+                    if (user_has_role_assignment($moodleuser->id, $moderatorrole, $contextid)) {
+                        $hasothermoderatorrole = true;
+                        break;
+                    }
+                }
             }
-            if (in_array($roleid, array_filter(explode(',', $rocketchatmoduleinstance->userroles)))) {
-                $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+            // Has other user moodle roles?
+            foreach ($userroles as $userrole) {
+                if ($userrole != $roleid) {
+                    if (user_has_role_assignment($moodleuser->id, $userrole, $contextid)) {
+                        $hasotheruserrole = true;
+                        break;
+                    }
+                }
+            }
+            if (in_array($roleid, array_filter($moderaorroles))) {
+                $wasmoderator = true;
+                if (!$hasothermoderatorrole) {
+                    $rocketchatapimanager->revoke_moderator_in_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+                }
+            }
+            $wasuser = false;
+            if (!$hasothermoderatorrole) {
+                if (in_array($roleid, array_filter($userroles))) {
+                    $wasuser = true;
+                    if (!$hasotheruserrole) {
+                        $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+                    }
+                } else if($wasmoderator) {
+                    $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
+                }
             }
         }
     }
