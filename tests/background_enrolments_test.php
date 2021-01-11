@@ -36,6 +36,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
     private $datagenerator;
     private $rocketchat;
     private $studentrole;
+    private $editingteacherrole;
 
     public function setUp() {
         global $DB;
@@ -56,6 +57,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $this->user2 = $this->datagenerator->create_user(
             array('username' => $username.'2', 'firstname' => $username.'2', 'lastname' => $username.'2'));
         $this->studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $this->editingteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_'.time(),
             'mod_rocketchat');
@@ -142,6 +144,38 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         self::unenrol_user('manual', $this->course->id, $this->user2->id);
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members);
+    }
+
+    public function test_user_role_changes_override_module_context() {
+        set_config('background_enrolment_task', 'enrol_manual', 'mod_rocketchat');
+        $modulecontext = context_module::instance($this->rocketchat->cmid);
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(1, $members); // Owner.
+        $this->datagenerator->enrol_user($this->user->id, $this->course->id, $this->studentrole->id);
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(1, $members);
+        // Need to trigger adhoc tasks to enrol.
+        phpunit_util::run_all_adhoc_tasks();
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(2, $members);
+        $enrolmethod = 'manual';
+        // Assign editingteacher role.
+        role_assign($this->editingteacherrole->id, $this->user->id, $modulecontext->id);
+        $moderators = $this->rocketchatapimanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $this->assertCount(0, $moderators);
+        // Trigger adhoc tasks.
+        phpunit_util::run_all_adhoc_tasks();
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $moderators = $this->rocketchatapimanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $this->assertCount(1, $moderators);
+        $this->assertCount(2, $members);
+        // Unassign editingteacher role in module context
+        role_unassign($this->editingteacherrole->id, $this->user->id, $modulecontext->id);
+        phpunit_util::run_all_adhoc_tasks();
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $moderators = $this->rocketchatapimanager->get_group_moderators($this->rocketchat->rocketchatid);
+        $this->assertCount(0, $moderators);
+        $this->assertCount(2, $members);
     }
 
 

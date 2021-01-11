@@ -291,8 +291,6 @@ class observer_testcase extends advanced_testcase{
         $this->assertCount(1, $moderators);
         $moderator = $moderators[0];
         $this->assertEquals($this->usereditingteacher->username, $moderator->username);
-        $coursecontext = context_course::instance($this->course->id);
-        $student = $DB->get_record('role', array('shortname' => 'student'));
         $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
         // Assign student as editingteacher in module context.
         $modulecontext = context_module::instance($this->rocketchat->cmid);
