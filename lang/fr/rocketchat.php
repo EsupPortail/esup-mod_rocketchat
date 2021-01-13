@@ -30,7 +30,7 @@ $string['description'] = 'Module de synchronisation entre Rockat.Chat et Moodle'
 $string['modulename'] = 'Rocket.Chat';
 $string['modulenameplural'] = 'Rocket.Chat';
 $string['pluginname'] = 'Rocket.Chat';
-$string['modulename_help'] = 'En ajoutant cette activité à un  cours Moodle , un canal privé Rocket.Chat sera uatomatique créé.
+$string['modulename_help'] = 'En ajoutant cette activité à un  cours Moodle, un canal privé Rocket.Chat sera automatiquent créé.
 
 Les utilisateurs associés, en fonction de leur rôle dans le cours, y seront inscrits et mis à jour automatiquement.
 
