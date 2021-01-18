@@ -141,6 +141,42 @@ class rocket_chat_api_manager{
         return false;
     }
 
+    public function save_rocketchat_group_settings($groupid, $settings) {
+        $identifier = new \stdClass();
+        $identifier->_id = $groupid;
+        $identifier->name = '';
+        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+        // Format settings
+        $rcsettings = array();
+        foreach($settings as $settingname => $settingvalue){
+            switch($settingname) {
+                case 'retentionenabled':
+                    $rcsettings['retentionEnabled'] = (boolean) $settingvalue;
+                    break;
+                case 'overrideglobal' :
+                    $rcsettings['retentionOverrideGlobal'] = (boolean) $settingvalue;
+                    break;
+                case 'maxage' :
+                    $rcsettings['retentionMaxAge'] = $settingvalue;
+                    break;
+                case 'filesonly' :
+                    $rcsettings['retentionFilesOnly'] = (boolean) $settingvalue;
+                    break;
+                case 'excludepinned' :
+                    $rcsettings['retentionExcludePinned'] = (boolean) $settingvalue;
+                    break;
+                default:
+                    break;
+            }
+        }
+        try {
+            $group->saveRoomSettings($rcsettings);
+        } catch (RocketChatException $e) {
+            self::moodle_debugging_message("Error while save settings into Room $group->id", $e, DEBUG_ALL);
+        }
+    }
+
     public function archive_rocketchat_group($id) {
         $identifier = new \stdClass();
         $identifier->_id = $id;

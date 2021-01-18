@@ -61,6 +61,58 @@ class mod_rocketchat_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements();
 
+        if (has_capability('mod/rocketchat:canactivateretentionglobaloverride', $this->get_context())) {
+            $mform->addElement('checkbox', 'overrideglobal',
+                get_string('overrideglobal', 'mod_rocketchat'),
+                get_string('overrideglobal_desc', 'mod_rocketchat')
+            );
+            $mform->addHelpButton('overrideglobal', 'overrideglobal', 'mod_rocketchat');
+        } else {
+            $mform->addElement('hidden', 'overrigeglobal');
+        }
+        $mform->setDefault('overrideglobal', get_config('mod_rocketchat', 'overrideglobal'));
+
+        if (has_capability('mod/rocketchat:canactivateretentionpolicy', $this->get_context())) {
+            $mform->addElement('checkbox', 'retentionenabled',
+                get_string('retentionenabled', 'mod_rocketchat'),
+                get_string('retentionenabled_desc', 'mod_rocketchat')
+            );
+            $mform->setDefault('rententionenabled', get_config('mod_rocketchat', 'rententionenabled'));
+            $mform->addElement('text', 'maxage', get_string('maxage', 'mod_rocketchat'));
+            $mform->setType('maxage', PARAM_INT);
+            $mform->disabledif('maxage', 'retentionenabled',
+                'notchecked');
+            if (has_capability('mod/rocketchat:candefineadvancedretentionparamaters', $this->get_context())) {
+                $mform->addElement('checkbox', 'filesonly',
+                    get_string('filesonly', 'mod_rocketchat'),
+                    get_string('filesonly_desc', 'mod_rocketchat')
+                );
+                $mform->disabledif('filesonly', 'retentionenabled',
+                    'notchecked');
+                $mform->addElement('checkbox', 'excludepinned',
+                    get_string('excludepinned', 'mod_rocketchat'),
+                    get_string('excludepinned_desc', 'mod_rocketchat')
+                );
+                $mform->disabledif('excludepinned', 'retentionenabled',
+                    'notchecked');
+            } else {
+                $mform->addElement('hidden', 'filesonly');
+                $mform->addElement('hidden', 'excludepinned');
+            }
+        } else {
+            $mform->addElement('hidden', 'retentionenable');
+            $mform->setDefault('rententionenabled', get_config('mod_rocketchat', 'rententionenabled'));
+            $mform->addElement('hidden', 'maxage');
+            $mform->addElement('hidden', 'filesonly');
+            $mform->addElement('hidden', 'excludepinned');
+        }
+
+        $defaultmaxage = get_config('mod_rocketchat', 'maxage');
+        $defaultmaxage = intval($defaultmaxage);
+        $mform->setDefault('maxage', $defaultmaxage);
+        $mform->setDefault('filesonly', get_config('mod_rocketchat', 'excludepinned'));
+        $mform->setDefault('excludepinned', get_config('mod_rocketchat', 'excludepinned'));
+
         $embbeddisplaymodechange = has_capability('mod/rocketchat:change_embedded_display_mode', $this->get_context());
         if ($embbeddisplaymodechange) {
             $mform->addElement('checkbox', 'embbeded',

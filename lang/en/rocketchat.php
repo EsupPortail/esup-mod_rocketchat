@@ -125,3 +125,23 @@ $string['background_user_update'] = 'Pass Rocket.Chat enrolments to background t
     .' activation/deactivation.';
 $string['background_user_update_desc'] = 'Pass Rocket.Chat enrolments to background task while updating user informations such as'
     .' activation/deactivation.';
+$string['retentionenabled'] = 'Message retention';
+$string['retentionenabled_desc'] = 'Activate message retention';
+$string['overrideglobal'] = 'Override global message retention mode';
+$string['overrideglobal_desc'] = 'Activate override global message retention on a private group.';
+$string['maxage'] = 'Retention time value (maxAge) for the Rocket.Chat group';
+$string['maxage_desc'] = 'If you enabled override global message retention, the following retention value will override.'
+    .' WARNING : 0 will trigger regular deletion of messages.'
+    .' global Rocket.Chat retention value.';
+$string['maxage_help'] = 'If you enabled override global message retention, the following retention value will override.'
+    .' WARNING : 0 will trigger regular deletion of messages.'
+    .' global Rocket.Chat retention value.';
+$string['filesonly'] = 'Prune files only, keep messages';
+$string['filesonly_desc'] = 'if enabled, messages are not be deleted, but files are;'
+    .' they are replaced by a simple File removed by automatic prune message. When used together with Exclude pinned messages,'
+    .' only unpinned files are deleted.';
+$string['excludepinned'] = 'Exclude pinned messages';
+$string['excludepinned_desc'] = 'If enabled, pinned messages are not deleted.'
+    .' For example, if you pinned a few messages with important links, they stay intact.';
+$string['mod/rocketchat:candefineadvancedretentionparamaters'] = 'Can override avanced Rocket.Chat local retention policy paramaters';
+$string['mod/rocketchat:canactivateretentionpolicy'] = 'Can acivate local retention policy on Rocket.Chat group';

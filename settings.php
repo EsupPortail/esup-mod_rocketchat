@@ -97,6 +97,48 @@ if ($ADMIN->fulltree) {
         )
     );
 
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_rocketchat/retentionenabled',
+            get_string('retentionenabled', 'mod_rocketchat'),
+            get_string('retentionenabled_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_rocketchat/overrideglobal',
+            get_string('overrideglobal', 'mod_rocketchat'),
+            get_string('overrideglobal_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+    $settings->add(
+        new admin_setting_configtext(
+            'mod_rocketchat/maxage',
+            get_string('maxage', 'mod_rocketchat'),
+            get_string('maxage_desc', 'mod_rocketchat'),
+            90
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_rocketchat/filesonly',
+            get_string('filesonly', 'mod_rocketchat'),
+            get_string('filesonly_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_rocketchat/excludepinned',
+            get_string('excludepinned', 'mod_rocketchat'),
+            get_string('excludepinned_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+
     $rolesoptions = role_fix_names(get_all_roles(), null, ROLENAME_ORIGINALANDSHORT, true);
     $editingteachers = get_archetype_roles('editingteacher');
     $student = get_archetype_roles('student');

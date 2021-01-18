@@ -75,6 +75,15 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
     $groupname = mod_rocketchat_tools::rocketchat_group_name($cmid, $course);
     $rocketchatapimanager = new rocket_chat_api_manager();
     $moduleinstance->rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
+    $data = $mform->get_data();
+    $retentionsettings = array(
+        'retentionenabled' => $data->retentionenabled,
+        'overrideglobal' => $data->overrideglobal,
+        'maxage' => $data->maxage,
+        'filesonly' => $data->fileslonly,
+        'excludepinned' => $data->excludepinned
+        );
+    $rocketchatapimanager->save_rocketchat_group_settings($moduleinstance->rocketchatid, $retentionsettings);
     if (is_null($moduleinstance->rocketchatid)) {
         print_error('an error occured while creating Rocket.Chat group');
     }
@@ -101,12 +110,20 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
  */
 function rocketchat_update_instance($moduleinstance, $mform = null) {
     global $DB;
-    $data = $mform->get_data();
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
+    $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleinstance->id));
     $return = $DB->update_record('rocketchat', $moduleinstance);
     if ($return) {
-        $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleinstance->id));
+        $retentionsettings = array(
+            'retentionenabled' => $moduleinstance->retentionenabled,
+            'overrideglobal' => $moduleinstance->overrideglobal,
+            'maxage' => $moduleinstance->maxage,
+            'filesonly' => $moduleinstance->fileslonly,
+            'excludepinned' => $moduleinstance->excludepinned
+        );
+        $rocketchatapimanager = new rocket_chat_api_manager();
+        $rocketchatapimanager->save_rocketchat_group_settings($rocketchat->rocketchatid, $retentionsettings);
         \mod_rocketchat_tools::synchronize_group_members($rocketchat->rocketchatid,
             get_config('mod_rocketchat', 'background_synchronize'));
     }
