@@ -148,30 +148,39 @@ class rocket_chat_api_manager{
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
         // Format settings
-        $rcsettings = array();
+        $rcsettings1 = array();
+        $rcsettings2 = array();
         foreach($settings as $settingname => $settingvalue){
             switch($settingname) {
                 case 'retentionenabled':
-                    $rcsettings['retentionEnabled'] = (boolean) $settingvalue;
+                    $rcsettings1['retentionEnabled'] = (boolean) $settingvalue;
                     break;
                 case 'overrideglobal' :
-                    $rcsettings['retentionOverrideGlobal'] = (boolean) $settingvalue;
+                    $rcsettings1['retentionOverrideGlobal'] = (boolean) $settingvalue;
                     break;
                 case 'maxage' :
-                    $rcsettings['retentionMaxAge'] = $settingvalue;
+                    $rcsettings2['retentionMaxAge'] = $settingvalue;
                     break;
                 case 'filesonly' :
-                    $rcsettings['retentionFilesOnly'] = (boolean) $settingvalue;
+                    $rcsettings2['retentionFilesOnly'] = (boolean) $settingvalue;
                     break;
                 case 'excludepinned' :
-                    $rcsettings['retentionExcludePinned'] = (boolean) $settingvalue;
+                    $rcsettings2['retentionExcludePinned'] = (boolean) $settingvalue;
                     break;
                 default:
                     break;
             }
         }
         try {
-            $group->saveRoomSettings($rcsettings);
+            /*
+            if (count($rcsettings1)>0) {
+                $group->saveRoomSettings($rcsettings1);
+            }
+            if (count($rcsettings2)>0) {
+                $group->saveRoomSettings($rcsettings2);
+            }*/
+            $group->saveRoomSettings(array_merge($rcsettings1,$rcsettings2));
+
         } catch (RocketChatException $e) {
             self::moodle_debugging_message("Error while save settings into Room $group->id", $e, DEBUG_ALL);
         }
