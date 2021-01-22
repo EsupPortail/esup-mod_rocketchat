@@ -78,6 +78,18 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
     if (is_null($moduleinstance->rocketchatid)) {
         print_error('an error occured while creating Rocket.Chat group');
     }
+    if ((boolean)get_config('mod_rocketchat', 'retentionfeature')) {
+        $retentionsettings = array(
+            'retentionenabled' =>
+                property_exists($moduleinstance, 'retentionenabled') ? $moduleinstance->retentionenabled : false,
+            'overrideglobal' =>
+                property_exists($moduleinstance, 'overrideglobal') ? $moduleinstance->overrideglobal : false,
+            'maxage' => $moduleinstance->maxage,
+            'filesonly' => property_exists($moduleinstance, 'filesonly') ? $moduleinstance->filesonly : false,
+            'excludepinned' => property_exists($moduleinstance, 'excludepinned') ? $moduleinstance->excludepinned : false
+        );
+        $rocketchatapimanager->save_rocketchat_group_settings($moduleinstance->rocketchatid, $retentionsettings);
+    }
     if (!$moduleinstance->visible || !$moduleinstance->visibleoncoursepage) {
         $group = $rocketchatapimanager->get_rocketchat_group_object($moduleinstance->rocketchatid);
         $group->archive();
@@ -101,12 +113,31 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
  */
 function rocketchat_update_instance($moduleinstance, $mform = null) {
     global $DB;
-    $data = $mform->get_data();
     $moduleinstance->timemodified = time();
-    $moduleinstance->id = $moduleinstance->instance;
+    $moduleinstance->id = property_exists($moduleinstance, 'id') ? $moduleinstance->id : $moduleinstance->instance;
+    $moduleinstance->retentionenabled =
+        property_exists($moduleinstance, 'retentionenabled') ? $moduleinstance->retentionenabled : false;
+    $moduleinstance->overrideglobal =
+        property_exists($moduleinstance, 'overrideglobal') ? $moduleinstance->overrideglobal : false;
+    $moduleinstance->filesonly =
+        property_exists($moduleinstance, 'filesonly') ? $moduleinstance->filesonly : false;
+    $moduleinstance->excludepinned =
+        property_exists($moduleinstance, 'excludepinned') ? $moduleinstance->excludepinned : false;
+    $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleinstance->id));
     $return = $DB->update_record('rocketchat', $moduleinstance);
     if ($return) {
-        $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleinstance->id));
+        $rocketchatapimanager = new rocket_chat_api_manager();
+        if ((boolean)get_config('mod_rocketchat', 'retentionfeature')) {
+            $retentionsettings = array(
+                'retentionenabled' => $moduleinstance->retentionenabled,
+                'overrideglobal' => $moduleinstance->overrideglobal,
+                'maxage' => $moduleinstance->maxage,
+                'filesonly' => $moduleinstance->filesonly,
+                'excludepinned' => $moduleinstance->excludepinned
+
+            );
+            $rocketchatapimanager->save_rocketchat_group_settings($rocketchat->rocketchatid, $retentionsettings);
+        }
         \mod_rocketchat_tools::synchronize_group_members($rocketchat->rocketchatid,
             get_config('mod_rocketchat', 'background_synchronize'));
     }

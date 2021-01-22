@@ -91,5 +91,52 @@ function xmldb_rocketchat_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020101203, 'rocketchat');
 
     }
+
+    if ($oldversion < 2021011500) {
+        // Define field retention to be added to rocketchat.
+        $table = new xmldb_table('rocketchat');
+        $field = new xmldb_field('retention', XMLDB_TYPE_INTEGER, '10',
+            null, null, null, null, 'userroles');
+
+        // Conditionally launch add field retention.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Rocketchat savepoint reached.
+        upgrade_mod_savepoint(true, 2021011500, 'rocketchat');
+    }
+    if ($oldversion < 2021011504) {
+        // Define field retention to be added to rocketchat.
+        $table = new xmldb_table('rocketchat');
+        $field = new xmldb_field('retentionenabled', XMLDB_TYPE_INTEGER, '1',
+            null, true, null, 0, 'userroles');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('overrideglobal', XMLDB_TYPE_INTEGER, '1',
+            null, true, null, 0, 'retentionenabled');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('maxage', XMLDB_TYPE_INTEGER, '10',
+            null, true, null, 90, 'overrideglobal');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('filesonly', XMLDB_TYPE_INTEGER, '1',
+            null, true, null, 0, 'maxage');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('excludepinned', XMLDB_TYPE_INTEGER, '1',
+            null, true, null, 0, 'filesonly');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Rocketchat savepoint reached.
+        upgrade_mod_savepoint(true, 2021011504, 'rocketchat');
+    }
     return true;
 }

@@ -141,6 +141,50 @@ class rocket_chat_api_manager{
         return false;
     }
 
+    public function save_rocketchat_group_settings($groupid, $settings) {
+        $identifier = new \stdClass();
+        $identifier->_id = $groupid;
+        $identifier->name = '';
+        $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+        // Format settings.
+        $rcsettings1 = array();
+        $rcsettings2 = array();
+        foreach ($settings as $settingname => $settingvalue) {
+            switch($settingname) {
+                case 'retentionenabled':
+                    $rcsettings1['retentionEnabled'] = (boolean) $settingvalue;
+                    break;
+                case 'overrideglobal' :
+                    $rcsettings1['retentionOverrideGlobal'] = (boolean) $settingvalue;
+                    break;
+                case 'maxage' :
+                    $rcsettings2['retentionMaxAge'] = $settingvalue;
+                    break;
+                case 'filesonly' :
+                    $rcsettings2['retentionFilesOnly'] = (boolean) $settingvalue;
+                    break;
+                case 'excludepinned' :
+                    $rcsettings2['retentionExcludePinned'] = (boolean) $settingvalue;
+                    break;
+                default:
+                    break;
+            }
+        }
+        try {
+            // Need to make it in two times because of Rocket.Chat behaviour.
+            if (count($rcsettings1) > 0) {
+                $group->saveRoomSettings($rcsettings1);
+            }
+            if (count($rcsettings2) > 0) {
+                $group->saveRoomSettings($rcsettings2);
+            }
+
+        } catch (RocketChatException $e) {
+            self::moodle_debugging_message("Error while save settings into Room $group->id", $e, DEBUG_ALL);
+        }
+    }
+
     public function archive_rocketchat_group($id) {
         $identifier = new \stdClass();
         $identifier->_id = $id;

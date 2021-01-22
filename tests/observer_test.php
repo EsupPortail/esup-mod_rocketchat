@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
-class observer_testcase extends advanced_testcase{
+class mod_rocketchat_observer_testcase extends advanced_testcase{
     private $course;
     private $rocketchat;
     private $userstudent;
@@ -221,7 +221,7 @@ class observer_testcase extends advanced_testcase{
                 break;
             }
         }
-        // add editingteacher to student -> 2 roles
+        // Add editingteacher to student -> 2 roles.
         $editingteacher = $DB->get_record('role', array('shortname' => 'editingteacher'));
         $student = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($this->userstudent->id, $this->course->id, $editingteacher->id);

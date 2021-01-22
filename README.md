@@ -77,15 +77,16 @@ set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Op
 ```bash
 cd /www_moodle_path
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_background_enrolments_testcase" mod/rocketchat/tests/backup_enrolments_test.php
-/www_moodle_path/vendor/bin/phpunit "backup_restore_testcase" mod/rocketchat/tests/backup_restore_test.php
-/www_moodle_path/vendor/bin/phpunit "course_reset_testcase" mod/rocketchat/tests/course_reset_test.php
-/www_moodle_path/vendor/bin/phpunit "observer_testcase" mod/rocketchat/tests/observer_test.php
-/www_moodle_path/vendor/bin/phpunit   "mod_rocketchat_api_manager_testcase" mod/rocketchat/tests/rocket_chat_api_manager_test.php
-/www_moodle_path/vendor/bin/phpunit "recyclebin_category_testcase" mod/rocketchat/tests/recyclebin_category_test.php
-/www_moodle_path/vendor/bin/phpunit "recyclebin_testcase" mod/rocketchat/tests/recyclebin_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_backup_restore_testcase" mod/rocketchat/tests/backup_restore_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_course_reset_testcase" mod/rocketchat/tests/course_reset_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_observer_testcase" mod/rocketchat/tests/observer_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_api_manager_testcase" mod/rocketchat/tests/rocket_chat_api_manager_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_recyclebin_category_testcase" mod/rocketchat/tests/recyclebin_category_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_recyclebin_testcase" mod/rocketchat/tests/recyclebin_test.php
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_privacy_testcase" mod/rocketchat/tests/privacy_provider_test.php
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_tools_testcase" mod/rocketchat/tests/mod_rocketchat_tools_test.php
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_moderator_and_user_roles_testcase" mod/rocketchat/tests/moderator_and_user_roles_test.php
+/www_moodle_path/vendor/bin/phpunit "mod_rocketchat_retention_testcase" mod/rocketchat/tests/retention_test.php
 ```
 
 ## Functional tests with behat

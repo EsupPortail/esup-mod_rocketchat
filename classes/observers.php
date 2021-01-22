@@ -49,9 +49,9 @@ class observers {
                     $coursecontext = \context_course::instance($cm->course);
                 }
                 if (
-                    ($context->contextlevel ==  CONTEXT_COURSE
+                    ($context->contextlevel == CONTEXT_COURSE
                         && \mod_rocketchat_tools::has_rocketchat_module_instances($coursecontext->instanceid))
-                    || ($context->contextlevel ==  CONTEXT_MODULE
+                    || ($context->contextlevel == CONTEXT_MODULE
                         && \mod_rocketchat_tools::is_module_a_rocketchat_instance($cm->id))
                 ) {
                     $backenrolmentsmethods = array_filter(

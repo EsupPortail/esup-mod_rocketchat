@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
-class course_reset_testcase extends advanced_testcase{
+class mod_rocketchat_course_reset_testcase extends advanced_testcase{
     private $course;
     private $rocketchat;
     private $userstudent;

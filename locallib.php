@@ -127,7 +127,7 @@ class mod_rocketchat_tools {
         return $DB->record_exists_sql($sql , array('courseid' => $courseid, 'rocketchat' => 'rocketchat'));
     }
 
-    public static function is_module_a_rocketchat_instance($cmid){
+    public static function is_module_a_rocketchat_instance($cmid) {
         global $DB;
         $sql = 'select cm.*, r.rocketchatid, r.moderatorroles, r.userroles'
             .' from {course_modules} cm inner join {modules} m on m.id=cm.module inner join {rocketchat} r on r.id=cm.instance '
@@ -424,7 +424,7 @@ class mod_rocketchat_tools {
                     if (!$hasotheruserrole) {
                         $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                     }
-                } else if($wasmoderator && !$hasotheruserrole) {
+                } else if ($wasmoderator && !$hasotheruserrole) {
                     $rocketchatapimanager->unenrol_user_from_group($rocketchatmoduleinstance->rocketchatid, $moodleuser);
                 }
             }

@@ -29,7 +29,7 @@ global $CFG;
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
-class recyclebin_category_testcase extends advanced_testcase{
+class mod_rocketchat_recyclebin_category_testcase extends advanced_testcase{
 
     private $user;
     private $rocketchat;
