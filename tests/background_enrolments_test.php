@@ -169,7 +169,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $moderators = $this->rocketchatapimanager->get_group_moderators($this->rocketchat->rocketchatid);
         $this->assertCount(1, $moderators);
         $this->assertCount(2, $members);
-        // Unassign editingteacher role in module context
+        // Unassign editingteacher role in module context.
         role_unassign($this->editingteacherrole->id, $this->user->id, $modulecontext->id);
         phpunit_util::run_all_adhoc_tasks();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);

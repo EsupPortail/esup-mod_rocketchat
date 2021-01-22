@@ -99,6 +99,15 @@ if ($ADMIN->fulltree) {
 
     $settings->add(
         new admin_setting_configcheckbox(
+            'mod_rocketchat/retentionfeature',
+            get_string('retentionfeature', 'mod_rocketchat'),
+            get_string('retentionfeature_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+
+    $settings->add(
+        new admin_setting_configcheckbox(
             'mod_rocketchat/retentionenabled',
             get_string('retentionenabled', 'mod_rocketchat'),
             get_string('retentionenabled_desc', 'mod_rocketchat'),

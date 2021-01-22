@@ -147,10 +147,10 @@ class rocket_chat_api_manager{
         $identifier->name = '';
         $group = new \RocketChat\Group($identifier, array(), array(), $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
-        // Format settings
+        // Format settings.
         $rcsettings1 = array();
         $rcsettings2 = array();
-        foreach($settings as $settingname => $settingvalue){
+        foreach ($settings as $settingname => $settingvalue) {
             switch($settingname) {
                 case 'retentionenabled':
                     $rcsettings1['retentionEnabled'] = (boolean) $settingvalue;
@@ -172,14 +172,13 @@ class rocket_chat_api_manager{
             }
         }
         try {
-            /*
-            if (count($rcsettings1)>0) {
+            // Need to make it in two times because of Rocket.Chat behaviour.
+            if (count($rcsettings1) > 0) {
                 $group->saveRoomSettings($rcsettings1);
             }
-            if (count($rcsettings2)>0) {
+            if (count($rcsettings2) > 0) {
                 $group->saveRoomSettings($rcsettings2);
-            }*/
-            $group->saveRoomSettings(array_merge($rcsettings1,$rcsettings2));
+            }
 
         } catch (RocketChatException $e) {
             self::moodle_debugging_message("Error while save settings into Room $group->id", $e, DEBUG_ALL);

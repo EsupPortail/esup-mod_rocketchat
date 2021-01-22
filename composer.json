@@ -3,7 +3,7 @@
   "description": "Rocket.Chat Moodle module.",
   "minimum-stability": "dev",
   "require": {
-    "esup-portail/rocket-chat-rest-client": "dev-devel",
+    "esup-portail/rocket-chat-rest-client": "dev-master#1.3",
     "nategood/httpful": "*"
   },
   "repositories": [

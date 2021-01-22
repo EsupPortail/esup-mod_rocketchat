@@ -145,6 +145,15 @@ $string['filesonly'] = 'Prune files only, keep messages';
 $string['filesonly_desc'] = 'if enabled, messages are not be deleted, but files are;'
     .' they are replaced by a simple File removed by automatic prune message. When used together with Exclude pinned messages,'
     .' only unpinned files are deleted.';
-$string['exludpoinned'] = 'Exclude pinned messages';
-$string['exludpoinned_desc'] = 'If enabled, pinned messages are not deleted.'
+$string['exludeoinned'] = 'Exclude pinned messages';
+$string['exludeoinned_desc'] = 'If enabled, pinned messages are not deleted.'
     .' For example, if you pinned a few messages with important links, they stay intact.';
+$string['retentionfeature'] = 'Fonctionalité de réention des messages';
+$string['retentionfeature_desc'] = 'Activer le paramétrage de la rétention des message par groupe Rocket.Chat. Attention '
+    .'cette fonctionnalité de Rocket.Chat n\'est valable qu\'à partir de la version 3.10.3 du serveur Rocket.Chat server.';
+$string['rocketchat:canactivateretentionpolicy'] = 'Permet de surcharger l\'activation de la rétention'.
+    ' des messages dans une instance de Rocket.Chat.';
+$string['rocketchat:canactivateretentionglobaloverride'] = 'Permet de surcharger l\'activation de rétention globale'.
+    ' des messages dans une instance de Rocket.Chat.';
+$string['rocketchat:candefineadvancedretentionparamaters'] = 'Permet de surcharger l\'activation des paramètres de rétention globale'.
+    ' des messages dans une instance de Rocket.Chat.';

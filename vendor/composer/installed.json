@@ -1,8 +1,8 @@
 [
     {
         "name": "esup-portail/rocket-chat-rest-client",
-        "version": "dev-devel",
-        "version_normalized": "dev-devel",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/EsupPortail/rocket-chat-rest-client.git",
@@ -30,7 +30,7 @@
         },
         "description": "Rocket Chat REST API client in PHP.",
         "support": {
-            "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/devel"
+            "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/1.3"
         }
     },
     {
