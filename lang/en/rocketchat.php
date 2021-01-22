@@ -151,3 +151,6 @@ $string['retentionfeature_desc'] = 'Activate retention feature settings.'
 $string['rocketchat:canactivateretentionpolicy'] = 'Can override retention policy activation on a Rocket.Chat instance';
 $string['rocketchat:canactivateretentionglobaloverride'] = 'Can override global override activation on a Rocket.Chat instance';
 $string['rocketchat:candefineadvancedretentionparamaters'] = 'Can override global override settings on a Rocket.Chat instance';
+$string['displaysection'] = 'Display settings';
+$string['retentionsection'] = 'Message retention settings';
+$string['rolessection'] = 'Roles definition settings';

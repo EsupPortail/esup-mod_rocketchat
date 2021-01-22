@@ -157,3 +157,6 @@ $string['rocketchat:canactivateretentionglobaloverride'] = 'Permet de surcharger
     ' des messages dans une instance de Rocket.Chat.';
 $string['rocketchat:candefineadvancedretentionparamaters'] = 'Permet de surcharger l\'activation des paramètres de rétention globale'.
     ' des messages dans une instance de Rocket.Chat.';
+$string['displaysection'] = 'Affichage';
+$string['retentionsection'] = 'Rétention des messages';
+$string['rolessection'] = 'Définition des rôles';
