@@ -144,7 +144,7 @@ class mod_rocketchat_tools {
         $coursecontext = context_course::instance($courseid);
         $users = get_enrolled_users($coursecontext);
         foreach ($users as $user) {
-            if(!$background || ($forcecreator && $user->id == $USER->id && !\core\session\manager::is_loggedinas())) {
+            if (!$background || ($forcecreator && $user->id == $USER->id && !\core\session\manager::is_loggedinas())) {
                 self::enrol_user_to_rocketchat_group($rocketchatmoduleinstance->rocketchatid,
                     $rocketchatmoduleinstance->moderatorroles,
                     $rocketchatmoduleinstance->userroles,
