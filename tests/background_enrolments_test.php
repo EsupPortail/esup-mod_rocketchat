@@ -61,9 +61,6 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         set_config('groupnametoformat',
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_'.time(),
             'mod_rocketchat');
-        $groupname = mod_rocketchat_tools::rocketchat_group_name(0, $this->course);
-        $this->rocketchat = $this->datagenerator->create_module('rocketchat',
-            array('course' => $this->course->id, 'groupname' => $groupname));
     }
 
     protected function tearDown() {
@@ -78,6 +75,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
     public function test_enrol_unenrol_user_no_background() {
         // No enrolment method in background.
         set_config('background_enrolment_task', '', 'mod_rocketchat');
+        $this->create_rocketchat_module();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members); // Only Owner.
         $this->datagenerator->enrol_user($this->user->id, $this->course->id, $this->studentrole->id);
@@ -91,6 +89,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
 
     public function test_enrol_unenrol_user_manual_background() {
         set_config('background_enrolment_task', 'enrol_manual', 'mod_rocketchat');
+        $this->create_rocketchat_module();
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members); // Owner.
         $this->datagenerator->enrol_user($this->user->id, $this->course->id, $this->studentrole->id);
@@ -111,6 +110,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
     }
 
     public function test_enrol_unenrol_user_cohort_background() {
+        $this->create_rocketchat_module();
         self::enable_cohort_enrolments();
         set_config('background_enrolment_task', 'enrol_cohort', 'mod_rocketchat');
         $trace = new null_progress_trace();
@@ -147,6 +147,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
     }
 
     public function test_user_role_changes_override_module_context() {
+        $this->create_rocketchat_module();
         set_config('background_enrolment_task', 'enrol_manual', 'mod_rocketchat');
         $modulecontext = context_module::instance($this->rocketchat->cmid);
         $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
@@ -178,6 +179,20 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $this->assertCount(2, $members);
     }
 
+    public function test_add_instance_enrol_user_manual_background_currentuser() {
+        set_config('background_enrolment_task', 'enrol_manual', 'mod_rocketchat');
+        // Create a new rocketchat instance after course enrolments.
+        $this->datagenerator->enrol_user($this->user->id, $this->course->id, $this->editingteacherrole->id);
+        $this->datagenerator->enrol_user($this->user2->id, $this->course->id, $this->studentrole->id);
+        $this->setUser($this->user);
+        $this->create_rocketchat_module();
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(2, $members); // Owner.
+        // Need to trigger adhoc tasks to enrol.
+        phpunit_util::run_all_adhoc_tasks();
+        $members = $this->rocketchatapimanager->get_group_members($this->rocketchat->rocketchatid);
+        $this->assertCount(3, $members);
+    }
 
     private function load_rocketchat_test_config() {
         global $CFG;
@@ -210,5 +225,11 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
         $enabled['cohort'] = true;
         $enabled = array_keys($enabled);
         set_config('enrol_plugins_enabled', implode(',', $enabled));
+    }
+
+    private function create_rocketchat_module(): void {
+        $groupname = mod_rocketchat_tools::rocketchat_group_name(0, $this->course);
+        $this->rocketchat = $this->datagenerator->create_module('rocketchat',
+            array('course' => $this->course->id, 'groupname' => $groupname));
     }
 }

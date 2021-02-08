@@ -135,12 +135,22 @@ class mod_rocketchat_tools {
         return $DB->record_exists_sql($sql , array('cmid' => $cmid, 'rocketchat' => 'rocketchat'));
     }
 
-    public static function enrol_all_concerned_users_to_rocketchat_group($rocketchatmoduleinstance, $background=false) {
+    public static function enrol_all_concerned_users_to_rocketchat_group($rocketchatmoduleinstance,
+        $background=false,
+        $forcecreator=false
+    ) {
+        global $USER;
         $courseid = $rocketchatmoduleinstance->course;
         $coursecontext = context_course::instance($courseid);
         $users = get_enrolled_users($coursecontext);
         foreach ($users as $user) {
-            if ($background) {
+            if(!$background || ($forcecreator && $user->id == $USER->id && !\core\session\manager::is_loggedinas())) {
+                self::enrol_user_to_rocketchat_group($rocketchatmoduleinstance->rocketchatid,
+                    $rocketchatmoduleinstance->moderatorroles,
+                    $rocketchatmoduleinstance->userroles,
+                    $user->id,
+                    $coursecontext->id);
+            } else {
                 $taskenrolment = new \mod_rocketchat\task\enrol_user_to_rocketchat_group();
                 $taskenrolment->set_custom_data(
                     array(
@@ -152,12 +162,6 @@ class mod_rocketchat_tools {
                     )
                 );
                 \core\task\manager::queue_adhoc_task($taskenrolment);
-            } else {
-                self::enrol_user_to_rocketchat_group($rocketchatmoduleinstance->rocketchatid,
-                    $rocketchatmoduleinstance->moderatorroles,
-                    $rocketchatmoduleinstance->userroles,
-                    $user->id,
-                    $coursecontext->id);
             }
         }
     }
@@ -316,7 +320,7 @@ class mod_rocketchat_tools {
      * @param context_course $coursecontext
      * @return array
      */
-    protected static function has_rocket_chat_user_role(array $userroleids, $moodlemember, context_course $coursecontext) {
+    public static function has_rocket_chat_user_role(array $userroleids, $moodlemember, context_course $coursecontext) {
         $isuser = false;
         foreach ($userroleids as $userroleid) {
             if (user_has_role_assignment($moodlemember->id, $userroleid, $coursecontext->id)) {
@@ -437,7 +441,7 @@ class mod_rocketchat_tools {
      * @param context_course $coursecontext
      * @return array
      */
-    protected static function has_rocket_chat_moderator_role(array $moderatorroleids, $moodlemember,
+    public static function has_rocket_chat_moderator_role(array $moderatorroleids, $moodlemember,
         context_course $coursecontext) {
         $ismoderator = false;
         foreach ($moderatorroleids as $moderatorroleid) {

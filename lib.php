@@ -31,7 +31,7 @@ use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 /**
  * Return if the plugin supports $feature.
  *
- * @param string $feature Constant representing the feature.
+ * @param string $feature Constant representing theadd feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
 function rocketchat_supports($feature) {
@@ -67,7 +67,7 @@ function rocketchat_supports($feature) {
  * @return int The id of the newly inserted record.
  */
 function rocketchat_add_instance($moduleinstance, $mform = null) {
-    global $DB;
+    global $DB, $USER;
     $moduleinstance->timecreated = time();
     $moduleinstance->timemodified = $moduleinstance->timecreated;
     $cmid       = $moduleinstance->coursemodule;
@@ -95,9 +95,15 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
         $group->archive();
     }
     $id = $DB->insert_record('rocketchat', $moduleinstance);
+    // Force creator if current user has a role for this instance.
+    $moderatorrolesids = array_filter(explode(',', $moduleinstance->moderatorroles));
+    $userrolesids = array_filter(explode(',', $moduleinstance->userroles));
+    $forcecreator = mod_rocketchat_tools::has_rocket_chat_user_role($userrolesids, $USER, context_course::instance($course->id))
+        || mod_rocketchat_tools::has_rocket_chat_moderator_role($moderatorrolesids, $USER, context_course::instance($course->id));
     mod_rocketchat_tools::enrol_all_concerned_users_to_rocketchat_group(
         $moduleinstance,
-        get_config('mod_rocketchat', 'background_add_instance'));
+        get_config('mod_rocketchat', 'background_add_instance'),
+        $forcecreator);
     return $id;
 }
 
