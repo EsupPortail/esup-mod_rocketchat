@@ -158,5 +158,5 @@ $string['rocketchat:candefineadvancedretentionparamaters'] = 'Permet de surcharg
 $string['displaysection'] = 'Affichage';
 $string['retentionsection'] = 'Rétention des messages';
 $string['rolessection'] = 'Définition des rôles';
-$string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentificationin ,'
-    .' Seuls l\'authentification par token est prise en charge.'.PHP_EOL.'Veuillez s\'il vous plait changer le paramétrage du plugin.';
+$string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentification ,'
+    .' Seule l\'authentification par token est prise en charge.'.PHP_EOL.'Veuillez s\'il vous plait changer le paramétrage du plugin.';
