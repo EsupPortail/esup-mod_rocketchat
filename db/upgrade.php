@@ -140,7 +140,7 @@ function xmldb_rocketchat_upgrade($oldversion) {
     }
     if ($oldversion < 2021020800) {
         $tokenmode = get_config('mod_rocketchat', 'tokenmode');
-        if($tokenmode) {
+        if ($tokenmode) {
             $apipassword = get_config('mod_rocketchat', 'apipassword');
             set_config('apitoken', $apipassword, 'mod_rocketchat');
         } else {

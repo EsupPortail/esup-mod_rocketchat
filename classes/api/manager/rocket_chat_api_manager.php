@@ -62,7 +62,7 @@ class rocket_chat_api_manager{
         );
     }
 
-    public function login_admin(){
+    public function login_admin() {
         $this->adminuser->login_token($this->rocketchatapiconfig->get_api_token());
     }
 
