@@ -41,17 +41,15 @@ patch -p1 /moodlepath/user/classes/output/user_roles_editable.php  < /moodlepath
 
 ```
 
-### Authentication settings 
-### user/password mode
-* apiuser is the RocketChat account username
-* apipassword is the password (do not put any generated token here)
-### token mode
-* if token mode is checked
+### Authentication settings
 * apiuser will be rocket-chat userid
-* apipassword a token generated on Rocket.Chat for the apiuser
+* apitoken a token generated on Rocket.Chat for the apiuser
   * can be generated on Rocket.Chat for apiuser on Profile -> My Account -> Security -> Personal Access Tokens menu
   * don't forget to enable create-personal-access-tokens permission for the apiuser through its role
+## Backup settings
+On moodle 3.5 versions `backup_auto_activities` backup settings must be checked otherwise Rocket.Chat module restoration from recycle bin will not work.
 
+See [MDL-6621 tracker ticket](https://tracker.moodle.org/browse/MDL-66221) for more informations
 ## Specials capabilities
 * mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 
 * mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing the module instance
@@ -65,7 +63,7 @@ patch -p1 /moodlepath/user/classes/output/user_roles_editable.php  < /moodlepath
 set_config('instanceurl','https://rocketchat-server_url','mod_rocketchat');
 set_config('restapiroot','/api/v1/','mod_rocketchat');
 set_config('apiuser','your_user_on_rocket.chat','mod_rocketchat');
-set_config('apipassword','#############','mod_rocketchat');
+set_config('apitoken','#############','mod_rocketchat');
 // fake config test to avoird email domain troubles
 set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Optional argument.line.
 ```

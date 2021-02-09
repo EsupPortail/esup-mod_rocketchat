@@ -29,8 +29,7 @@ class rocket_chat_api_config {
     private $instanceurl;
     private $restapiroot;
     private $apiuser;
-    private $apipasswordortoken;
-    private $tokenmode;
+    private $apitoken;
 
     /**
      * @return mixed
@@ -56,15 +55,8 @@ class rocket_chat_api_config {
     /**
      * @return mixed
      */
-    public function get_apipassword_or_token() {
-        return $this->apipasswordortoken;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function get_tokenmode() {
-        return $this->tokenmode;
+    public function get_api_token() {
+        return $this->apitoken;
     }
 
     public function __construct() {
@@ -81,16 +73,15 @@ class rocket_chat_api_config {
                 print_error('RocketChat rest api root is empty');
             }
             if (empty($config->apiuser)) {
-                print_error('RocketChat api password is empty');
+                print_error('RocketChat api user is empty');
             }
-            if (empty($config->apipassword)) {
-                print_error('RocketChat api password is empty');
+            if (empty($config->apitoken)) {
+                print_error('RocketChat api token is empty');
             }
             $this->instanceurl = $config->instanceurl;
             $this->restapiroot = $config->restapiroot;
             $this->apiuser = $config->apiuser;
-            $this->apipasswordortoken = $config->apipassword;
-            $this->tokenmode = $config->tokenmode;
+            $this->apitoken = $config->apitoken;
         }
     }
 

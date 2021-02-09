@@ -48,7 +48,7 @@ $config = get_config('mod_rocketchat');
 $instanceurl = $config->instanceurl;
 $restapiroot  = $config->restapiroot;
 $apiuser  = $config->apiuser;
-$apipassword  = $config->apipassword;
+$apitoken  = $config->apitoken;
 
 
 echo $OUTPUT->header();
@@ -57,9 +57,7 @@ echo $OUTPUT->container_start('center');
 $result = true;
 try {
     $rocketchatapimanager = new rocket_chat_api_manager();
-    if ($config->tokenmode) {
-        $result = $rocketchatapimanager->get_adminuser_info();
-    }
+    $result = $rocketchatapimanager->get_adminuser_info();
 } catch (Exception $e) {
     $result = false;
     echo html_writer::tag('h2', get_string('errorintestwhilegconnection', 'mod_rocketchat'));

@@ -231,7 +231,7 @@ class mod_rocketchat_tools {
         if (!empty($module->visible)) {
             $config = get_config('mod_rocketchat');
             if (!empty($config->instanceurl) && !empty($config->restapiroot)
-                && !empty($config->apiuser) && !empty($config->apipassword)) {
+                && !empty($config->apiuser) && !empty($config->apitoken)) {
                 return true;
             }
         }

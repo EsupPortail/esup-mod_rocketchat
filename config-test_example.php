@@ -25,12 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 set_config('instanceurl', 'https://rocketchat-server_url', 'mod_rocketchat');
 set_config('restapiroot', '/api/v1/', 'mod_rocketchat');
-set_config('tokenmode', 0, 'mod_rocketchat'); // User password moodle api account authentication.
 set_config('apiuser', 'your_user_on_rocket.chat', 'mod_rocketchat');
-set_config('apipassword', '#############', 'mod_rocketchat');
-//set_config('tokenmode', 1, 'mod_rocketchat'); // Token moodle api account authentication.
-//set_config('apiuser', 'your_user_id_on_rocket.chat', 'mod_rocketchat');
-//set_config('apipassword', 'generated_token_on_rocket.chat', 'mod_rocketchat');
+set_config('apitoken', '#############', 'mod_rocketchat');
 // Fake config test to avoid email domain troubles.
 set_config('domainmail', 'your_domain_mail_if_necessary', 'mod_rocketchat'); // Optional argument.line.
 set_config('usernamehook', 0, 'mod_rocketchat');

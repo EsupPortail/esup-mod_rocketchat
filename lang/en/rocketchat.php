@@ -43,12 +43,10 @@ $string['instanceurl'] = 'Rocket.Chat instance URL';
 $string['instanceurl_desc'] = 'Rocket.Chat instance URL (ex: https://rocketchat.univ.fr)';
 $string['restapiroot'] = 'Rocket.Chat REST API root';
 $string['restapiroot_desc'] = 'Rocket.Chat REST API root';
-$string['tokenmode'] = 'Token mode';
-$string['tokenmode_desc'] = 'If token mode is activated apiuser will be a Rocket.Chat id and token will be a valid Rocket.Chat token associated to this Rocket.Chat User';
 $string['apiuser'] = 'Rocket.Chat API user';
 $string['apiuser_desc'] = 'Rocket.Chat API user / Token mode : Rocket.Chat User Id ';
-$string['apipassword'] = 'Rocket.Chat API password';
-$string['apipassword_desc'] = 'Rocket.Chat API password / Token mode : Rocket.Chat associated token';
+$string['apitoken'] = 'Rocket.Chat API token';
+$string['apitoken_desc'] = 'Rocket.Chat API associated token';
 $string['norocketchats'] = 'No Rocket.Chat module instances.';
 $string['groupnametoformat'] = 'Formatted group name';
 $string['groupnametoformat_desc'] = 'String format {$a->parameter} is possible with the following parameters : moodleid, moodleshortname, moodlefullname, moduleid, modulemoodleid (unique whitin all your possible moodle), courseid, courseshortname, coursefullname';
@@ -97,7 +95,7 @@ $string['connection-success'] = 'Connection succesfully establish';
 $string['testconnection'] = 'Test connection to Rocket.Chat';
 $string['testtitle'] = 'Rocket.Chat connection test.';
 $string['testconnectionfailure'] = 'Connection test require following settings :</br>'
-    .'instanceurl, restapiroot, apiuser and apipassword.</br>Please check that theses are all filled in.';
+    .'instanceurl, restapiroot, apiuser and apitoken.</br>Please check that theses are all filled in.';
 $string['settings'] = 'Rocket.Chat plugin settings';
 $string['errorintestwhilegconnection'] = 'Error while testing connection';
 $string['connectiontestresult'] = 'Connection test result';
@@ -154,3 +152,5 @@ $string['rocketchat:candefineadvancedretentionparamaters'] = 'Can override globa
 $string['displaysection'] = 'Display settings';
 $string['retentionsection'] = 'Message retention settings';
 $string['rolessection'] = 'Roles definition settings';
+$string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods,'
+    .' Only token auth is now taken into acount.'.PHP_EOL.'Please change the Rocket.Chat plugin settings.';

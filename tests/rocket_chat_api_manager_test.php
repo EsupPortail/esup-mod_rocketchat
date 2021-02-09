@@ -287,6 +287,7 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     public function test_delete_all_group_messages() {
         $this->initiate_environment_and_connection();
         set_config('create_user_account_if_not_exists', 1, 'mod_rocketchat');
+        $this->rocketchatapimanager->login_admin();
         $groupname = 'moodletestgroup' . time();
         $groupid = $this->rocketchatapimanager->create_rocketchat_group($groupname);
         $this->assertNotEmpty($groupid);
@@ -305,19 +306,8 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(1, $messages); // User enrolments generate a message.
         $this->rocketchatapimanager->post_message($groupid, 'a message');
-        // Api manager because of header persistence.
-        // Need to remove token mode for this.
-        $initialtokenmode = get_config('mod_rocketchat', 'tokenmode');
-        set_config('tokenmode', 0, 'mod_rocketchat');
-        $userrocketchatapimanager =
-            new \mod_rocketchat\api\manager\rocket_chat_api_manager($moodleuser->username, $moodleuser->password);
-        $userrocketchatapimanager->post_message($groupid, 'a user message');
-        $userrocketchatapimanager->close_connection();
-        // Got a bug due to static Request call so reinit apimamanger.
-        set_config('tokenmode', $initialtokenmode, 'mod_rocketchat');
-        $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
-        $this->assertCount(3, $messages); // 2 real messages, 1 message for enrollment.
+        $this->assertCount(2, $messages);
         $this->rocketchatapimanager->clean_history($groupid);
         $messages = $this->rocketchatapimanager->get_group_messages($groupid);
         $this->assertCount(0, $messages);

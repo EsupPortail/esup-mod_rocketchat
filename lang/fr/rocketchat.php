@@ -43,12 +43,10 @@ $string['instanceurl'] = 'URL de l\'instance Rocket.Chat';
 $string['instanceurl_desc'] = 'URL de l\'instance Rocket.Chat (ex: https://rocketchat.univ.fr)';
 $string['restapiroot'] = 'Chemin de l\'API Rocket.Chat';
 $string['restapiroot_desc'] = 'Adresse de l\'API Rocket.Chat';
-$string['tokenmode'] = 'mode Token';
-$string['tokenmode_desc'] = 'Si ce mode est activé, apiuser doit être un id d\'utilisateur Rocket.Chat et le mot de passe devra contenir un token Rocket.Chat valide associé à cet utilisateur Rocket.Chat';
 $string['apiuser'] = 'Utilisateur API Rocket.Chat';
 $string['apiuser_desc'] = 'Utilisateur Rocket.Chat utilisé par Moodle pour interroger l\'API du serveur Rocket.Chat (ne pas mettre de token à cet endroit)';
-$string['apipassword'] = 'Mot de passe API Rocket.Chat';
-$string['apipassword_desc'] = 'Mot de passe de l\'utilisateur renseigné ci-dessus';
+$string['apitoken'] = 'Token API Rocket.Chat';
+$string['apitoken_desc'] = 'Token API  de l\'utilisateur renseigné ci-dessus';
 $string['norocketchats'] = 'Aucune instance de module Rocket.Chat';
 $string['groupnametoformat'] = 'Formatage de nom des groupes';
 $string['groupnametoformat_desc'] = 'Les variables utilisables sont les suivantes : moodleid, moodleshortname, moodlefullname, moduleid, modulemoodleid (identifiant unique de la plateforme moodle), courseid, courseshortname, coursefullname';
@@ -97,7 +95,7 @@ $string['connection-success'] = 'La connexion a été établie avec succès.';
 $string['testconnection'] = 'Tester la connexion à Rocket.Chat';
 $string['testtitle'] = 'Test de connexion Rocket.Chat.';
 $string['testconnectionfailure'] = 'Les paramètres suivants doivent être renseignés dans la configuration du plugin :</br>'
-    .'instanceurl, restapiroot, apiuser and apipassword.</br>Veuillez vérifier que tous ces champs sont renseignés.';
+    .'instanceurl, restapiroot, apiuser and apitoken.</br>Veuillez vérifier que tous ces champs sont renseignés.';
 $string['settings'] = 'Paramétrage de Rocket.Chat';
 $string['errorintestwhilegconnection'] = 'Erreur lors du test de la connection';
 $string['connectiontestresult'] = 'Résultat du test de connexion';
@@ -160,3 +158,5 @@ $string['rocketchat:candefineadvancedretentionparamaters'] = 'Permet de surcharg
 $string['displaysection'] = 'Affichage';
 $string['retentionsection'] = 'Rétention des messages';
 $string['rolessection'] = 'Définition des rôles';
+$string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentificationin ,'
+    .' Seuls l\'authentification par token est prise en charge.'.PHP_EOL.'Veuillez s\'il vous plait changer le paramétrage du plugin.';

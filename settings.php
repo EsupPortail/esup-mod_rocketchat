@@ -63,15 +63,6 @@ if ($ADMIN->fulltree) {
         )
     );
     $settings->add(
-        new admin_setting_configcheckbox(
-            'mod_rocketchat/tokenmode',
-            get_string('tokenmode', 'mod_rocketchat'),
-            get_string('tokenmode_desc', 'mod_rocketchat'),
-            0
-        )
-    );
-
-    $settings->add(
         new admin_setting_configtext(
             'mod_rocketchat/apiuser',
             get_string('apiuser', 'mod_rocketchat'),
@@ -83,9 +74,9 @@ if ($ADMIN->fulltree) {
 
     $settings->add(
         new admin_setting_configpasswordunmask(
-            'mod_rocketchat/apipassword',
-            get_string('apipassword', 'mod_rocketchat'),
-            get_string('apipassword_desc', 'mod_rocketchat'),
+            'mod_rocketchat/apitoken',
+            get_string('apitoken', 'mod_rocketchat'),
+            get_string('apitoken_desc', 'mod_rocketchat'),
             ''
         )
     );

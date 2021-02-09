@@ -46,20 +46,24 @@ class rocket_chat_api_manager{
     public function is_verbose() {
         return $this->verbose;
     }
-    public function __construct($user=null, $password=null) {
+    public function __construct($user=null, $token=null) {
         $this->rocketchatapiconfig = new rocket_chat_api_config();
-        $this->initiate_connection($user, $password);
+        $this->initiate_connection($user, $token);
     }
 
-    private function initiate_connection($user = null, $password = null) {
+    private function initiate_connection($user = null, $token = null) {
         // User amanager object , logged to remote Rocket.Chat.
         $this->adminuser = new \RocketChat\UserManager(
-            $this->rocketchatapiconfig->get_tokenmode(),
+            1,
             is_null($user) ? $this->rocketchatapiconfig->get_apiuser() : $user,
-            is_null($user) ? $this->rocketchatapiconfig->get_apipassword_or_token() : $password,
+            is_null($user) ? $this->rocketchatapiconfig->get_api_token() : $token,
             $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot()
         );
+    }
+
+    public function login_admin(){
+        $this->adminuser->login_token($this->rocketchatapiconfig->get_api_token());
     }
 
     public function close_connection() {
@@ -531,7 +535,7 @@ class rocket_chat_api_manager{
     }
 
     public function kick_all_group_members($groupid) {
-        $rocketchatapiusername = get_config('mod_rocketchat', 'apiuser');
+        $rocketchatapiuser = get_config('mod_rocketchat', 'apiuser');
         $group = $this->get_rocketchat_group_object($groupid);
         $members = false;
         try {
@@ -540,7 +544,7 @@ class rocket_chat_api_manager{
             self::moodle_debugging_message("error while retrieving group members", $e);
         }
         foreach ($members as $member) {
-            if ($member->username != $rocketchatapiusername) {
+            if ($member->_id != $rocketchatapiuser) {
                 try {
                     $rocketchatuser = $this->get_user_infos($member->username);
                     $group->kick($rocketchatuser->_id);

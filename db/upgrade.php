@@ -138,5 +138,15 @@ function xmldb_rocketchat_upgrade($oldversion) {
         // Rocketchat savepoint reached.
         upgrade_mod_savepoint(true, 2021011504, 'rocketchat');
     }
+    if ($oldversion < 2021020800) {
+        $tokenmode = get_config('mod_rocketchat', 'tokenmode');
+        if($tokenmode) {
+            $apipassword = get_config('mod_rocketchat', 'apipassword');
+            set_config('apitoken', $apipassword, 'mod_rocketchat');
+        } else {
+            echo get_string('warningapiauthchanges', 'mod_rocketchat');
+        }
+        upgrade_mod_savepoint(true, 2021020800, 'rocketchat');
+    }
     return true;
 }
