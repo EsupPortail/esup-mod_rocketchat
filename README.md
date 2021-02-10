@@ -6,23 +6,62 @@ This plugin allows teachers to push students from Moodle into a dedicated Rocket
 Adding this activity to a Moodle course will create a channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel. The list of members will then be kept up to date.
 
 ## Rocket.Chat settings requirements
-* create a local RocketChat account
-  * other authentification account will not work
+### Authentication
+* LDAP and CAS account fusion is adviced when moodle user account creation is activated
+  for moodle Rocket.Chat account
+
+### Moodle API account creation
+* create a RocketChat local account
+  * other authentification account such like CAS will work
 * confirm it (verified button) through Rocket.Chat administration
-### permissions
-for moodle Rocket.Chat account
+
+### roles and permissions
+* Give the created user user and admin role
 * view-room-administration
 * if necessary add api-bypass-rate-limit in case of error with request limit
 * CAS authentication
   * In case of user account creation in Rocket.Chat through moodle plugin you must activate following settings
     * Trust CAS username
     * Authorize user creation
-### Authentication
-* LDAP and CAS account fusion is adviced when moodle user account creation is activated
-
+### Create a personal token for this account
+#### Through Visual interface
+* logged as the Moodle api account, though My Account -> Personal Access Tokens
+* create a new personal access token with `Ignore Two Factor Authentification` checked
+#### through command lines
+* retrieve auth token
+```bash
+curl https://chat.univ.fr/api/v1/login -d "username=superadmin&password=superpassword" | cut -d\" -f7-14
+```
+will return
+```json
+{"userId":"XXXUserIDXXX","authToken":"XXXAuthTokenXXX"}
+```
+* generate personal access token
+```bash
+curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H "Content-type:application/json" https://chat.univ.fr/api/v1/users.generatePersonalAccessToken -d '{"tokenName": "moodletoken"}'
+```
+  * will return
+```json
+{"token":"XXXPersonalTokenXXX","success":true}
+```
+* list personal tokens
+```bash
+curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H t-type:application/json" https://chat.univ.fr/api/v1/users.getPersonalAccessTokens
+```
+  * will return
+```json
+{"tokens":[{"name":"moodletoken","createdAt":"2021-02-09T10:35:38.564Z","lastTokenPart":"XXX"}],"success":true}
+```
+* generate token in case of lost
+```bash
+curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H "Content-type:application/json" https://chat.univ.fr/api/v1/users.regeneratePersonalAccessToken -d '{"tokenName": "moodletoken"}'
+```
+  * will return
+```json
+{"token":"XXXNewPersonalTokenXXX","success":true}
+```
 
 ## Installation
-
 ### Moodle plugin
 1. Copy the Rocket.Chat plugin to the `mod` directory of your Moodle instance:
 
