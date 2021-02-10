@@ -166,3 +166,5 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
   * Université de Lorraine
   * Université de Strasbourg
   * Université de technologie de Troyes
+
+If you need some help, you can contact us via this email address : mod-rocketchat-contact _AT_ esup-portail.org
