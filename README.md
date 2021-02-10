@@ -16,9 +16,10 @@ Adding this activity to a Moodle course will create a channel in Rocket.Chat and
 * confirm it (verified button) through Rocket.Chat administration
 
 ### roles and permissions
-* Give the created user user and admin role
+* Give the created user user and admin role (further tests will enable to prevent for using admin role)
 * view-room-administration
-* if necessary add api-bypass-rate-limit in case of error with request limit
+* create-personal-access-tokens
+* api-bypass-rate-limit to prevent request limit
 * CAS authentication
   * In case of user account creation in Rocket.Chat through moodle plugin you must activate following settings
     * Trust CAS username
