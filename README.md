@@ -17,7 +17,6 @@ It will be possible to access to this Rocket.Chat channel directly from Moodle o
   * other authentification account such like CAS will work
 * confirm it (verified button) through Rocket.Chat administration
 
-<<<<<<< HEAD
 ### Roles and permissions
 * Give the created user user and admin role (further tests will enable to prevent for using admin role)
 * view-room-administration
@@ -82,7 +81,7 @@ On moodle 3.5 versions `backup_auto_activities` backup settings must be checked 
 
 See [MDL-6621 tracker ticket](https://tracker.moodle.org/browse/MDL-66221) for more informations
 ## Specials capabilities
-* mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 
+* mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance
 * mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing the module instance
 ## Unit tests
 ### settings
@@ -102,7 +101,7 @@ set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Op
 * see [moodle documentation](https://docs.moodle.org/dev/PHPUnit)
 
 ### Provided tests
-* don't forget to init phpunit moodle tests environment (requirements) 
+* don't forget to init phpunit moodle tests environment (requirements)
 ```bash
 cd /www_moodle_path
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_background_enrolments_testcase" mod/rocketchat/tests/backup_enrolments_test.php
