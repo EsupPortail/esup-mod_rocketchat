@@ -1,9 +1,11 @@
 # Rocket.Chat activity for Moodle #
 
-This plugin allows teachers to push students from Moodle into a dedicated Rocket.Chat channel.
+This plugin allows teachers to keep synchronized users enrolled in a Moodle course into a dedicated Rocket.Chat private channel.
 
 ## Main feature
-Adding this activity to a Moodle course will create a channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel. The list of members will then be kept up to date.
+Adding this activity to a Moodle course will create a private channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel. The list of members will then be kept up to date.
+
+It will be possible to access to this Rocket.Chat channel directly from Moodle or through any autonomous Rocket.Chat client.
 
 ## Rocket.Chat settings requirements
 ### Authentication
@@ -15,7 +17,7 @@ Adding this activity to a Moodle course will create a channel in Rocket.Chat and
   * other authentification account such like CAS will work
 * confirm it (verified button) through Rocket.Chat administration
 
-### roles and permissions
+### Roles and permissions
 * Give the created user user and admin role (further tests will enable to prevent for using admin role)
 * view-room-administration
 * create-personal-access-tokens
@@ -29,37 +31,25 @@ Adding this activity to a Moodle course will create a channel in Rocket.Chat and
 * logged as the Moodle api account, though My Account -> Personal Access Tokens
 * create a new personal access token with `Ignore Two Factor Authentification` checked
 #### through command lines
-* retrieve auth token
+* Retrieve auth token based on login/passowrd
 ```bash
 curl https://chat.univ.fr/api/v1/login -d "username=superadmin&password=superpassword" | cut -d\" -f7-14
+# {"userId":"XXXUserIDXXX","authToken":"XXXAuthTokenXXX"}
 ```
-will return
-```json
-{"userId":"XXXUserIDXXX","authToken":"XXXAuthTokenXXX"}
-```
-* generate personal access token
+* Generate personal access token
 ```bash
 curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H "Content-type:application/json" https://chat.univ.fr/api/v1/users.generatePersonalAccessToken -d '{"tokenName": "moodletoken"}'
+# {"token":"XXXPersonalTokenXXX","success":true}
 ```
-  * will return
-```json
-{"token":"XXXPersonalTokenXXX","success":true}
-```
-* list personal tokens
+* If you want to verify, you can list personal tokens
 ```bash
 curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H t-type:application/json" https://chat.univ.fr/api/v1/users.getPersonalAccessTokens
+# {"tokens":[{"name":"moodletoken","createdAt":"2021-02-09T10:35:38.564Z","lastTokenPart":"XXX"}],"success":true}
 ```
-  * will return
-```json
-{"tokens":[{"name":"moodletoken","createdAt":"2021-02-09T10:35:38.564Z","lastTokenPart":"XXX"}],"success":true}
-```
-* generate token in case of lost
+* Generate a new token in case of lost
 ```bash
 curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H "Content-type:application/json" https://chat.univ.fr/api/v1/users.regeneratePersonalAccessToken -d '{"tokenName": "moodletoken"}'
-```
-  * will return
-```json
-{"token":"XXXNewPersonalTokenXXX","success":true}
+# {"token":"XXXNewPersonalTokenXXX","success":true}
 ```
 
 ## Installation
@@ -91,7 +81,7 @@ On moodle 3.5 versions `backup_auto_activities` backup settings must be checked 
 
 See [MDL-6621 tracker ticket](https://tracker.moodle.org/browse/MDL-66221) for more informations
 ## Specials capabilities
-* mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance 
+* mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance
 * mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing the module instance
 ## Unit tests
 ### settings
@@ -111,7 +101,7 @@ set_config('domainmail','your_domain_mail_if_necessary','mod_rocketchat'); // Op
 * see [moodle documentation](https://docs.moodle.org/dev/PHPUnit)
 
 ### Provided tests
-* don't forget to init phpunit moodle tests environment (requirements) 
+* don't forget to init phpunit moodle tests environment (requirements)
 ```bash
 cd /www_moodle_path
 /www_moodle_path/vendor/bin/phpunit "mod_rocketchat_background_enrolments_testcase" mod/rocketchat/tests/backup_enrolments_test.php
