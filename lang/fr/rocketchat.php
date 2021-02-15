@@ -94,8 +94,7 @@ $string['privacy:metadata:mod_rocketchat:rocket_chat_server'] = 'Données transm
 $string['connection-success'] = 'La connexion a été établie avec succès.';
 $string['testconnection'] = 'Tester la connexion à Rocket.Chat';
 $string['testtitle'] = 'Test de connexion Rocket.Chat.';
-$string['testconnectionfailure'] = 'Les paramètres suivants doivent être renseignés dans la configuration du plugin :</br>'
-    .'instanceurl, restapiroot, apiuser and apitoken.</br>Veuillez vérifier que tous ces champs sont renseignés.';
+$string['testconnectionfailure'] = 'Les paramètres suivants doivent être renseignés dans la configuration du plugin :</br>instanceurl, restapiroot, apiuser and apitoken.</br>Veuillez vérifier que tous ces champs sont renseignés.';
 $string['settings'] = 'Paramétrage de Rocket.Chat';
 $string['errorintestwhilegconnection'] = 'Erreur lors du test de la connection';
 $string['connectiontestresult'] = 'Résultat du test de connexion';
@@ -104,59 +103,34 @@ $string['testerrormessage'] = 'Message d\'erreur :</br>{$a}';
 $string['testerrorcode'] = 'Code erreur : {$a}';
 $string['rcgrouperror'] = 'Le groupe distant Rocket.Chat ne peut être récupéré. Veuillez contacter votre administrateur système. Code erreur {$a}.';
 $string['usernamehook'] = 'Activer le hook du username.';
-$string['usernamehook_desc'] =
-    'En activant cette option, il est alors possible de transformer le nom d\'utilisateur moodle pour'
-    .' qu\'il corresponde à celui sur Rocket.Chat.'
-    .'</br>Créez un fichier hooklib.php file dans le répertoire d\'installation du module rocketchat.'
-    .'</br>Ajoutez une fonction moodle_username_to_rocketchat qui doit retourner le username moodle transformé '
-    .'pour correspondre à celui sur Rocket.Chat.'
-    .'</br>le fichier hooklib-example.php est fourni à titre d\'example.';
-$string['background_enrolment_task'] = 'Effectuer les inscriptions/desinscriptions de cours en tâche différée '
-    .'pour les méthodes d\'inscription sélectionnées.';
-$string['background_enrolment_task_desc'] = 'Ceci permet de résoudre des problèmes de performances '
-    .'lors de l\'inscription de grandes quantités d\'utilisateurs.'
-    .'</br>Cela empêchera que l\'utilisateur réalisant l\'inscription attende trop longtemps sur la page d\'inscriptions aux cours.'
-    .'</br>Ce paramètre agit en différant, via une tâche en arrière plan, les inscriptions/désinscriptions au server Rocket.Chat distant'
-    .'</br>Nous vous conseillons fortement de sélectionner les méthodes flatfile et cohort si elles sont activées.';
-$string['background_add_instance'] = 'Effectuer les inscriptions à Rocket.Chat'
-    .' en tâche d\'arrière plan à la création d\'une nouvelle instance';
+$string['usernamehook_desc'] ='En activant cette option, il est alors possible de transformer le nom d\'utilisateur moodle pour qu\'il corresponde à celui sur Rocket.Chat.</br>Créez un fichier hooklib.php file dans le répertoire d\'installation du module rocketchat.</br>Ajoutez une fonction moodle_username_to_rocketchat qui doit retourner le username moodle transformé pour correspondre à celui sur Rocket.Chat. </br>le fichier hooklib-example.php est fourni à titre d\'example.';
+$string['background_enrolment_task'] = 'Effectuer les inscriptions/desinscriptions de cours en tâche différée pour les méthodes d\'inscription sélectionnées.';
+$string['background_enrolment_task_desc'] = 'Ceci permet de résoudre des problèmes de performances lors de l\'inscription de grandes quantités d\'utilisateurs.</br>Cela empêchera que l\'utilisateur réalisant l\'inscription attende trop longtemps sur la page d\'inscriptions aux cours.</br>Ce paramètre agit en différant, via une tâche en arrière plan, les inscriptions/désinscriptions au server Rocket.Chat distant</br>Nous vous conseillons fortement de sélectionner les méthodes flatfile et cohort si elles sont activées.';
+$string['background_add_instance'] = 'Effectuer les inscriptions à Rocket.Chat en tâche d\'arrière plan à la création d\'une nouvelle instance';
 $string['background_add_instance_desc'] = 'Ceci améliorera le délai d\'attente à la création d\'une nouvelle instance';
 $string['background_restore'] = 'Effectuer les inscriptions à Rocket.Chat en tâche d\'arrière plan à la duplication du module.';
 $string['background_restore_desc'] = 'Ceci améliorera le délai d\'attente à la duplication d\'un module Rocket.Chat.';
 $string['background_synchronize'] = 'Effectuer les inscriptions à Rocket.Chat en tâche d\'arrière plan lors de la sychronisation des inscriptions.';
 $string['background_synchronize_desc'] = 'Se produit après le retour depuis la corbeille d\'un cours ou d\'un module Rocket.Chat';
-$string['background_user_update'] = 'Effectuer les inscriptions à Rocket.Chat en tâche d\'arrière plan lors de la mise à jour d\'informations'
-    .'utilisateur tel que l\'activation/deactivation.';
+$string['background_user_update'] = 'Effectuer les inscriptions à Rocket.Chat en tâche d\'arrière plan lors de la mise à jour d\'informations utilisateur tel que l\'activation/deactivation.';
 $string['background_user_update_desc'] = 'Ceci améliorera le délai d\'attente lors de la mise à jour des utilisateurs';
 $string['retentionenabled'] = 'Rétention des messages';
 $string['retentionenabled_desc'] = 'Activer la rétention de messages';
 $string['overrideglobal'] = 'Surcharger la rétention globale des messages dans Rocket.Chat';
 $string['overrideglobal_desc'] = 'Activer La surcharger la rétention globale des messages dans Rocket.Chat';
 $string['maxage'] = 'Valeur du temps de rétention des messages(maxAge) pour un groupe Rocket.Chat';
-$string['maxage_desc'] = 'Si le mode "Surcharger la rétention globale des messages" est activé,'
-    .' la valeur de temps de rétention des messages sera appliquée au group Rocket.Chat,'
-    .' surchageant le temps de rétention global du serveur. ATTENTION : la valeur 0 déclenche la suppression régulière des messages.';
-$string['maxage_help'] = 'Si le mode "Surcharger la rétention globale des messages" est activé,'
-    .' la valeur de temps de rétention des messages sera appliquée au group Rocket.Chat,'
-    .' surchageant le temps de rétention global du serveur. ATTENTION : la valeur 0 déclenche la suppression régulière des messages.';
+$string['maxage_desc'] = 'Si le mode "Surcharger la rétention globale des messages" est activé, la valeur de temps de rétention des messages sera appliquée au group Rocket.Chat, surchageant le temps de rétention global du serveur. ATTENTION : la valeur 0 déclenche la suppression régulière des messages.';
+$string['maxage_help'] = 'Si le mode "Surcharger la rétention globale des messages" est activé,la valeur de temps de rétention des messages sera appliquée au group Rocket.Chat, surchageant le temps de rétention global du serveur. ATTENTION : la valeur 0 déclenche la suppression régulière des messages.';
 $string['filesonly'] = 'Prune files only, keep messages';
-$string['filesonly_desc'] = 'if enabled, messages are not be deleted, but files are;'
-    .' they are replaced by a simple File removed by automatic prune message. When used together with Exclude pinned messages,'
-    .' only unpinned files are deleted.';
+$string['filesonly_desc'] = 'if enabled, messages are not be deleted, but files are; they are replaced by a simple File removed by automatic prune message. When used together with Exclude pinned messages, only unpinned files are deleted.';
 $string['exludeoinned'] = 'Exclude pinned messages';
-$string['exludeoinned_desc'] = 'If enabled, pinned messages are not deleted.'
-    .' For example, if you pinned a few messages with important links, they stay intact.';
+$string['exludeoinned_desc'] = 'If enabled, pinned messages are not deleted. For example, if you pinned a few messages with important links, they stay intact.';
 $string['retentionfeature'] = 'Fonctionalité de réention des messages';
-$string['retentionfeature_desc'] = 'Activer le paramétrage de la rétention des message par groupe Rocket.Chat. Attention '
-    .'cette fonctionnalité de Rocket.Chat n\'est valable qu\'à partir de la version 3.10.3 du serveur Rocket.Chat server.';
-$string['rocketchat:canactivateretentionpolicy'] = 'Permet de surcharger l\'activation de la rétention'.
-    ' des messages dans une instance de Rocket.Chat.';
-$string['rocketchat:canactivateretentionglobaloverride'] = 'Permet de surcharger l\'activation de rétention globale'.
-    ' des messages dans une instance de Rocket.Chat.';
-$string['rocketchat:candefineadvancedretentionparamaters'] = 'Permet de surcharger l\'activation des paramètres de rétention globale'.
-    ' des messages dans une instance de Rocket.Chat.';
+$string['retentionfeature_desc'] = 'Activer le paramétrage de la rétention des message par groupe Rocket.Chat. Attention cette fonctionnalité de Rocket.Chat n\'est valable qu\'à partir de la version 3.10.3 du serveur Rocket.Chat server.';
+$string['rocketchat:canactivateretentionpolicy'] = 'Permet de surcharger l\'activation de la rétention des messages dans une instance de Rocket.Chat.';
+$string['rocketchat:canactivateretentionglobaloverride'] = 'Permet de surcharger l\'activation de rétention globale des messages dans une instance de Rocket.Chat.';
+$string['rocketchat:candefineadvancedretentionparamaters'] = 'Permet de surcharger l\'activation des paramètres de rétention globale des messages dans une instance de Rocket.Chat.';
 $string['displaysection'] = 'Affichage';
 $string['retentionsection'] = 'Rétention des messages';
 $string['rolessection'] = 'Définition des rôles';
-$string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentification ,'
-    .' Seule l\'authentification par token est prise en charge.'.PHP_EOL.'Veuillez s\'il vous plait changer le paramétrage du plugin.';
+$string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentification . Seule l\'authentification par token est prise en charge.\nVeuillez s\'il vous plait changer le paramétrage du plugin.';
