@@ -134,8 +134,8 @@ class observers {
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
             $cminfos = $event->other;
             // Check that this is a Rocket.Chat module instance.
-            $sql = 'select * from {course_modules} cm inner join {modules} m on m.id=cm.module where cm.id=:cmid';
-            $rocketchatmodule = $DB->get_record_sql($sql, array('cmid' => $cminfos['cmid']));
+            $sql = 'select * from {course_modules} cm inner join {modules} m on m.id=cm.module where cm.id=:cmid and m.name=:modulename';
+            $rocketchatmodule = $DB->get_record_sql($sql, array('cmid' => $cminfos['cmid'], 'modulename' => 'rocketchat'));
             if ($rocketchatmodule) {
                 $rocketchat = $DB->get_record('rocketchat', array('id' => $cminfos['instanceid']));
                 // Insert item into association table.

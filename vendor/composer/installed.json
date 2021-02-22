@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/EsupPortail/rocket-chat-rest-client.git",
-            "reference": "dddb6f431748e439dddad6fe66f57959b1878a9c"
+            "reference": "3b83c50a28dd97264b3ac1f2276a434f4f86739e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/dddb6f431748e439dddad6fe66f57959b1878a9c",
-            "reference": "dddb6f431748e439dddad6fe66f57959b1878a9c",
+            "url": "https://api.github.com/repos/EsupPortail/rocket-chat-rest-client/zipball/3b83c50a28dd97264b3ac1f2276a434f4f86739e",
+            "reference": "3b83c50a28dd97264b3ac1f2276a434f4f86739e",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "require-dev": {
             "phpunit/phpunit": "^8"
         },
-        "time": "2021-01-18T09:17:33+00:00",
+        "time": "2021-02-22T12:20:32+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -30,7 +30,7 @@
         },
         "description": "Rocket Chat REST API client in PHP.",
         "support": {
-            "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/1.3"
+            "source": "https://github.com/EsupPortail/rocket-chat-rest-client/tree/1.5"
         }
     },
     {
