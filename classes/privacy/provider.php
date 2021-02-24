@@ -51,6 +51,7 @@ class provider implements
             ],
             'privacy:metadata:mod_rocketchat:rocket_chat_server'
         );
+        return $collection;
     }
 
     /**
