@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_rocketchat';
-$plugin->release = '1.2.8';
-$plugin->version = 2021022200;
+$plugin->release = '1.2.9';
+$plugin->version = 2021022400;
 $plugin->requires = 2018050800;
 $plugin->maturity = MATURITY_STABLE;
