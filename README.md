@@ -6,6 +6,8 @@ This plugin allows teachers to keep synchronized users enrolled in a Moodle cour
 Adding this activity to a Moodle course will create a private channel in Rocket.Chat and push Moodle users associated to this activity as members of this newly created channel. The list of members will then be kept up to date.
 
 It will be possible to access to this Rocket.Chat channel directly from Moodle or through any autonomous Rocket.Chat client.
+## System requirements
+Php 7.1 or 7.2 required
 
 ## Rocket.Chat settings requirements
 ### Authentication

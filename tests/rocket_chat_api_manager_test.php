@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     private $rocketchatapimanager;
 
-    public function setUp() {
+    public function setUp() : void {
         global $DB;
         parent::setUp();
         set_config('background_enrolment_task', '', 'mod_rocketchat');

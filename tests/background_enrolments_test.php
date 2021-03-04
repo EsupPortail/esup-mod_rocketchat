@@ -38,7 +38,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
     private $studentrole;
     private $editingteacherrole;
 
-    public function setUp() {
+    public function setUp() : void {
         global $DB;
         parent::setUp();
         $this->initiate_test_environment();
@@ -63,7 +63,7 @@ class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
             'mod_rocketchat');
     }
 
-    protected function tearDown() {
+    protected function tearDown() : void {
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);
         }

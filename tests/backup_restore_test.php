@@ -38,7 +38,7 @@ class mod_rocketchat_backup_restore_testcase extends advanced_testcase{
     private $newrocketchatmodule;
     private $user;
 
-    protected function setUp() {
+    protected function setUp() : void {
         global $CFG, $DB;
         parent::setUp();
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
@@ -65,7 +65,7 @@ class mod_rocketchat_backup_restore_testcase extends advanced_testcase{
         $this->rocketchat = $generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));
     }
-    protected function tearDown() {
+    protected function tearDown() : void {
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);
         }

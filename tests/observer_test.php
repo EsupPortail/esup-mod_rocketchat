@@ -38,7 +38,7 @@ class mod_rocketchat_observer_testcase extends advanced_testcase{
     private $usereditingteacher;
     private $rocketchatmanager;
 
-    protected function setUp() {
+    protected function setUp() : void {
         global $CFG, $DB;
         parent::setUp();
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
@@ -75,7 +75,7 @@ class mod_rocketchat_observer_testcase extends advanced_testcase{
         $this->rocketchat = $generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));
     }
-    protected function tearDown() {
+    protected function tearDown() : void {
         ob_start();
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true); // Delete Rocket.Chat module.

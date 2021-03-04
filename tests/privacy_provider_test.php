@@ -51,7 +51,7 @@ class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testc
     private $userstudent;
     private $usereditingteacher;
 
-    public function setUp() {
+    public function setUp() : void {
         global $DB, $CFG;
         parent::setUp();
         set_config('background_enrolment_task', '', 'mod_rocketchat');
@@ -92,7 +92,7 @@ class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testc
         $this->rocketchatcontext2 = context_module::instance($this->rocketchat2->cmid);
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         ob_start();
         if (!empty($this->rocketchat1)) {
             course_delete_module($this->rocketchat1->cmid, true);

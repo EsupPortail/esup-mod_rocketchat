@@ -78,7 +78,7 @@ class mod_rocketchat_moderator_and_user_roles_testcase extends advanced_testcase
         $this->assertFalse(array_key_exists($this->teacher1->username, $members));
     }
 
-    public function setUp() {
+    public function setUp() : void {
         global $DB;
         parent::setUp();
         // Enable rocketchat module.
@@ -88,7 +88,7 @@ class mod_rocketchat_moderator_and_user_roles_testcase extends advanced_testcase
         $this->initiate_test_environment();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         ob_start();
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);

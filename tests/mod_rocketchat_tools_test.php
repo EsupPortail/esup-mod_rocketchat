@@ -41,7 +41,7 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
     private $teacher3;
     private $generator;
 
-    public function setUp() {
+    public function setUp() : void {
         global $DB;
         parent::setUp();
         // Enable rocketchat module.
@@ -56,7 +56,7 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         ob_start();
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);

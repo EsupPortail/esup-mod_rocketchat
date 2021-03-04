@@ -35,7 +35,7 @@ class mod_rocketchat_recyclebin_category_testcase extends advanced_testcase{
     private $rocketchat;
     private $course;
 
-    protected function setUp() {
+    protected function setUp() : void {
         global $CFG, $DB;
         parent::setUp();
         // Enable rocketchat module.

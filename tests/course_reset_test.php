@@ -40,7 +40,7 @@ class mod_rocketchat_course_reset_testcase extends advanced_testcase{
     private $editingteacherrole;
     private $studentrole;
 
-    protected function setUp() {
+    protected function setUp() : void {
         global $CFG, $DB;
         parent::setUp();
         // Enable rocketchat module.
@@ -73,7 +73,7 @@ class mod_rocketchat_course_reset_testcase extends advanced_testcase{
             array('course' => $this->course->id, 'groupname' => $groupname));
         $this->rocketchatapimanager = new rocket_chat_api_manager();
     }
-    protected function tearDown() {
+    protected function tearDown() : void {
         ob_start();
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);

@@ -36,7 +36,7 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
     private $rocketchat;
     private $course;
 
-    protected function setUp() {
+    protected function setUp() : void {
         global $CFG, $DB;
         parent::setUp();
         // Enable rocketchat module.
@@ -163,7 +163,7 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
             'moodleunittest_{$a->courseshortname}_{$a->moduleid}_' . time(),
             'mod_rocketchat');
     }
-    public function tearDown() {
+    public function tearDown() : void {
         ob_start();
         if (!empty($this->rocketchat)) {
             course_delete_module($this->rocketchat->cmid, true);
