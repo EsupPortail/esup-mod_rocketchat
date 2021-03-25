@@ -20,10 +20,20 @@ Php 7.1 or 7.2 required
 * confirm it (verified button) through Rocket.Chat administration
 
 ### Roles and permissions
-* Give the created user user and admin role (further tests will enable to prevent for using admin role)
-* view-room-administration
-* create-personal-access-tokens
-* api-bypass-rate-limit to prevent request limit
+* Create a new role on Rocket.Chat with following permissions : 
+  * create-user
+  * clean-channel-history
+  * delete-user
+  * create-p
+  * unarchive-room
+  * view-full-other-user-info
+  * view room administration
+  * api-bypass-rate-limit
+  * edit-room-retention-policy
+  * create-personal-access-tokens
+* Create an application user (local or CAS)
+* Activate user by checling Verified checkbox
+* Give the created user user and previous created role
 * CAS authentication
   * In case of user account creation in Rocket.Chat through moodle plugin you must activate following settings
     * Trust CAS username
