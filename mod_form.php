@@ -144,7 +144,7 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                     get_string('retentionenabled', 'mod_rocketchat'),
                     get_string('retentionenabled_desc', 'mod_rocketchat')
                 );
-                $mform->setDefault('rententionenabled', get_config('mod_rocketchat', 'rententionenabled'));
+                $mform->setDefault('retentionenabled', get_config('mod_rocketchat', 'retentionenabled'));
 
                 if (has_capability('mod/rocketchat:canactivateretentionglobaloverride', $this->get_context())) {
                     $mform->addElement('checkbox', 'overrideglobal',
@@ -190,9 +190,9 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                     $mform->setType('excludepinned', PARAM_INT);
                 }
             } else {
-                $mform->addElement('hidden', 'retentionenable');
-                $mform->setType('retentionenable', PARAM_INT);
-                $mform->setDefault('rententionenabled', get_config('mod_rocketchat', 'rententionenabled'));
+                $mform->addElement('hidden', 'retentionenabled');
+                $mform->setType('retentionenabled', PARAM_INT);
+                $mform->setDefault('retnetionenabled', get_config('mod_rocketchat', 'retnetionenabled'));
                 $mform->addElement('hidden', 'maxage');
                 $mform->setType('maxage', PARAM_INT);
                 $mform->addElement('hidden', 'filesonly');
