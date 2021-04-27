@@ -155,8 +155,8 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                     $mform->disabledif('overrideglobal', 'retentionenabled',
                         'notchecked');
                 } else {
-                    $mform->addElement('hidden', 'overrigeglobal');
-                    $mform->setType('overrigeglobal', PARAM_INT);
+                    $mform->addElement('hidden', 'overrideglobal');
+                    $mform->setType('overrideglobal', PARAM_INT);
                 }
                 $mform->setDefault('overrideglobal', get_config('mod_rocketchat', 'overrideglobal'));
 
@@ -192,7 +192,10 @@ class mod_rocketchat_mod_form extends moodleform_mod {
             } else {
                 $mform->addElement('hidden', 'retentionenabled');
                 $mform->setType('retentionenabled', PARAM_INT);
-                $mform->setDefault('retnetionenabled', get_config('mod_rocketchat', 'retnetionenabled'));
+                $mform->setDefault('retentionenabled', get_config('mod_rocketchat', 'retentionenabled'));
+                $mform->addElement('hidden', 'overrideglobal');
+                $mform->setType('overrideglobal', PARAM_INT);
+                $mform->setDefault('overrideglobal', get_config('mod_rocketchat', 'overrideglobal'));
                 $mform->addElement('hidden', 'maxage');
                 $mform->setType('maxage', PARAM_INT);
                 $mform->addElement('hidden', 'filesonly');
