@@ -43,7 +43,7 @@ curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H "Content
 ```
 * If you want to verify, you can list personal tokens
 ```bash
-curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H t-type:application/json" https://chat.univ.fr/api/v1/users.getPersonalAccessTokens
+curl -H "X-Auth-Token: XXXAuthTokenXXX" -H "X-User-Id: XXXUserIDXXX" -H "Content-type:application/json" https://chat.univ.fr/api/v1/users.getPersonalAccessTokens
 # {"tokens":[{"name":"moodletoken","createdAt":"2021-02-09T10:35:38.564Z","lastTokenPart":"XXX"}],"success":true}
 ```
 * Generate a new token in case of lost
