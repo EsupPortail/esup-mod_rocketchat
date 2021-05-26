@@ -105,21 +105,20 @@ if ($ADMIN->fulltree) {
             0
         )
     );
-
-    $settings->add(
-        new admin_setting_configcheckbox(
-            'mod_rocketchat/overrideglobal',
-            get_string('overrideglobal', 'mod_rocketchat'),
-            get_string('overrideglobal_desc', 'mod_rocketchat'),
-            0
-        )
-    );
     $settings->add(
         new admin_setting_configtext(
             'mod_rocketchat/maxage',
             get_string('maxage', 'mod_rocketchat'),
             get_string('maxage_desc', 'mod_rocketchat'),
             90
+        )
+    );
+    $settings->add(
+        new admin_setting_configtext(
+            'mod_rocketchat/maxage_limit',
+            get_string('maxage_limit', 'mod_rocketchat'),
+            get_string('maxage_limit_desc', 'mod_rocketchat'),
+            350
         )
     );
     $settings->add(

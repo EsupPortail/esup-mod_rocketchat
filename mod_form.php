@@ -147,25 +147,26 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                 $mform->setDefault('retentionenabled', get_config('mod_rocketchat', 'retentionenabled'));
 
                 if (has_capability('mod/rocketchat:canactivateretentionglobaloverride', $this->get_context())) {
-                    $mform->addElement('checkbox', 'overrideglobal',
-                        get_string('overrideglobal', 'mod_rocketchat'),
-                        get_string('overrideglobal_desc', 'mod_rocketchat')
-                    );
+                    $mform->addElement('hidden', 'overrideglobal');
                     $mform->addHelpButton('overrideglobal', 'overrideglobal', 'mod_rocketchat');
                     $mform->disabledif('overrideglobal', 'retentionenabled',
                         'notchecked');
+                    $mform->setDefault('overrideglobal', get_config('mod_rocketchat', 'retentionenabled'));
                 } else {
                     $mform->addElement('hidden', 'overrideglobal');
-                    $mform->setType('overrideglobal', PARAM_INT);
                 }
+                $mform->setType('overrideglobal', PARAM_INT);
                 $mform->setDefault('overrideglobal', get_config('mod_rocketchat', 'overrideglobal'));
 
+                $mform->addElement('hidden', 'maxage_limit');
+                $mform->setType('maxage_limit', PARAM_INT);
+                $mform->setDefault('maxage_limit', get_config('mod_rocketchat', 'maxage_limit'));
                 $mform->addElement('text', 'maxage', get_string('maxage', 'mod_rocketchat'));
                 $mform->setType('maxage', PARAM_INT);
-                $mform->disabledif('maxage', 'overrideglobal',
-                    'notchecked');
                 $mform->disabledif('maxage', 'retentionenabled',
                     'notchecked');
+                $mform->addRule(array('maxage_limit', 'maxage'), get_string('limit_override', 'mod_rocketchat'), 'compare', 'gte', 'client');
+
                 if (has_capability('mod/rocketchat:candefineadvancedretentionparamaters', $this->get_context())) {
                     $mform->addElement('checkbox', 'filesonly',
                         get_string('filesonly', 'mod_rocketchat'),
@@ -242,4 +243,8 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         return $formattedrole;
     }
 
+    function validation($data, $files) {
+        global $COURSE, $DB, $CFG;
+        $errors = parent::validation($data, $files);
+    }
 }

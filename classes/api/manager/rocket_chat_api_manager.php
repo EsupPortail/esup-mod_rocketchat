@@ -158,12 +158,13 @@ class rocket_chat_api_manager{
             switch($settingname) {
                 case 'retentionenabled':
                     $rcsettings1['retentionEnabled'] = (boolean) $settingvalue;
-                    break;
-                case 'overrideglobal' :
                     $rcsettings1['retentionOverrideGlobal'] = (boolean) $settingvalue;
                     break;
                 case 'maxage' :
                     $rcsettings2['retentionMaxAge'] = $settingvalue;
+                    break;
+                case 'maxage_limit' :
+                    $rcsettings2['retentionMaxAgeLimit'] = $settingvalue;
                     break;
                 case 'filesonly' :
                     $rcsettings2['retentionFilesOnly'] = (boolean) $settingvalue;
