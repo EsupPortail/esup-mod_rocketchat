@@ -38,20 +38,13 @@ Feature: mod_rocketchat
     And I wait until the page is ready
     And "retentionenabled" "checkbox" should exist
     And the field "retentionenabled" matches value "0"
-    And "overrideglobal" "checkbox" should exist
-    And the "overrideglobal" "checkbox" should be disabled
     And "filesonly" "checkbox" should exist
     And the "filesonly" "checkbox" should be disabled
     And "maxage" "field" should exist
     And the "maxage" "field" should be disabled
     When I set the field "retentionenabled" to "checked"
-    Then the "overrideglobal" "checkbox" should be enabled
-    And the field "overrideglobal" matches value "0"
     And the "filesonly" "checkbox" should be disabled
     And the "excludepinned" "checkbox" should be disabled
-    And the "maxage" "field" should be disabled
-    When I set the field "overrideglobal" to "checked"
-    Then the "filesonly" "checkbox" should be enabled
     And the "excludepinned" "checkbox" should be enabled
     And the "maxage" "field" should be enabled
 
@@ -65,7 +58,6 @@ Feature: mod_rocketchat
     And I add a "Rocket.Chat" to section "1"
     And I wait until the page is ready
     And "retentionenabled" "checkbox" should not exist
-    And "overrideglobal" "checkbox" should not exist
     And "filesonly" "checkbox" should not exist
     And "maxage" "field" should not exist
     Then I log out
@@ -80,7 +72,6 @@ Feature: mod_rocketchat
     And I add a "Rocket.Chat" to section "1"
     And I wait until the page is ready
     And "retentionenabled" "checkbox" should exist
-    And "overrideglobal" "checkbox" should not exist
     And "filesonly" "checkbox" should not exist
     And "excludepinned" "checkbox" should not exist
     And "maxage" "field" should not exist
@@ -96,7 +87,6 @@ Feature: mod_rocketchat
     And I add a "Rocket.Chat" to section "1"
     And I wait until the page is ready
     And "retentionenabled" "checkbox" should exist
-    And "overrideglobal" "checkbox" should exist
     And "filesonly" "checkbox" should not exist
     And "maxage" "field" should not exist
     And "excludepinned" "checkbox" should not exist
@@ -112,7 +102,6 @@ Feature: mod_rocketchat
     And I add a "Rocket.Chat" to section "1"
     And I wait until the page is ready
     And "retentionenabled" "checkbox" should exist
-    And "overrideglobal" "checkbox" should exist
     And "filesonly" "checkbox" should exist
     And "maxage" "field" should exist
     And "excludepinned" "checkbox" should exist
