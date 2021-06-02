@@ -163,13 +163,16 @@ class observers {
     public static function course_bin_item_restored(\tool_recyclebin\event\course_bin_item_restored $event) {
         global $DB;
         if (\mod_rocketchat_tools::rocketchat_enabled() && \mod_rocketchat_tools::is_patch_installed()) {
+            // Check that this is a rocketchat module.
             $rocketchatrecyclebin = $DB->get_record('rocketchatxrecyclebin', array('binid' => $event->objectid));
-            $rocketchatapimanager = new rocket_chat_api_manager();
-            $rocketchatapimanager->unarchive_rocketchat_group($rocketchatrecyclebin->rocketchatid);
-            $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
-            // Synchronise members.
-            \mod_rocketchat_tools::synchronize_group_members($rocketchatrecyclebin->rocketchatid,
-                get_config('mod_rocketchat', 'background_synchronize'));
+            if($rocketchatrecyclebin){
+                $rocketchatapimanager = new rocket_chat_api_manager();
+                $rocketchatapimanager->unarchive_rocketchat_group($rocketchatrecyclebin->rocketchatid);
+                $DB->delete_records('rocketchatxrecyclebin', array('id' => $rocketchatrecyclebin->id));
+                // Synchronise members.
+                \mod_rocketchat_tools::synchronize_group_members($rocketchatrecyclebin->rocketchatid,
+                    get_config('mod_rocketchat', 'background_synchronize'));
+            }
         }
     }
 
