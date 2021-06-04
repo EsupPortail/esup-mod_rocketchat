@@ -148,8 +148,10 @@ for behat funcitonal tests by file
 
 ```shell script
 cd /www_moodle_path
+vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/maxage_limit.feature
 vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_activity_creation.feature
-vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_create_deletion.feature
+vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_retention.feature
+vendor/bin/behat --config /datas/mdlfarm/behat_datas/behatrun/behat/behat.yml  /www_moodle_path/mod/rocketchat/tests/behat/rocketchat_test_connection.feature
 ```
 
 ## License ##
