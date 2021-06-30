@@ -73,7 +73,7 @@ Feature: mod_rocketchat
     And "retentionenabled" "checkbox" should exist
     And "filesonly" "checkbox" should not exist
     And "excludepinned" "checkbox" should not exist
-    And "maxage" "field" should not exist
+    And "maxage" "field" should exist
     Then I log out
     And I log in as "admin"
     And I set the following system permissions of "Teacher" role:
