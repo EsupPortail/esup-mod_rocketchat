@@ -78,21 +78,6 @@ Feature: mod_rocketchat
     And I log in as "admin"
     And I set the following system permissions of "Teacher" role:
       | capability | permission |
-      | mod/rocketchat:canactivateretentionglobaloverride | Allow |
-    Then I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I turn editing mode on
-    And I add a "Rocket.Chat" to section "1"
-    And I wait until the page is ready
-    And "retentionenabled" "checkbox" should exist
-    And "filesonly" "checkbox" should not exist
-    And "maxage" "field" should not exist
-    And "excludepinned" "checkbox" should not exist
-    Then I log out
-    And I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability | permission |
       | mod/rocketchat:candefineadvancedretentionparamaters | Allow |
     Then I log out
     And I log in as "teacher1"
