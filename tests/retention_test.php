@@ -80,8 +80,6 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
         $retention = $groupinfos->retention;
         $this->assertTrue(array_key_exists('enabled', $retention));
         $this->assertFalse($retention->enabled);
-        $this->assertTrue(array_key_exists('overrideGlobal', $retention));
-        $this->assertTrue($retention->overrideGlobal);
         $this->assertTrue(array_key_exists('maxAge', $retention));
         $this->assertEquals(20, $retention->maxAge);
         $this->assertTrue(array_key_exists('filesOnly', $retention));
@@ -96,8 +94,6 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
         $retention = $groupinfos->retention;
         $this->assertTrue(array_key_exists('enabled', $retention));
         $this->assertFalse($retention->enabled);
-        $this->assertTrue(array_key_exists('overrideGlobal', $retention));
-        $this->assertFalse($retention->overrideGlobal);
         $this->assertTrue(array_key_exists('maxAge', $retention));
         $this->assertEquals(20, $retention->maxAge);
         $this->assertTrue(array_key_exists('filesOnly', $retention));
