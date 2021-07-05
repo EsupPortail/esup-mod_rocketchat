@@ -635,7 +635,7 @@ class rocket_chat_api_manager{
      * @param $moodleuser
      * @param $e
      */
-    protected static function moodle_debugging_message($message, $e, $level = DEBUG_DEVELOPER) {
+    public static function moodle_debugging_message($message, $e, $level = DEBUG_DEVELOPER) {
         if (!empty($message)) {
             debugging($message."\n"."Rocket.chat api Error ".$e->getCode()." : ".$e->getMessage(), $level);
         } else {

@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
+use RocketChat\RocketChatException;
 
 class mod_rocketchat_tools {
     /** Display new window */
@@ -557,7 +558,13 @@ class mod_rocketchat_tools {
             if ($rocketchatapimanager->user_exists($rocketchatusername)) {
                 $rocketchatuser = $rocketchatapimanager->get_user_infos($rocketchatusername);
             } else if ( get_config('mod_rocketchat', 'create_user_account_if_not_exists')) {
-                $rocketchatuser = $rocketchatapimanager->create_user_if_not_exists($moodleuser);
+                try {
+                    $rocketchatuser = $rocketchatapimanager->create_user_if_not_exists($moodleuser);
+                } catch (RocketChatException $e){
+                    rocket_chat_api_manager::moodle_debugging_message(
+                        "Error while creating user in Rocket.Chat remote group $moodleuser->username", $e, DEBUG_ALL
+                    );
+                }
             } else {
                 return null;
             }
