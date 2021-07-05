@@ -570,11 +570,23 @@ class mod_rocketchat_tools {
             }
             $isuser = self::has_rocket_chat_user_role($userroleids, $moodleuser, $coursecontext);
             if ($isuser) {
-                $rocketchatapimanager->enrol_user_to_group($rocketchatid, $moodleuser);
+                try{
+                    $rocketchatapimanager->enrol_user_to_group($rocketchatid, $moodleuser);
+                } catch( RocketChatException $e) {
+                    rocket_chat_api_manager::moodle_debugging_message(
+                        "Error while enrolling moderator $moodleuser->username", $e, DEBUG_ALL
+                    );
+                }
             }
             $ismoderator = self::has_rocket_chat_moderator_role($moderatorroleids, $moodleuser, $coursecontext);
             if ($ismoderator) {
-                $rocketchatapimanager->enrol_moderator_to_group($rocketchatid, $moodleuser);
+                try {
+                    $rocketchatapimanager->enrol_moderator_to_group($rocketchatid, $moodleuser);
+                } catch( RocketChatException $e) {
+                    rocket_chat_api_manager::moodle_debugging_message(
+                        "Error while enrolling moderator $moodleuser->username", $e, DEBUG_ALL
+                    );
+                }
             }
         }
         return $rocketchatuser;
