@@ -148,5 +148,14 @@ function xmldb_rocketchat_upgrade($oldversion) {
         }
         upgrade_mod_savepoint(true, 2021020800, 'rocketchat');
     }
+
+    if($oldversion < 2021072600) {
+        $table = new xmldb_table('rocketchat');
+        $field = new xmldb_field('overrideglobal');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2021072600, 'rocketchat');
+    }
     return true;
 }

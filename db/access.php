@@ -70,14 +70,6 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
-    'mod/rocketchat:canactivateretentionglobaloverride' => [
-        'riskbitmask' => RISK_PERSONAL,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
     'mod/rocketchat:candefineadvancedretentionparamaters' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'write',

@@ -158,6 +158,7 @@ class rocket_chat_api_manager{
             switch($settingname) {
                 case 'retentionenabled':
                     $rcsettings1['retentionEnabled'] = (boolean) $settingvalue;
+                    // Set overrideglobal to retentionEnabled value to simplify.
                     $rcsettings1['retentionOverrideGlobal'] = (boolean) $settingvalue;
                     break;
                 case 'maxage' :

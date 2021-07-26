@@ -144,6 +144,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $members = $this->rocketchatapimanager->get_enriched_group_members($rocketchat->rocketchatid);
         $this->assertCount(1, $members);
         phpunit_util::run_all_adhoc_tasks();
+        $this->assertDebuggingCalled();
         $members = $this->rocketchatapimanager->get_enriched_group_members($rocketchat->rocketchatid);
         $this->assertCount(2, $members);
         $this->assertContains($gooduser->username, array_keys($members));

@@ -56,7 +56,7 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
         $generator = $this->getDataGenerator();
         $this->rocketchat = $generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname,
-                'retentionenabled' => 1, 'overrideglobal' => 1, 'maxage' => 20, 'filesonly' => 1, 'excludepinned' => 1));
+                'retentionenabled' => 1, 'maxage' => 20, 'filesonly' => 1, 'excludepinned' => 1));
         $rocketchatmanager = new rocket_chat_api_manager();
         $groupinfos = $rocketchatmanager->get_group_infos($this->rocketchat->rocketchatid);
         $groupinfos = $groupinfos->group;
@@ -64,8 +64,6 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
         $retention = $groupinfos->retention;
         $this->assertTrue(array_key_exists('enabled', $retention));
         $this->assertTrue($retention->enabled);
-        $this->assertTrue(array_key_exists('overrideGlobal', $retention));
-        $this->assertTrue($retention->overrideGlobal);
         $this->assertTrue(array_key_exists('maxAge', $retention));
         $this->assertEquals(20, $retention->maxAge);
         $this->assertTrue(array_key_exists('filesOnly', $retention));
@@ -86,7 +84,6 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
         $this->assertTrue($retention->filesOnly);
         $this->assertTrue(array_key_exists('excludePinned', $retention));
         $this->assertTrue($retention->excludePinned);
-        $this->rocketchat->overrideglobal = 0;
         rocketchat_update_instance($this->rocketchat);
         $groupinfos = $rocketchatmanager->get_group_infos($this->rocketchat->rocketchatid);
         $groupinfos = $groupinfos->group;
@@ -110,8 +107,6 @@ class mod_rocketchat_retention_testcase extends advanced_testcase{
         $retention = $groupinfos->retention;
         $this->assertTrue(array_key_exists('enabled', $retention));
         $this->assertFalse($retention->enabled);
-        $this->assertTrue(array_key_exists('overrideGlobal', $retention));
-        $this->assertFalse($retention->overrideGlobal);
         $this->assertTrue(array_key_exists('maxAge', $retention));
         $this->assertEquals(10, $retention->maxAge);
         $this->assertTrue(array_key_exists('filesOnly', $retention));

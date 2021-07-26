@@ -96,7 +96,6 @@ See [MDL-6621 tracker ticket](https://tracker.moodle.org/browse/MDL-66221) for m
 the following capabilities define if a role is able to perform some setting in the module instance : 
 * mod/rocketchat:change_embedded_display_mode : enable a user to choose embbeded Rocket.Chat web client display mode while eidting the module instance
 * mod/rocketchat:candefineroles : enable a user to change defaults roles mapping while editing the module instance
-* mod/rocketchat:canactivateretentionglobaloverride : enable a user to change default platform retention override setting
 * mod/rocketchat:candefineadvancedretentionparamaters : enable a user to define advanced message retention options
 ## Unit tests
 ### settings

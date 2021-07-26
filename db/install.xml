@@ -22,7 +22,6 @@
         <FIELD NAME="moderatorroles" TYPE="char" LENGTH="255" SEQUENCE="false" NOTNULL="false" COMMENT="Moodle roles in course that will be Rocket.Chat moderators."/>
         <FIELD NAME="userroles" TYPE="char" LENGTH="255" SEQUENCE="false" NOTNULL="false" COMMENT="Moodle roles in course that will be Rocket.Chat user (with normal rights)."/>
         <FIELD NAME="retentionenabled" TYPE="int" LENGTH="1" SEQUENCE="false" NOTNULL="true" DEFAULT="0" COMMENT="override global message retnetion time"/>
-        <FIELD NAME="overrideglobal" TYPE="int" LENGTH="1" SEQUENCE="false" NOTNULL="true" DEFAULT="0" COMMENT="override global message retnetion time"/>
         <FIELD NAME="maxage" TYPE="int" LENGTH="10" SEQUENCE="false" NOTNULL="true" DEFAULT="90" COMMENT="maxAge value for retention policy overriding"/>
         <FIELD NAME="filesonly" TYPE="int" LENGTH="1" SEQUENCE="false" NOTNULL="true" DEFAULT="0" COMMENT="remove only files while deleting messages (retnetion policy)"/>
         <FIELD NAME="excludepinned" TYPE="int" LENGTH="1" SEQUENCE="false" NOTNULL="true" DEFAULT="0" COMMENT="exclude pinned messages while deleting messages (retnetion policy)"/>

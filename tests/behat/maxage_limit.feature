@@ -37,10 +37,12 @@ Feature: mod_rocketchat
     And "retentionenabled" "checkbox" should exist
     When I set the field "retentionenabled" to "checked"
     And the "maxage" "field" should be enabled
-    And I set the field "maxage" to "90"
-    And I should not see "- Retention time exceeded maximum setting" in the "#id_error_maxage" "css_element"
     And I set the field "maxage" to "400"
+    And I press "Save changes"
     And I should see "- Retention time exceeded maximum setting" in the "#id_error_maxage" "css_element"
+    Then I set the field "maxage" to "90"
+    And I press "Save changes"
+    And I should not see "- Retention time exceeded maximum setting" in the "#id_error_maxage" "css_element"
 
 
 

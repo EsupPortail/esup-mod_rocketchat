@@ -43,8 +43,8 @@ Feature: mod_rocketchat
     And "maxage" "field" should exist
     And the "maxage" "field" should be disabled
     When I set the field "retentionenabled" to "checked"
-    And the "filesonly" "checkbox" should be disabled
-    And the "excludepinned" "checkbox" should be disabled
+    And the "filesonly" "checkbox" should be enabled
+    And the "excludepinned" "checkbox" should be enabled
     And the "maxage" "field" should be enabled
 
   @javascript
