@@ -146,9 +146,6 @@ class mod_rocketchat_mod_form extends moodleform_mod {
                 );
                 // Parameter retentionenabled means Rocket.Chat retentionEnabled + overrideGlobal.
                 $mform->setDefault('retentionenabled', get_config('mod_rocketchat', 'retentionenabled'));
-                $mform->addElement('hidden', 'maxage_limit');
-                $mform->setType('maxage_limit', PARAM_INT);
-                $mform->setDefault('maxage_limit', get_config('mod_rocketchat', 'maxage_limit'));
                 $mform->addElement('text', 'maxage', get_string('maxage', 'mod_rocketchat'));
                 $mform->setType('maxage', PARAM_INT);
                 $mform->disabledif('maxage', 'retentionenabled',
@@ -226,8 +223,9 @@ class mod_rocketchat_mod_form extends moodleform_mod {
     function validation($data, $files) {
         $errors = parent::validation($data, $files);
         if ($data['retentionenabled'] == 1 ) {
-            if($data['maxage'] > $data['maxage_limit']){
-                $errors['maxage'] = get_string('limit_override', 'mod_rocketchat');
+            $maxagelimit = get_config('mod_rocketchat', 'maxage_limit');
+            if($data['maxage'] > $maxagelimit){
+                $errors['maxage'] = get_string('limit_override', 'mod_rocketchat', $maxagelimit);
             }
         }
         return $errors;
