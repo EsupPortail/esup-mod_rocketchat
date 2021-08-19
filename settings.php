@@ -43,6 +43,12 @@ $ADMIN->add('modrocketchatfolder', new admin_externalpage('rocketchatconnectiont
     new lang_string('testconnection', 'mod_rocketchat'),
     new moodle_url('/mod/rocketchat/test_connection.php')));
 
+$ADMIN->add('modrocketchatfolder', new admin_externalpage(
+        'mod_rocketchat_admin_interface',
+        get_string('pluginname_admin', 'mod_rocketchat'),
+        "$CFG->wwwroot/mod/rocketchat/management.php",
+        'moodle/site:config')
+);
 if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configtext(

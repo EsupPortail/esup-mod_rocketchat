@@ -134,4 +134,6 @@ $string['rocketchat:candefineadvancedretentionparamaters'] = 'Can override globa
 $string['displaysection'] = 'Display settings';
 $string['retentionsection'] = 'Message retention settings';
 $string['rolessection'] = 'Roles definition settings';
+$string['pluginname_admin'] = 'Rocketchat admin interface';
+$string['welcome_string'] = 'Rocketchat admin interface';
 $string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods, Only token auth is now taken into acount.\nPlease change the Rocket.Chat plugin settings.';
