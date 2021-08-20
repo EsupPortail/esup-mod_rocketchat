@@ -22,5 +22,4 @@ $PAGE->set_pagelayout('admin');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('welcome_string', 'mod_rocketchat'));
-
 echo $OUTPUT->footer();
