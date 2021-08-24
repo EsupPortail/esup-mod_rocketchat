@@ -135,4 +135,7 @@ $string['retentionsection'] = 'Rétention des messages';
 $string['rolessection'] = 'Définition des rôles';
 $string['pluginname_admin'] = 'Interface admin Rocketchat';
 $string['welcome_string'] = 'Interface admin Rocketchat';
+$string['days'] = 'jours';
+$string['yes'] = 'Oui';
+$string['no'] = 'Non';
 $string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentification . Seule l\'authentification par token est prise en charge.\nVeuillez s\'il vous plait changer le paramétrage du plugin.';

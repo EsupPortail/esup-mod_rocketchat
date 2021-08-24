@@ -11,6 +11,7 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/mod/rocketchat/rocketchatadmintable.php');
+require_once($CFG->dirroot . '/mod/rocketchat/rocketchatadmintablerecyclebin.php');
 require_login(null, false);
 
 admin_externalpage_setup('mod_rocketchat_admin_interface', '', array(),
@@ -27,5 +28,9 @@ $page = optional_param('page', 0, PARAM_INT);
 $table = new rocketchat_admin_table($perpage,$page);
 $table->is_persistent(true);
 echo $table->out($table->get_rows_per_page(), true);
+
+$table_recycle = new rocketchat_admin_table_recycle($perpage,$page);
+$table_recycle->is_persistent(true);
+echo $table_recycle->out($table->get_rows_per_page(), true);
 
 echo $OUTPUT->footer();

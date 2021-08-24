@@ -13,9 +13,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/tablelib.php');
-require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 
-class rocketchat_admin_table extends table_sql implements renderable {
+class rocketchat_admin_table_recycle extends table_sql implements renderable {
     /** @var int $perpage */
     private $perpage = 10;
     /** @var int $rownum (global index of current row in table) */
@@ -33,7 +32,7 @@ class rocketchat_admin_table extends table_sql implements renderable {
      */
     function __construct($perpage=null, $page=null, $rowoffset=0) {
         global $PAGE, $CFG, $DB;
-        parent::__construct('rocketchat');
+        parent::__construct('tool_my_external_backup_restore_course_admin_entries');
         if(isset($perpage)){
             $this->perpage = $perpage;
         }
@@ -43,7 +42,7 @@ class rocketchat_admin_table extends table_sql implements renderable {
 
         $this->define_baseurl(new moodle_url('/'.$CFG->admin.'/mod/rocketchat/management.php'));
 
-        $this->anyentries = $DB->get_records('rocketchat');
+        $this->anyentries = $DB->get_records('rocketchatxrecyclebin');
 
         // do some business - then set the sql
         if ($rowoffset) {
@@ -53,32 +52,23 @@ class rocketchat_admin_table extends table_sql implements renderable {
 
         $params = array('component'=>'course','filearea'=>'legacy','coursecontext'=>CONTEXT_COURSE);
         $fields='*';
-        $from = '{rocketchat}';
+        $from = '{rocketchatxrecyclebin}';
         $where = 'true';
 
         $this->set_sql($fields, $from, $where, $params);
-        $this->set_count_sql('select count(*) from {rocketchat}');
+        $this->set_count_sql('select count(*) from {rocketchatxrecyclebin}');
 
         $columns = array();
         $headers = array();
 
-
-        $columns[] = 'action';
-        $headers[] = '';
         $columns[] = $headers[]= 'id';
-        $columns[] = $headers[]= 'course';
-        $columns[] = $headers[]= 'name';
-        $columns[] = $headers[] = 'timecreated';
-        $columns[] = $headers[] = 'timemodified';
-        $columns[] = $headers[] = 'retentionenabled';
-        $columns[] = $headers[] = 'filesonly';
-        $columns[] = $headers[] = 'maxage';
+        $columns[] = $headers[]= 'binid';
+        $columns[] = $headers[]= 'rocketchatid';
 
         // set the columns
         $this->define_columns($columns);
         $this->define_headers($headers);
         $this->sortable(true,'course');
-        $this->no_sorting('action');
         $this->use_pages =true;
         $this->collapsible(false);
     }
@@ -92,24 +82,56 @@ class rocketchat_admin_table extends table_sql implements renderable {
         return $this->perpage;
     }
 
-    function col_course(stdClass $row) {
-        if($row->course) {
+    /**
+     * Format a link to the assignment instance
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    function col_externalcoursename(stdClass $row) {
+        return html_writer::link(new moodle_url($row->externalmoodleurl.'/course/view.php',
+            array('id' => $row->externalcourseid)), $row->externalcoursename);
+    }
+
+
+    function col_courseid(stdClass $row) {
+        if($row->courseid) {
             return html_writer::link(new moodle_url('/course/view.php',
-                array('id' => $row->course)), $row->course);
+                array('id' => $row->courseid)), $row->courseid);
 
         }else{
             return '';
         }
     }
 
+
+    /**
+     * internal category input field
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    function col_internalcategory(stdClass $row) {
+        return html_writer::empty_tag('input', array('name'=>'internalcategory_'.$row->id,'type'=>'text','value'=>$row->internalcategory, 'size' => "4"));
+
+    }
+
+    /**
+     * status selection
+     * @param stdClass $row
+     * @return string
+     */
+    function col_status(stdClass $row) {
+        return html_writer::select(array(block_my_external_backup_restore_courses_tools::STATUS_SCHEDULED => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_SCHEDULED,'block_my_external_backup_restore_courses'),
+            block_my_external_backup_restore_courses_tools::STATUS_INPROGRESS => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_INPROGRESS,'block_my_external_backup_restore_courses'),
+            block_my_external_backup_restore_courses_tools::STATUS_PERFORMED => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_PERFORMED,'block_my_external_backup_restore_courses'),
+            block_my_external_backup_restore_courses_tools::STATUS_ERROR => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_ERROR,'block_my_external_backup_restore_courses')
+        ),
+            'status_'.$row->id,$row->status);
+    }
     function col_action(stdClass $row){
-        $out=html_writer::empty_tag('input',
-            array('type'=>'button',
-                'value'=>get_string('edit'),
-                'name'=>'submit',
-                'onclick'=> ''//'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
-            )
-        );
+        $out=html_writer::empty_tag('input',array('type'=>'hidden','value'=>$this->currpage, 'name'=>'page'));
+        $out.=html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('edit'), 'name'=>'submit','onclick'=>'$(\'#trigger\').val('.$row->id.')'));
         return $out;
     }
     function col_timecreated(stdClass $row){
@@ -118,17 +140,8 @@ class rocketchat_admin_table extends table_sql implements renderable {
     function col_timemodified(stdClass $row){
         return $row->timemodified == 0? get_string('never') : userdate($row->timemodified,'%D %X');
     }
-
-    function col_maxage(stdClass $row){
-        return $row->maxage . ' ' .get_string('days') ;
-    }
-
-    function col_filesonly(stdClass $row){
-        return $row->filesonly == 0 ? get_string('no') : get_string('yes') ;
-    }
-
-    function col_retentionenabled(stdClass $row){
-        return $row->retentionenabled == 0 ? get_string('no') : get_string('yes') ;
+    function col_timescheduleprocessed(stdClass $row){
+        return $row->timescheduleprocessed == 0? get_string('never') : userdate($row->timescheduleprocessed,'%D %X');
     }
 
     //override fonctions to include form
