@@ -83,8 +83,9 @@ class Channel extends Client
 	 */
 	public function info()
 	{
+	    //https://rocketchat-dev.di.unistra.fr/api/v1/channels.info?roomId=nex7SLn3Hrb4XcAD5
 		$response = Request::get($this->api . 'channels.info?roomId=' . $this->id)->send();
-
+        var_dump($this->api." here ".$this->id);
 		if (self::success($response))
 		{
 			$this->id = $response->body->channel->_id;

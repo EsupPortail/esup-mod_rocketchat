@@ -643,4 +643,16 @@ class rocket_chat_api_manager{
             debugging("Rocket.chat api Error ".$e->getCode()." : ".$e->getMessage(), DEBUG_DEVELOPER);
         }
     }
+
+    /**
+     ******************************************* Functions for channels ********************************************
+     */
+
+    /**
+     * @return \RocketChat\Channel
+     */
+    public function get_rocketchat_channel_with_id_object() {
+        return new \RocketChat\Channel(null, null,
+            $this->rocketchatapiconfig->get_instanceurl(), $this->rocketchatapiconfig->get_restapiroot());
+    }
 }

@@ -10,6 +10,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_rocketchat\api\manager\rocket_chat_api_manager;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/tablelib.php');
@@ -66,6 +68,7 @@ class rocketchat_admin_table extends table_sql implements renderable {
         $columns[] = 'action';
         $headers[] = '';
         $columns[] = $headers[]= 'id';
+        $columns[] = $headers[]= 'rocketchatid';
         $columns[] = $headers[]= 'course';
         $columns[] = $headers[]= 'name';
         $columns[] = $headers[] = 'timecreated';
@@ -103,14 +106,25 @@ class rocketchat_admin_table extends table_sql implements renderable {
     }
 
     function col_action(stdClass $row){
-        $out=html_writer::empty_tag('input',
+        $config = get_config('mod_rocketchat');
+        $instanceurl = $config->instanceurl;
+        $restapiroot  = $config->restapiroot;
+        $apiuser  = $config->apiuser;
+        $apitoken  = $config->apitoken;
+        $rocketchatapimanager = new rocket_chat_api_manager();
+        $channel = $rocketchatapimanager->get_rocketchat_channel_with_id_object();
+        $channel->id = $row->rocketchatid;
+        $result = $channel->info();
+        var_dump($result);
+
+        /*$out=html_writer::empty_tag('input',
             array('type'=>'button',
                 'value'=>get_string('edit'),
                 'name'=>'submit',
                 'onclick'=> ''//'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
             )
-        );
-        return $out;
+        );*/
+        return "toto";
     }
     function col_timecreated(stdClass $row){
         return $row->timecreated == 0? get_string('never') : userdate($row->timecreated,'%D %X');
