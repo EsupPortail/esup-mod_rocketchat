@@ -112,19 +112,27 @@ class rocketchat_admin_table extends table_sql implements renderable {
         $apiuser  = $config->apiuser;
         $apitoken  = $config->apitoken;
         $rocketchatapimanager = new rocket_chat_api_manager();
-        $channel = $rocketchatapimanager->get_rocketchat_channel_with_id_object();
-        $channel->id = $row->rocketchatid;
+        $channel = $rocketchatapimanager->get_rocketchat_channel_object($row->rocketchatid);
+        //$channel->id = $row->rocketchatid;
         $result = $channel->info();
-        var_dump($result);
-
-        /*$out=html_writer::empty_tag('input',
-            array('type'=>'button',
-                'value'=>get_string('edit'),
-                'name'=>'submit',
-                'onclick'=> ''//'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
-            )
-        );*/
-        return "toto";
+        if(!$result){ // Not Found
+            $out=html_writer::empty_tag('input',
+                array('type'=>'button',
+                    'value'=>get_string('edit'),
+                    'name'=>'submit',
+                    'onclick'=> 'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
+                )
+            );
+        } else { // Found
+            $out=html_writer::empty_tag('input',
+                array('type'=>'button',
+                    'value'=>get_string('edit'),
+                    'name'=>'submit',
+                    'onclick'=> ''//'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
+                )
+            );
+        }
+        return $out;
     }
     function col_timecreated(stdClass $row){
         return $row->timecreated == 0? get_string('never') : userdate($row->timecreated,'%D %X');
