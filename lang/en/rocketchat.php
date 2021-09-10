@@ -139,4 +139,6 @@ $string['welcome_string'] = 'Rocketchat admin interface';
 $string['days'] = 'days';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
+$string['re_sync'] = 'Synchronize';
+$string['re_create'] = 'Recreate';
 $string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods, Only token auth is now taken into acount.\nPlease change the Rocket.Chat plugin settings.';

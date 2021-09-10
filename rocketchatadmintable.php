@@ -43,7 +43,7 @@ class rocketchat_admin_table extends table_sql implements renderable {
             $this->currpage = $page;
         }
 
-        $this->define_baseurl(new moodle_url('/'.$CFG->admin.'/mod/rocketchat/management.php'));
+        $this->define_baseurl(new moodle_url('/mod/rocketchat/management.php'));
 
         $this->anyentries = $DB->get_records('rocketchat');
 
@@ -113,24 +113,23 @@ class rocketchat_admin_table extends table_sql implements renderable {
         $apitoken  = $config->apitoken;
         $rocketchatapimanager = new rocket_chat_api_manager();
         $channel = $rocketchatapimanager->get_rocketchat_channel_object($row->rocketchatid);
-        //$channel->id = $row->rocketchatid;
         $result = $channel->info();
         if(!$result){ // Not Found
+            $out="Erreur!";
+
+        } else { // Found
             $out=html_writer::empty_tag('input',
                 array('type'=>'button',
-                    'value'=>get_string('edit'),
+                    'value'=> "Resynchroniser", // input string not working for some reason
                     'name'=>'submit',
                     'onclick'=> 'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
                 )
             );
-        } else { // Found
-            $out=html_writer::empty_tag('input',
-                array('type'=>'button',
-                    'value'=>get_string('edit'),
-                    'name'=>'submit',
-                    'onclick'=> ''//'mod_rocketchat_tools::synchronize_group_members_for_module('.$row->rocketchatid.')'
-                )
-            );
+
+            $out = html_writer::div(html_writer::link(
+                new moodle_url('/mod/rocketchat/sync_rocketchat_room.php',
+                    ['roomid' => $row->rocketchatid, 'sesskey' => sesskey()]),
+                get_string('clear')), 'rocketchat_synchronise_task');
         }
         return $out;
     }

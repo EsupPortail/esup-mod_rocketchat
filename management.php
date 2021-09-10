@@ -23,8 +23,10 @@ $PAGE->set_pagelayout('admin');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('welcome_string', 'mod_rocketchat'));
+
 $perpage = optional_param('perpage', 0, PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
+
 $table = new rocketchat_admin_table($perpage,$page);
 $table->is_persistent(true);
 echo $table->out($table->get_rows_per_page(), true);
