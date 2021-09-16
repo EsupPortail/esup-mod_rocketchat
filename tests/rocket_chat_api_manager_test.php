@@ -338,13 +338,13 @@ class mod_rocketchat_api_manager_testcase extends advanced_testcase{
     protected function initiate_group_with_user() {
         $domainmail = get_config('mod_rocketchat', 'domainmail');
         $moderator = new stdClass();
-        $moderator->username = 'usertest' . time();
+        $moderator->username = 'moodleusertestModerator' . time();
         $moderator->firstname = 'moodleusertestModerator';
         $moderator->lastname = $moderator->firstname;
         $moderator->email = $moderator->username . '@' . (!empty($domainmail) ? $domainmail : 'moodle.test');
         $rocketchatmoderator = $this->rocketchatapimanager->create_user_if_not_exists($moderator);
         $user = new stdClass();
-        $user->username = 'usertest' . time();
+        $user->username = 'moodleusertestUser' . time();
         $user->firstname = 'moodleusertestUser';
         $user->lastname = $user->firstname;
         $user->email = $user->username . '@' . (!empty($domainmail) ? $domainmail : 'moodle.test');
