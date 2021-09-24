@@ -77,6 +77,11 @@ class rocket_chat_api_manager{
             $this->rocketchatapiconfig->get_restapiroot());
     }
 
+    public function get_rocketchat_role_object() {
+        return new \RocketChat\Role(array(),  $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+    }
+
     public function get_rocketchat_group_object($groupid, $groupname='') {
         $group = new \stdClass();
         $group->_id = $groupid;
