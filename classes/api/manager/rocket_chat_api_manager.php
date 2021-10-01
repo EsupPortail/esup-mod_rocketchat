@@ -81,6 +81,13 @@ class rocket_chat_api_manager{
         return new \RocketChat\Role(array(),  $this->rocketchatapiconfig->get_instanceurl(),
             $this->rocketchatapiconfig->get_restapiroot());
     }
+    public function get_rocketchat_room_object($roomid,  $roomname='') {
+        $room = new \stdClass();
+        $room->_id = $roomid;
+        $room->name = $roomname;
+        return new \RocketChat\Room($room, $this->rocketchatapiconfig->get_instanceurl(),
+            $this->rocketchatapiconfig->get_restapiroot());
+    }
 
     public function get_rocketchat_group_object($groupid, $groupname='') {
         $group = new \stdClass();

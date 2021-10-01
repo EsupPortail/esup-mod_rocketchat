@@ -33,7 +33,7 @@ $restapiroot  = $config->restapiroot;
 $apiuser  = $config->apiuser;
 $apitoken  = $config->apitoken;
 $rocketchatapimanager = new rocket_chat_api_manager();
-$channel = $rocketchatapimanager->get_rocketchat_channel_object($rocketid);
+$channel = $rocketchatapimanager->get_rocketchat_room_object($rocketid);
 
 $coursecontext = context_course::instance($courseid);
 $moodlemembers = get_enrolled_users($coursecontext);
@@ -44,20 +44,26 @@ if (!$rocketchatmoduleinstance) {
 
 $moderatorroles = array_filter(explode(',', $rocketchatmoduleinstance->moderatorroles));
 $userroles = $rocketchatmoduleinstance->userroles;
+
+$count =0;
 foreach ($moodlemembers as $moodleuser){
-    $rocket = $rocketchatapimanager->get_rocketchat_role_object();
-    $results = $rocket->getUserInRole();
-    var_dump($results);
+    $count++;
+    $moodleUsers[]['name'] = $moodleuser->firstname.' '.$moodleuser->lastname;
     //var_dump($moodleuser->username. ' '.mod_rocketchat_tools::has_rocket_chat_moderator_role($moderatorroles, $moodleuser, $coursecontext));
 }
 //self::has_rocket_chat_user_role($userroleids, $moodleuser, $coursecontext);
 
+$group = $rocketchatapimanager->get_rocketchat_group_object($rocketid);
+$rocketUsers = $group->members();
+var_dump($rocketUsers);
 
+$details[0]->intro = $count;
 $result = $channel->info();
-var_dump($result);
 $data = [
     'moodle' => $details[0],
-    'rocketchat' => $result
+    'moodleUsers' => $moodleUsers,
+    'rocketchat' => $result,
+    'rocketchatUsers' => $rocketUsers
 ];
 
 echo $OUTPUT->render_from_template('mod_rocketchat/details', $data);

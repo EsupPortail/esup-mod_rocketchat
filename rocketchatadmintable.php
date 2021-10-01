@@ -108,7 +108,7 @@ class rocketchat_admin_table extends table_sql implements renderable {
     function col_action(stdClass $row){
         $config = get_config('mod_rocketchat');
         $rocketchatapimanager = new rocket_chat_api_manager();
-        $channel = $rocketchatapimanager->get_rocketchat_channel_object($row->rocketchatid);
+        $channel = $rocketchatapimanager->get_rocketchat_room_object($row->rocketchatid);
         $result = $channel->info();
         if(!$result){ // Not Found
             $out="Erreur!";
