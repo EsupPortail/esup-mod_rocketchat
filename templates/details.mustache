@@ -1,6 +1,5 @@
 <div id="rocket_details">
-    <h2>Titre</h2>
-    <div id="moodle">
+    <div id="moodle" class="details">
         {{# moodle }}
             <label>Name : </label><span id="name"> {{ name }}</span><br/>
             <label>Id : </label><span id="rocketchatid"> {{ rocketchatid }}</span><br/>
@@ -9,24 +8,28 @@
             <label>MaxAge : </label><span id="maxage"> {{ maxage }}</span><br/>
             <label>FilesOnly : </label><span id="filesonly"> {{ filesonly }}</span><br/>
             <label>ExcludePinned : </label><span id="excludepinned"> {{ excludepinned }}</span><br>
-            {{# moodleUsers }}
-                <span>{{name}}</span><br>
-            {{/moodleUsers}}
+            <label>Users :</label><div class="users">
+                {{# moodleUsers }}
+                    <span>{{name}}</span><br>
+                {{/moodleUsers}}
+            </div>
         {{/ moodle }}
     </div>
-    <div id="rocket">
+    <div id="rocket" class="details">
         {{# rocketchat }}
             <label>Name : </label><span id="name"> {{ room.name }}</span><br/>
             <label>Id : </label><span id="rocketchatid"> {{ room._id }}</span><br/>
             <label>UserCount : </label><span id="rocketchatid"> {{ room.usersCount }}</span><br/>
 
             <label>RetentionEnabled : </label><span id="retentionenabled"> {{ room.retention.enabled }}</span><br/>
-            <label>MaxAge : </label><span id="maxage"> {{ room.retention.maxage }}</span><br/>
-            <label>FilesOnly : </label><span id="filesonly"> {{ room.retention.filesonly }}</span><br/>
+            <label>MaxAge : </label><span id="maxage"> {{ room.retention.maxAge }}</span><br/>
+            <label>FilesOnly : </label><span id="filesonly"> {{ room.retention.filesOnly }}</span><br/>
             <label>ExcludePinned : </label><span id="excludepinned"> {{ room.retention.excludePinned }}</span><br>
-            {{# rocketchatUsers }}
-                <span>{{nickname}}</span><br>
-            {{/rocketchatUsers}}
+            <label>Users :</label><div class="users">
+                {{# rocketchatUsers }}
+                    <span>{{nickname}}</span><br>
+                {{/rocketchatUsers}}
+            </div>
         {{/ rocketchat }}
     </div>
 </div>

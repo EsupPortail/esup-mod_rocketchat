@@ -17,6 +17,7 @@ admin_externalpage_setup('mod_rocketchat_admin_interface', '', array(),
 $PAGE->navbar->add(get_string('pluginname_admin', 'mod_rocketchat'));
 $PAGE->requires->jquery();
 $PAGE->set_context(context_system::instance());
+$PAGE->requires->css(new moodle_url('/mod/rocketchat/styles.css'));
 $PAGE->set_pagelayout('admin');
 
 $rocketid = required_param('rocketchat_id', PARAM_RAW_TRIMMED);
@@ -55,8 +56,6 @@ foreach ($moodlemembers as $moodleuser){
 
 $group = $rocketchatapimanager->get_rocketchat_group_object($rocketid);
 $rocketUsers = $group->members();
-var_dump($rocketUsers);
-
 $details[0]->intro = $count;
 $result = $channel->info();
 $data = [

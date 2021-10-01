@@ -1,0 +1,19 @@
+#rocket_details{
+    margin-top: 50px;
+    width : 70%;
+}
+.details{
+    font-size: large;
+    width: 30%;
+    margin-left: 100px;
+    height : 500px;
+    vertical-align: top;
+    display: inline-block;
+}
+.users{
+    padding-top: 10px;
+    padding-left: 20px;
+    margin-left: 20px;
+    border: 1px solid black;
+    width : 70%;
+}
