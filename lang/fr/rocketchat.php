@@ -139,5 +139,6 @@ $string['header_details'] = 'Details pour le module : ';
 $string['days'] = 'jours';
 $string['yes'] = 'Oui';
 $string['no'] = 'Non';
+$string['error'] = 'Erreur !';
 $string['details'] = 'Details';
 $string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentification . Seule l\'authentification par token est prise en charge.\nVeuillez s\'il vous plait changer le paramétrage du plugin.';

@@ -108,17 +108,25 @@ class rocketchat_admin_table extends table_sql implements renderable {
     function col_action(stdClass $row){
         $config = get_config('mod_rocketchat');
         $rocketchatapimanager = new rocket_chat_api_manager();
-        $channel = $rocketchatapimanager->get_rocketchat_room_object($row->rocketchatid);
-        $result = $channel->info();
+        $result = null;
+        try{
+            $channel = $rocketchatapimanager->get_rocketchat_room_object($row->rocketchatid);
+            $result = $channel->info();
+        }catch (Exception $e){
+            $result = null;
+        }
         if(!$result){ // Not Found
-            $out="Erreur!";
+            $results = 'error';
+            $rocketid = 0;
 
         } else { // Found
-            $out = html_writer::div(html_writer::link(
-                new moodle_url('/mod/rocketchat/rocket_room_details.php',
-                    ['rocketchat_id' => $row->rocketchatid,'course_id' => $row->course, 'sesskey' => sesskey()]),
-                get_string('details', "mod_rocketchat")), 'rocketchat_synchronise_task');
+            $results = 'details';
+            $rocketid = $row->rocketchatid;
         }
+        $out = html_writer::div(html_writer::link(
+            new moodle_url('/mod/rocketchat/rocket_room_details.php',
+                ['rocketchat_id' => $rocketid,'module_id' => $row->id,'course_id' => $row->course, 'sesskey' => sesskey()]),
+            get_string($results, "mod_rocketchat")), 'rocketchat_synchronise_task');
         return $out;
     }
     function col_timecreated(stdClass $row){

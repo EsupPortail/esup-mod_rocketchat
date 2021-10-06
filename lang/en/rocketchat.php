@@ -140,5 +140,6 @@ $string['header_details'] = 'Details for module : ';
 $string['days'] = 'days';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
+$string['error'] = 'Error !';
 $string['details'] = 'Details';
 $string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods, Only token auth is now taken into acount.\nPlease change the Rocket.Chat plugin settings.';
