@@ -655,11 +655,6 @@ class rocket_chat_api_manager{
             debugging("Rocket.chat api Error ".$e->getCode()." : ".$e->getMessage(), DEBUG_DEVELOPER);
         }
     }
-
-    /**
-     ******************************************* Functions for channels ********************************************
-     */
-
     /**
      * @return \RocketChat\Channel
      */

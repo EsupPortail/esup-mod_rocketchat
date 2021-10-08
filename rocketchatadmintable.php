@@ -1,5 +1,18 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * This file contains the definition for course table which subclassses easy_table
  *
@@ -33,13 +46,13 @@ class rocketchat_admin_table extends table_sql implements renderable {
      * @param int $perpage How many per page
      * @param int $rowoffset The starting row for pagination
      */
-    function __construct($perpage=null, $page=null, $rowoffset=0) {
+    public function __construct($perpage=null, $page=null, $rowoffset=0) {
         global $PAGE, $CFG, $DB;
         parent::__construct('rocketchat');
-        if(isset($perpage)){
+        if (isset($perpage)) {
             $this->perpage = $perpage;
         }
-        if(isset($page)){
+        if (isset($page)) {
             $this->currpage = $page;
         }
 
@@ -47,14 +60,14 @@ class rocketchat_admin_table extends table_sql implements renderable {
 
         $this->anyentries = $DB->get_records('rocketchat');
 
-        // do some business - then set the sql
         if ($rowoffset) {
             $this->rownum = $rowoffset - 1;
         }
 
-
-        $params = array('component'=>'course','filearea'=>'legacy','coursecontext'=>CONTEXT_COURSE);
-        $fields='*';
+        $params = array('component' => 'course',
+            'filearea' => 'legacy',
+            'coursecontext' => CONTEXT_COURSE);
+        $fields = '*';
         $from = '{rocketchat}';
         $where = 'true';
 
@@ -64,25 +77,24 @@ class rocketchat_admin_table extends table_sql implements renderable {
         $columns = array();
         $headers = array();
 
-
         $columns[] = 'action';
         $headers[] = '';
-        $columns[] = $headers[]= 'id';
-        $columns[] = $headers[]= 'rocketchatid';
-        $columns[] = $headers[]= 'course';
-        $columns[] = $headers[]= 'name';
+        $columns[] = $headers[] = 'id';
+        $columns[] = $headers[] = 'rocketchatid';
+        $columns[] = $headers[] = 'course';
+        $columns[] = $headers[] = 'name';
         $columns[] = $headers[] = 'timecreated';
         $columns[] = $headers[] = 'timemodified';
         $columns[] = $headers[] = 'retentionenabled';
         $columns[] = $headers[] = 'filesonly';
         $columns[] = $headers[] = 'maxage';
 
-        // set the columns
+        // ...set the columns
         $this->define_columns($columns);
         $this->define_headers($headers);
-        $this->sortable(true,'course');
+        $this->sortable(true, 'course');
         $this->no_sorting('action');
-        $this->use_pages =true;
+        $this->use_pages = true;
         $this->collapsible(false);
     }
 
@@ -91,78 +103,79 @@ class rocketchat_admin_table extends table_sql implements renderable {
      *
      * @return int The number of rows per page
      */
-    function get_rows_per_page() {
+    public function get_rows_per_page() {
         return $this->perpage;
     }
 
-    function col_course(stdClass $row) {
-        if($row->course) {
+    public function col_course(stdClass $row) {
+        if ($row->course) {
             return html_writer::link(new moodle_url('/course/view.php',
                 array('id' => $row->course)), $row->course);
 
-        }else{
+        } else {
             return '';
         }
     }
 
-    function col_action(stdClass $row){
+    public function col_action(stdClass $row) {
         $config = get_config('mod_rocketchat');
         $rocketchatapimanager = new rocket_chat_api_manager();
         $result = null;
-        try{
+        try {
             $channel = $rocketchatapimanager->get_rocketchat_room_object($row->rocketchatid);
             $result = $channel->info();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $result = null;
         }
-        if(!$result){ // Not Found
+        if (!$result) { // Not Found!
             $results = 'error';
             $rocketid = 0;
 
-        } else { // Found
+        } else { // Found!
             $results = 'details';
             $rocketid = $row->rocketchatid;
         }
         $out = html_writer::div(html_writer::link(
             new moodle_url('/mod/rocketchat/rocket_room_details.php',
-                ['rocketchat_id' => $rocketid,'module_id' => $row->id,'course_id' => $row->course, 'sesskey' => sesskey()]),
+                ['rocketchat_id' => $rocketid,
+                    'module_id' => $row->id,
+                    'course_id' => $row->course,
+                    'sesskey' => sesskey()]),
             get_string($results, "mod_rocketchat")), 'rocketchat_synchronise_task');
         return $out;
     }
-    function col_timecreated(stdClass $row){
-        return $row->timecreated == 0? get_string('never') : userdate($row->timecreated,'%D %X');
+    public function col_timecreated(stdClass $row) {
+        return $row->timecreated == 0 ? get_string('never') : userdate($row->timecreated, '%D %X');
     }
-    function col_timemodified(stdClass $row){
-        return $row->timemodified == 0? get_string('never') : userdate($row->timemodified,'%D %X');
-    }
-
-    function col_maxage(stdClass $row){
-        return $row->maxage . ' ' .get_string('days') ;
+    public function col_timemodified(stdClass $row) {
+        return $row->timemodified == 0 ? get_string('never') : userdate($row->timemodified, '%D %X');
     }
 
-    function col_filesonly(stdClass $row){
-        return $row->filesonly == 0 ? get_string('no') : get_string('yes') ;
+    public function col_maxage(stdClass $row) {
+        return $row->maxage . ' ' .get_string('days');
     }
 
-    function col_retentionenabled(stdClass $row){
-        return $row->retentionenabled == 0 ? get_string('no') : get_string('yes') ;
+    public function col_filesonly(stdClass $row) {
+        return $row->filesonly == 0 ? get_string('no') : get_string('yes');
     }
 
-    //override fonctions to include form
-    function start_html(){
+    public function col_retentionenabled(stdClass $row) {
+        return $row->retentionenabled == 0 ? get_string('no') : get_string('yes');
+    }
+
+    // ...override fonctions to include form
+    public function start_html() {
 
         parent::start_html();
-        echo html_writer::start_tag('form', array('action'=>$this->baseurl->out()));
-        echo html_writer::empty_tag('input', array('type'=>'hidden','name'=>'trigger', 'id'=>'trigger'));
-
-
+        echo html_writer::start_tag('form', array('action' => $this->baseurl->out()));
+        echo html_writer::empty_tag('input',
+            array('type' => 'hidden',
+                'name' => 'trigger',
+                'id' => 'trigger'));
     }
 
-    function finish_html(){
-
+    public function finish_html() {
         echo html_writer::end_tag('form');
         parent::finish_html();
-
-
     }
 }

@@ -32,12 +32,12 @@
                 {{/rocketchatUsers}}
             </div>
     </div>
-    <button class="action_sync"><a href="{{{ syncbutton }}}">Synchroniser</a></button>
+    <button class="action_sync btn btn-secondary"><a href="{{{ syncbutton }}}">Synchroniser</a></button>
     {{/ rocketchat }}
     {{^rocketchat}}
     <div id="rocket" class="details">
         <h3>Rocketchat course is missing!</h3>
     </div>
-    <button class="action_sync"><a href="{{{ recreatebutton }}}">Resynchroniser</a></button>
+    <button class="action_sync btn btn-secondary"><a href="{{{ recreatebutton }}}">Resynchroniser</a></button>
     {{/rocketchat}}
 </div>

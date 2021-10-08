@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This file contains the definition for course table which subclassses easy_table
@@ -30,13 +44,13 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
      * @param int $perpage How many per page
      * @param int $rowoffset The starting row for pagination
      */
-    function __construct($perpage=null, $page=null, $rowoffset=0) {
+    public function __construct($perpage=null, $page=null, $rowoffset=0) {
         global $PAGE, $CFG, $DB;
         parent::__construct('tool_my_external_backup_restore_course_admin_entries');
-        if(isset($perpage)){
+        if (isset($perpage)) {
             $this->perpage = $perpage;
         }
-        if(isset($page)){
+        if (isset($page)) {
             $this->currpage = $page;
         }
 
@@ -44,14 +58,11 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
 
         $this->anyentries = $DB->get_records('rocketchatxrecyclebin');
 
-        // do some business - then set the sql
         if ($rowoffset) {
             $this->rownum = $rowoffset - 1;
         }
-
-
-        $params = array('component'=>'course','filearea'=>'legacy','coursecontext'=>CONTEXT_COURSE);
-        $fields='*';
+        $params = array('component' => 'course', 'filearea' => 'legacy', 'coursecontext' => CONTEXT_COURSE);
+        $fields = '*';
         $from = '{rocketchatxrecyclebin}';
         $where = 'true';
 
@@ -61,15 +72,15 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
         $columns = array();
         $headers = array();
 
-        $columns[] = $headers[]= 'id';
-        $columns[] = $headers[]= 'binid';
-        $columns[] = $headers[]= 'rocketchatid';
+        $columns[] = $headers[] = 'id';
+        $columns[] = $headers[] = 'binid';
+        $columns[] = $headers[] = 'rocketchatid';
 
-        // set the columns
+        // ...set the columns
         $this->define_columns($columns);
         $this->define_headers($headers);
-        $this->sortable(true,'course');
-        $this->use_pages =true;
+        $this->sortable(true, 'course');
+        $this->use_pages = true;
         $this->collapsible(false);
     }
 
@@ -78,7 +89,7 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
      *
      * @return int The number of rows per page
      */
-    function get_rows_per_page() {
+    public function get_rows_per_page() {
         return $this->perpage;
     }
 
@@ -88,18 +99,18 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
      * @param stdClass $row
      * @return string
      */
-    function col_externalcoursename(stdClass $row) {
+    public function col_externalcoursename(stdClass $row) {
         return html_writer::link(new moodle_url($row->externalmoodleurl.'/course/view.php',
             array('id' => $row->externalcourseid)), $row->externalcoursename);
     }
 
 
-    function col_courseid(stdClass $row) {
-        if($row->courseid) {
+    public function col_courseid(stdClass $row) {
+        if ($row->courseid) {
             return html_writer::link(new moodle_url('/course/view.php',
                 array('id' => $row->courseid)), $row->courseid);
 
-        }else{
+        } else {
             return '';
         }
     }
@@ -111,8 +122,12 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
      * @param stdClass $row
      * @return string
      */
-    function col_internalcategory(stdClass $row) {
-        return html_writer::empty_tag('input', array('name'=>'internalcategory_'.$row->id,'type'=>'text','value'=>$row->internalcategory, 'size' => "4"));
+    public function col_internalcategory(stdClass $row) {
+        return html_writer::empty_tag('input',
+            array('name' => 'internalcategory_'.$row->id,
+                'type' => 'text',
+                'value' => $row->internalcategory,
+                'size' => "4"));
 
     }
 
@@ -121,44 +136,52 @@ class rocketchat_admin_table_recycle extends table_sql implements renderable {
      * @param stdClass $row
      * @return string
      */
-    function col_status(stdClass $row) {
-        return html_writer::select(array(block_my_external_backup_restore_courses_tools::STATUS_SCHEDULED => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_SCHEDULED,'block_my_external_backup_restore_courses'),
-            block_my_external_backup_restore_courses_tools::STATUS_INPROGRESS => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_INPROGRESS,'block_my_external_backup_restore_courses'),
-            block_my_external_backup_restore_courses_tools::STATUS_PERFORMED => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_PERFORMED,'block_my_external_backup_restore_courses'),
-            block_my_external_backup_restore_courses_tools::STATUS_ERROR => get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_ERROR,'block_my_external_backup_restore_courses')
+    public function col_status(stdClass $row) {
+        return html_writer::select(
+            array(
+                block_my_external_backup_restore_courses_tools::STATUS_SCHEDULED =>
+                    get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_SCHEDULED,
+                        'block_my_external_backup_restore_courses'),
+            block_my_external_backup_restore_courses_tools::STATUS_INPROGRESS =>
+                get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_INPROGRESS,
+                    'block_my_external_backup_restore_courses'),
+            block_my_external_backup_restore_courses_tools::STATUS_PERFORMED =>
+                get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_PERFORMED,
+                    'block_my_external_backup_restore_courses'),
+            block_my_external_backup_restore_courses_tools::STATUS_ERROR =>
+                get_string('status_'.block_my_external_backup_restore_courses_tools::STATUS_ERROR,
+                    'block_my_external_backup_restore_courses')
         ),
-            'status_'.$row->id,$row->status);
+            'status_'.$row->id, $row->status);
     }
-    function col_action(stdClass $row){
-        $out=html_writer::empty_tag('input',array('type'=>'hidden','value'=>$this->currpage, 'name'=>'page'));
-        $out.=html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('edit'), 'name'=>'submit','onclick'=>'$(\'#trigger\').val('.$row->id.')'));
+    public function col_action(stdClass $row) {
+        $out = html_writer::empty_tag('input',
+            array('type' => 'hidden', 'value' => $this->currpage, 'name' => 'page'));
+        $out .= html_writer::empty_tag('input',
+            array('type' => 'submit', 'value' => get_string('edit'),
+                'name' => 'submit', 'onclick' => '$(\'#trigger\').val('.$row->id.')'));
         return $out;
     }
-    function col_timecreated(stdClass $row){
-        return $row->timecreated == 0? get_string('never') : userdate($row->timecreated,'%D %X');
+    public function col_timecreated(stdClass $row) {
+        return $row->timecreated == 0 ? get_string('never') : userdate($row->timecreated, '%D %X');
     }
-    function col_timemodified(stdClass $row){
-        return $row->timemodified == 0? get_string('never') : userdate($row->timemodified,'%D %X');
+    public function col_timemodified(stdClass $row) {
+        return $row->timemodified == 0 ? get_string('never') : userdate($row->timemodified, '%D %X');
     }
-    function col_timescheduleprocessed(stdClass $row){
-        return $row->timescheduleprocessed == 0? get_string('never') : userdate($row->timescheduleprocessed,'%D %X');
+    public function col_timescheduleprocessed(stdClass $row) {
+        return $row->timescheduleprocessed == 0 ?
+            get_string('never') : userdate($row->timescheduleprocessed, '%D %X');
     }
 
-    //override fonctions to include form
-    function start_html(){
-
+    public function start_html() {
         parent::start_html();
-        echo html_writer::start_tag('form', array('action'=>$this->baseurl->out()));
-        echo html_writer::empty_tag('input', array('type'=>'hidden','name'=>'trigger', 'id'=>'trigger'));
-
+        echo html_writer::start_tag('form', array('action' => $this->baseurl->out()));
+        echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'trigger', 'id' => 'trigger'));
 
     }
 
-    function finish_html(){
-
+    public function finish_html() {
         echo html_writer::end_tag('form');
         parent::finish_html();
-
-
     }
 }
