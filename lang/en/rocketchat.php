@@ -142,4 +142,5 @@ $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['error'] = 'Error !';
 $string['details'] = 'Details';
+$string['rocketchat_synchronise_task'] = 'Synchronise all rocketchat rooms';
 $string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods, Only token auth is now taken into acount.\nPlease change the Rocket.Chat plugin settings.';
