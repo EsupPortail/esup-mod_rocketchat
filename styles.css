@@ -24,9 +24,10 @@
     }
 }
 
-@media (max-width:800px){
+@media (max-width:500px){
     .details{
         margin-left: 0px;
+        margin-bottom: 250px;
         height: 300px;
         width: 100%;
         font-size: large;
