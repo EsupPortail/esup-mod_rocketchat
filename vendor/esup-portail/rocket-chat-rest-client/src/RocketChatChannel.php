@@ -78,24 +78,59 @@ class Channel extends Client
 		}
 	}
 
-	/**
-	 * Retrieves the information about the channel.
-	 */
-	public function info()
-	{
-	    //https://rocketchat-dev.di.unistra.fr/api/v1/channels.info?roomId=nex7SLn3Hrb4XcAD5
-		$response = Request::get($this->api . 'channels.info?roomId=' . $this->id)->send();
-        var_dump($this->api." here ".$this->id);
-		if (self::success($response))
-		{
-			$this->id = $response->body->channel->_id;
-			return $response->body;
-		}
-		else
-		{
-			throw new RocketChatException($response);
-		}
-	}
+	
+    /**
+     * Retrieves the information about the channel.
+     */
+    public function info()
+    {
+        //https://rocketchat-dev.di.unistra.fr/api/v1/channels.info?roomId=nex7SLn3Hrb4XcAD5
+        $response = Request::get($this->api . 'channels.info?roomId=' . $this->id)->send();
+        if (self::success($response))
+        {
+            $this->id = $response->body->channel->_id;
+            return $response->body;
+        }
+        else
+        {
+            throw new RocketChatException($response);
+        }
+    }
+
+    /**
+     * Retrieves the information about the channel.
+     */
+    public function roles()
+    {
+        $response = Request::get($this->api . 'channels.roles?roomId=' . $this->id)->send();
+        if (self::success($response))
+        {
+            $this->id = $response->body->channel->_id;
+            return $response->body;
+        }
+        else
+        {
+            throw new RocketChatException($response);
+        }
+    }
+
+    /**
+     * Retrieves the information about the channel.
+     */
+    public function members()
+    {
+        $url = $this->api . 'channels.members?roomId='.$this->id;
+        $response = Request::get($url)->send();
+        if (self::success($response))
+        {
+            $this->id = $response->body->channel->_id;
+            return $response->body;
+        }
+        else
+        {
+            throw new RocketChatException($response);
+        }
+    }
 
 	/**
 	 * Post a message in this channel, as the logged-in user

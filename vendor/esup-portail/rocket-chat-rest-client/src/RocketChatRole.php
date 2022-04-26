@@ -36,12 +36,8 @@ class Role extends Client
         }
     }
 
-
-    /**
-     * Gets a user’s information, limited to the caller’s permissions.
-     */
-    public function getUserInRole() {
-        $response = Request::get( $this->api . 'users.getUsersInRole' )->send();
+    public function getUsersInRole($roomId, $roleid) {
+        $response = Request::get($this->api . 'roles.getUsersInRole?role=' . $roleid . '&roomId=' . $roomId)->send();
         if( self::success($response) ) {
             return $response->body;
         } else {

@@ -7,6 +7,7 @@ use RocketChat\Client;
 
 class Room extends Client
 {
+    public $id;
     public $name;
     public $usersCount;
     public $msgs;
@@ -14,29 +15,20 @@ class Room extends Client
     public $broadcast;
     public $encrypted;
 
-    public function __construct($fields = array(), $instanceurl = null, $restroot = null){
+    public function __construct($name, $instanceurl = null, $restroot = null){
         if(!is_null($instanceurl) && !is_null($restroot)){
             parent::__construct($instanceurl, $restroot);
         }else {
             parent::__construct();
         }
-        if( isset($fields['name']) ) {
-            $this->name = $fields['name'];
+        if (is_string($name))
+        {
+            $this->name = $name;
         }
-        if( isset($fields['$usersCount']) ) {
-            $this->usersCount = $fields['$usersCount'];
-        }
-        if( isset($fields['msgs']) ) {
-            $this->msgs = $fields['msgs'];
-        }
-        if( isset($fields['customFields']) ) {
-            $this->customFields = $fields['customFields'];
-        }
-        if( isset($fields['broadcast']) ) {
-            $this->broadcast = $fields['broadcast'];
-        }
-        if( isset($fields['encrypted']) ) {
-            $this->encrypted = $fields['encrypted'];
+        else if (isset($name->_id))
+        {
+            $this->name = $name->name;
+            $this->id = $name->_id;
         }
     }
 
@@ -50,6 +42,24 @@ class Room extends Client
         if (self::success($response))
         {
             //$this->id = $response->body->channel->_id;
+            return $response->body;
+        }
+        else
+        {
+            throw new RocketChatException($response);
+        }
+    }
+
+    
+    /**
+     * Retrieves the information about the channel.
+     */
+    public function roles()
+    {
+        $response = Request::get($this->api . 'room.roles?roomId=' . $this->id)->send();
+        if (self::success($response))
+        {
+            $this->id = $response->body->channel->_id;
             return $response->body;
         }
         else
