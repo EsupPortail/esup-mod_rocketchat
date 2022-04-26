@@ -38,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
 class mod_rocketchat_generator extends testing_module_generator {
 
     /**
-     * Creates an instance of bigbluebuttonbn for testing purposes.
+     * Creates an instance of rocket.chat for testing purposes.
      *
      * @param array|stdClass $record data for module being generated.
      * @param null|array $options general options for course module.
