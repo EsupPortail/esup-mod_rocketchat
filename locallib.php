@@ -560,7 +560,7 @@ class mod_rocketchat_tools {
             } else if ( get_config('mod_rocketchat', 'create_user_account_if_not_exists')) {
                 try {
                     $rocketchatuser = $rocketchatapimanager->create_user_if_not_exists($moodleuser);
-                } catch (RocketChatException $e){
+                } catch (RocketChatException $e) {
                     rocket_chat_api_manager::moodle_debugging_message(
                         "Error while creating user in Rocket.Chat remote group $moodleuser->username", $e, DEBUG_ALL
                     );
@@ -570,9 +570,9 @@ class mod_rocketchat_tools {
             }
             $isuser = self::has_rocket_chat_user_role($userroleids, $moodleuser, $coursecontext);
             if ($isuser) {
-                try{
+                try {
                     $rocketchatapimanager->enrol_user_to_group($rocketchatid, $moodleuser);
-                } catch( RocketChatException $e) {
+                } catch ( RocketChatException $e) {
                     rocket_chat_api_manager::moodle_debugging_message(
                         "Error while enrolling moderator $moodleuser->username", $e, DEBUG_ALL
                     );
@@ -582,7 +582,7 @@ class mod_rocketchat_tools {
             if ($ismoderator) {
                 try {
                     $rocketchatapimanager->enrol_moderator_to_group($rocketchatid, $moodleuser);
-                } catch( RocketChatException $e) {
+                } catch ( RocketChatException $e) {
                     rocket_chat_api_manager::moodle_debugging_message(
                         "Error while enrolling moderator $moodleuser->username", $e, DEBUG_ALL
                     );
@@ -608,5 +608,31 @@ class mod_rocketchat_tools {
                 'modulename' => 'rocketchat')
         );
         return $courseenrolments;
+    }
+
+    public static function create_rocketchat_room($moduleid, $course, $rocketchatapimanager) {
+        global $DB;
+        $groupname = self::rocketchat_group_name($moduleid, $course);
+        $groupid = $rocketchatapimanager->create_rocketchat_group($groupname);
+        $rocketchat = $DB->get_record('rocketchat', array('id' => $moduleid));
+        $rocketchat->rocketchatid = $groupid;
+        $DB->update_record('rocketchat', $rocketchat);
+        // Need to enrol users.
+        // Course information to fit ton function needs.
+        $rocketchat->course = $course->id;
+        self::enrol_all_concerned_users_to_rocketchat_group($rocketchat,
+            get_config('mod_rocketchat', 'background_restore'));
+
+        if ((boolean)get_config('mod_rocketchat', 'retentionfeature')) {
+            $retentionsettings = array(
+                'retentionenabled' =>
+                    property_exists($rocketchat, 'retentionenabled') ? $rocketchat->retentionenabled : false,
+                'maxage' => $rocketchat->maxage,
+                'filesonly' => property_exists($rocketchat, 'filesonly') ? $rocketchat->filesonly : false,
+                'excludepinned' => property_exists($rocketchat, 'excludepinned') ? $rocketchat->excludepinned : false
+            );
+            $rocketchatapimanager->save_rocketchat_group_settings($rocketchat->rocketchatid, $retentionsettings);
+        }
+        return $groupid;
     }
 }

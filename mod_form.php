@@ -220,11 +220,11 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         return $formattedrole;
     }
 
-    function validation($data, $files) {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         if ($data['retentionenabled'] == 1 ) {
             $maxagelimit = get_config('mod_rocketchat', 'maxage_limit');
-            if($data['maxage'] > $maxagelimit){
+            if ($data['maxage'] > $maxagelimit) {
                 $errors['maxage'] = get_string('limit_override', 'mod_rocketchat', $maxagelimit);
             }
         }

@@ -1,0 +1,46 @@
+@media (min-width:800px){
+        #rocket_details{
+        margin-top: 50px;
+        width : 70%;
+    }
+    .details{
+        font-size: large;
+        width: 35%;
+        margin-left: 100px;
+        margin-bottom: 15em;
+        height : 500px;
+        vertical-align: top;
+        display: inline-block;
+    }
+    .users{
+        padding-top: 10px;
+        padding-left: 20px;
+        margin-left: 20px;
+        border: 1px solid black;
+        width : 100%;
+    }
+    .action_sync{
+        margin-left: 100%;
+    }
+}
+
+@media (max-width:500px){
+    .details{
+        margin-left: 0px;
+        margin-bottom: 250px;
+        height: 300px;
+        width: 100%;
+        font-size: large;
+        vertical-align: top;
+        display: block;
+    }
+    .users{
+        padding-top: 10px;
+        border: 1px solid black;
+        width : 100%;
+    }
+    .action_sync{
+        margin-top: 30px;
+        margin-left: 10%;
+    }
+}

@@ -21,6 +21,8 @@ class ComposerStaticInit957b461ba202c0a13f71e9a3d4ac8829
         'RocketChat\\Client' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatClient.php',
         'RocketChat\\Group' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatGroup.php',
         'RocketChat\\RocketChatException' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatException.php',
+        'RocketChat\\Role' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatRole.php',
+        'RocketChat\\Room' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatRoom.php',
         'RocketChat\\Settings' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatSettings.php',
         'RocketChat\\User' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatUser.php',
         'RocketChat\\UserManager' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatUserManager.php',
