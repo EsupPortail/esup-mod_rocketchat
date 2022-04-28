@@ -53,6 +53,9 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->editingteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
     }
 
+/**
+ * @expectedException \RocketChat\RocketChatException
+ */
     public function test_create_user_invalid_username() {
         $moodleuser = new stdClass();
         $moodleuser->username = 'belinda@purcell.com'.time();
