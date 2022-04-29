@@ -13,25 +13,27 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * adhoc task file file
- * @package     mod_rocketchat
- * @category    observer
- * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
- * @author Céline Pervès<cperves@unistra.fr>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Folder plugin version information
+ *
+ * @package
+ * @subpackage
+ * @copyright  2021 unistra  {@link http://unistra.fr}
+ * @author Matthieu Fuchs <matfuchs@unistra.fr> Celine Perves <cperves@unistra.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace mod_rocketchat\task;
-
 defined('MOODLE_INTERNAL') || die();
-global $CFG;
-require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 
-class enrol_role_assign extends \core\task\adhoc_task {
-    public function execute() {
-        $data = $this->get_custom_data();
-        \mod_rocketchat_tools::role_assign($data->courseid, $data->roleid, $data->moodleuser, $data->context);
-    }
-
-}
+$tasks = array(
+    array(
+        'classname' => 'mod_rocketchat\task\rocketchat_synchronise_task',
+        'blocking' => 0,
+        'minute' => '00',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*',
+        'disabled' => 1
+    )
+);

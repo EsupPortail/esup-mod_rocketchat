@@ -144,3 +144,4 @@ class simpleform extends moodleform{
         // TODO: Implement definition() method.
     }
 }
+

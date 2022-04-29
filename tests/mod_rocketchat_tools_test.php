@@ -184,5 +184,4 @@ class mod_rocketchat_tools_testcase extends advanced_testcase {
         $this->rocketchat = $this->generator->create_module('rocketchat',
             array('course' => $this->course->id, 'groupname' => $groupname));
     }
-
 }

@@ -69,7 +69,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->assertTrue($this->rocketchatapimanager->delete_user($moodleuser->username));
     }
 
-    public function test_add_rocketchat_member_with_bad_username(){
+    public function test_add_rocketchat_member_with_bad_username() {
         $domainmail = get_config('mod_rocketchat', 'domainmail');
         $moderator = new stdClass();
         $moderator->username = 'usertestmoderator@badname' . time();
@@ -91,7 +91,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->assertNotEmpty($groupid);
         $this->assertTrue($this->rocketchatapimanager->group_exists($groupid));
         $this->waitForSecond(); // Some times seems that Rocket.Chat server is too long.
-        // False since not enrolled
+        // False since not enrolled!
         $this->assertFalse($this->rocketchatapimanager->enrol_moderator_to_group($groupid, $moderator));
         $this->assertDebuggingCalled();
         $this->assertEmpty($this->rocketchatapimanager->enrol_user_to_group($groupid, $user));
@@ -100,7 +100,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->assertCount(1, $members);
     }
 
-    public function test_synchronize_rocketchat_member_with_bad_username(){
+    public function test_synchronize_rocketchat_member_with_bad_username() {
         $domainmail = get_config('mod_rocketchat', 'domainmail');
         $moderator = new stdClass();
         $moderator->username = 'moodleusertestmoderator@badname' . time();
@@ -136,7 +136,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $gooduser->id = $this->datagenerator->create_user(
             array('username' => $gooduser->username, 'firstname' => $gooduser->firstname, 'lastname' => $gooduser->lastname)
         )->id;
-        // enrol with background task
+        // ...enrol with background task
         set_config('background_enrolment_task', 'enrol_manual', 'mod_rocketchat');
         $this->datagenerator->enrol_user($user->id, $course->id, $this->studentrole->id);
         $this->datagenerator->enrol_user($gooduser->id, $course->id, $this->studentrole->id);
@@ -149,7 +149,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->assertCount(2, $members);
         $this->assertContains($gooduser->username, array_keys($members));
 
-        // Clean before going out
+        // Clean before going out!
         if (!empty($rocketchat)) {
             course_delete_module($rocketchat->cmid, true);
         }
@@ -172,3 +172,4 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
     }
 }
+

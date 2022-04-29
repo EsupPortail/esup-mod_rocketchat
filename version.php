@@ -20,13 +20,14 @@
  * @package     mod_rocketchat
  * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
  * @author Céline Pervès<cperves@unistra.fr>
+ * @author Matthieu Fuchs <matfuchs@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_rocketchat';
-$plugin->release = '1.3.3';
-$plugin->version = 2021101913;
+$plugin->release = '1.4.0';
+$plugin->version = 2022042900;
 $plugin->requires = 2018050800;
 $plugin->maturity = MATURITY_STABLE;

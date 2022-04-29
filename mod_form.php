@@ -136,10 +136,10 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $mform->setDefault('userroles', get_config('mod_rocketchat', 'defaultuserroles'));
 
         if ((boolean)get_config('mod_rocketchat', 'retentionfeature')) {
-            $mform->addElement('header', 'retentionsection',
-                get_string('retentionsection', 'mod_rocketchat'));
-            $mform->setExpanded('retentionsection');
             if (has_capability('mod/rocketchat:canactivateretentionpolicy', $this->get_context())) {
+                $mform->addElement('header', 'retentionsection',
+                    get_string('retentionsection', 'mod_rocketchat'));
+                $mform->setExpanded('retentionsection');
                 $mform->addElement('checkbox', 'retentionenabled',
                     get_string('retentionenabled', 'mod_rocketchat'),
                     get_string('retentionenabled_desc', 'mod_rocketchat')
@@ -220,11 +220,11 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         return $formattedrole;
     }
 
-    function validation($data, $files) {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         if ($data['retentionenabled'] == 1 ) {
             $maxagelimit = get_config('mod_rocketchat', 'maxage_limit');
-            if($data['maxage'] > $maxagelimit){
+            if ($data['maxage'] > $maxagelimit) {
                 $errors['maxage'] = get_string('limit_override', 'mod_rocketchat', $maxagelimit);
             }
         }

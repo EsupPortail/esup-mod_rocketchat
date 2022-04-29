@@ -13,25 +13,32 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * adhoc task file file
- * @package     mod_rocketchat
- * @category    observer
- * @copyright   2020 ESUP-Portail {@link https://www.esup-portail.org/}
- * @author Céline Pervès<cperves@unistra.fr>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 
+/**
+ * Folder plugin version information
+ *
+ * @package
+ * @subpackage
+ * @copyright  2021 unistra  {@link http://unistra.fr}
+ * @author Matthieu Fuchs <cperves@unistra.fr>
+ * @author Celine Perves <cperves@unistra.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.cecill.info/licences/Licence_CeCILL_V2-en.html
+ */
 namespace mod_rocketchat\task;
 
-defined('MOODLE_INTERNAL') || die();
-global $CFG;
-require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
+use mod_rocketchat_tools;
 
-class enrol_role_assign extends \core\task\adhoc_task {
-    public function execute() {
-        $data = $this->get_custom_data();
-        \mod_rocketchat_tools::role_assign($data->courseid, $data->roleid, $data->moodleuser, $data->context);
+defined('MOODLE_INTERNAL') || die();
+
+class rocketchat_synchronise_task extends \core\task\scheduled_task {
+    public function get_name() {
+        // Shown in admin screens.
+        return get_string('rocketchat_synchronise_task', 'mod_rocketchat');
     }
 
+    public function execute() {
+        global $CFG;
+        mod_rocketchat_tools::synchronize_group_members_for_module($id);
+    }
 }
