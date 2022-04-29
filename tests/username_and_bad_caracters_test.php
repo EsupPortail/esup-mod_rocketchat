@@ -172,3 +172,4 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->rocketchatapimanager = new \mod_rocketchat\api\manager\rocket_chat_api_manager();
     }
 }
+

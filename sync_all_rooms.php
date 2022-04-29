@@ -38,7 +38,7 @@ class sync_all_rooms_task extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
         $rocketchatcourses = $DB->get_record('rocketchat', []);
-        foreach( $rocketchatcourses as $course){
+        foreach ( $rocketchatcourses as $course) {
             mod_rocketchat_tools::synchronize_group_members_for_course($course->id);
         }
     }

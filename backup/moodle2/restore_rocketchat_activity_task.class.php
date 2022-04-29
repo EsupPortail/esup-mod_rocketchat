@@ -54,7 +54,7 @@ class restore_rocketchat_activity_task extends restore_activity_task {
      *
      * @return array.
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         $contents = array();
 
         $contents[] = new restore_decode_content('rocketchat', array('intro'), 'rocketchat.xml');
@@ -67,7 +67,7 @@ class restore_rocketchat_activity_task extends restore_activity_task {
      *
      * @return array.
      */
-    static public function define_decode_rules() {
+    public static function define_decode_rules() {
         $rules = array();
         $rules[] = new restore_decode_rule('ROCKETCHATVIEWBYID', '/mod/rocketchat/view.php?id=$1', 'course_module');
         $rules[] = new restore_decode_rule('ROCKETCHATINDEX', '/mod/rocketchat/index.php?id=$1', 'course');
@@ -82,7 +82,7 @@ class restore_rocketchat_activity_task extends restore_activity_task {
      *
      * @return array.
      */
-    static public function define_restore_log_rules() {
+    public static function define_restore_log_rules() {
         $rules = array();
 
         $rules[] = new restore_log_rule('rocketchat', 'add', 'view.php?id={course_module}', '{rocketchat}');
@@ -98,7 +98,7 @@ class restore_rocketchat_activity_task extends restore_activity_task {
      * course logs. It must return one array
      * of {@link restore_log_rule} objects
      */
-    static public function define_restore_log_rules_for_course() {
+    public static function define_restore_log_rules_for_course() {
         $rules = array();
 
         $rules[] = new restore_log_rule('rocketchat', 'view all', 'index.php?id={course}', null);
