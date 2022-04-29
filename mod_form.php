@@ -136,10 +136,10 @@ class mod_rocketchat_mod_form extends moodleform_mod {
         $mform->setDefault('userroles', get_config('mod_rocketchat', 'defaultuserroles'));
 
         if ((boolean)get_config('mod_rocketchat', 'retentionfeature')) {
-            $mform->addElement('header', 'retentionsection',
-                get_string('retentionsection', 'mod_rocketchat'));
-            $mform->setExpanded('retentionsection');
             if (has_capability('mod/rocketchat:canactivateretentionpolicy', $this->get_context())) {
+                $mform->addElement('header', 'retentionsection',
+                    get_string('retentionsection', 'mod_rocketchat'));
+                $mform->setExpanded('retentionsection');
                 $mform->addElement('checkbox', 'retentionenabled',
                     get_string('retentionenabled', 'mod_rocketchat'),
                     get_string('retentionenabled_desc', 'mod_rocketchat')
