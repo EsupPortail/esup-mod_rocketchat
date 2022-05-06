@@ -18,6 +18,8 @@
         margin-left: 20px;
         border: 1px solid black;
         width : 100%;
+        height : 300px;
+        overflow-y: scroll
     }
     .action_sync{
         margin-left: 100%;

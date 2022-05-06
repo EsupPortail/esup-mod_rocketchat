@@ -78,7 +78,7 @@ class rocketchat_admin_table extends table_sql implements renderable {
         $headers = array();
 
         $columns[] = 'action';
-        $headers[] = '';
+        $headers[] = 'Manage';
         $columns[] = $headers[] = 'id';
         $columns[] = $headers[] = 'rocketchatid';
         $columns[] = $headers[] = 'course';
