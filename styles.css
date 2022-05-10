@@ -4,11 +4,12 @@
         width : 70%;
     }
     .details{
+        border: solid black 1px;
         font-size: large;
-        width: 35%;
         margin-left: 100px;
         margin-bottom: 15em;
-        height : 500px;
+        height : 750px;
+        width: 370px;
         vertical-align: top;
         display: inline-block;
     }
@@ -17,7 +18,7 @@
         padding-left: 20px;
         margin-left: 20px;
         border: 1px solid black;
-        width : 100%;
+        width : 90%;
         height : 300px;
         overflow-y: scroll
     }
@@ -28,6 +29,7 @@
 
 @media (max-width:500px){
     .details{
+        border: solid black 1px;
         margin-left: 0px;
         margin-bottom: 250px;
         height: 300px;

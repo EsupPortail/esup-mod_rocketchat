@@ -16,8 +16,8 @@
             </div>
         {{/ moodle }}
     </div>
+    {{# rocketchat }}
     <div id="rocket" class="details">
-        {{# rocketchat }}
             <h3>Rocketchat :</h3><br>
             <label>Name : </label><br/><span id="name"> {{ room.name }}</span><br/><br/>
             <label>Id : </label><span id="rocketchatid"> {{ room._id }}</span><br/>
@@ -33,7 +33,7 @@
             </div>
     </div>
     <button class="action_sync btn btn-secondary"><a href="{{{ syncbutton }}}">Synchroniser</a></button>
-    {{/ rocketchat }}
+    {{/rocketchat}}
     {{^rocketchat}}
     <div id="rocket" class="details">
         <h3>Rocketchat course is missing!</h3>
