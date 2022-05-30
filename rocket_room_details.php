@@ -24,20 +24,23 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 require_login(null, false);
+$courseid = required_param('course_id', PARAM_RAW_TRIMMED);
+$rocketid = required_param('rocketchat_id', PARAM_RAW_TRIMMED);
+$moduleid = required_param('module_id', PARAM_RAW_TRIMMED);
+$sync = optional_param('sync',  '0', PARAM_RAW_TRIMMED);
+$recreate = optional_param('recreate',  '0', PARAM_RAW_TRIMMED);
+
 admin_externalpage_setup('mod_rocketchat_admin_interface', '', array(),
-    new moodle_url('/mod/rocketchat/rocket_room_details.php', array()));
+    new moodle_url('/mod/rocketchat/rocket_room_details.php',
+        array('course_id' => $courseid, 'rocketchat_id' => $rocketid, 'module_id' => $moduleid)));
+
 $PAGE->navbar->add(get_string('pluginname_admin', 'mod_rocketchat'));
 $PAGE->requires->jquery();
 $PAGE->set_context(context_system::instance());
 $PAGE->requires->css(new moodle_url('/mod/rocketchat/styles.css'));
 $PAGE->set_pagelayout('admin');
 
-$courseid = required_param('course_id', PARAM_RAW_TRIMMED);
-$rocketid = required_param('rocketchat_id', PARAM_RAW_TRIMMED);
 $course = $DB->get_record('course', array('id' => $courseid));
-$moduleid = required_param('module_id', PARAM_RAW_TRIMMED);
-$sync = optional_param('sync',  '0', PARAM_RAW_TRIMMED);
-$recreate = optional_param('recreate',  '0', PARAM_RAW_TRIMMED);
 if ($sync == 1) {
     mod_rocketchat_tools::synchronize_group_members_for_course($courseid);
 }
