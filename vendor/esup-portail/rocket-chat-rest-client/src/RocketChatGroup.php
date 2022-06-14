@@ -402,13 +402,10 @@ class Group extends Client {
 
     public function isGroupAlreadyExists(){
         $response = Request::get( $this->api . 'rooms.adminRooms?filter=' . $this->name )->send();
-
         if( self::success($response) ) {
             foreach($response->body->rooms as $room){
                 if($this->name == $room->name) {
                     return true;
-                } else {
-                    return false;
                 }
             }
             return false;
