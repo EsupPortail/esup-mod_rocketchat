@@ -3,7 +3,7 @@
         margin-top: 50px;
         width : 70%;
     }
-    .details{
+    .rocket_details{
         border: solid black 1px;
         font-size: large;
         margin-left: 100px;
@@ -28,7 +28,7 @@
 }
 
 @media (max-width:500px){
-    .details{
+    .rocket_details{
         border: solid black 1px;
         margin-left: 0px;
         margin-bottom: 250px;
