@@ -74,10 +74,10 @@ Feature: mod_rocketchat
     And I turn editing mode on
     And I add a "Rocket.Chat" to section "1"
     And I wait until the page is ready
-    Then I should not see "Activate message retention"
+    Then I should see "Activate message retention"
     And I should not see "Prune files only, keep messages"
     And I should not see "Exclude pinned messages"
-    And I should not see "Retention time value (maxAge) for the Rocket.Chat group"
+    And I should see "Retention time value (maxAge) for the Rocket.Chat group"
 
   @javascript
   Scenario: Edit Rocketchat activity form and check that retention options are visible depending of capabilities 2
