@@ -218,3 +218,34 @@ function rocketchat_reset_userdata($data) {
     return $status;
 
 }
+
+/**
+ * Add a get_coursemodule_info function in case rocketchat instance wants to add 'extra' information
+ * for the course (see resource).
+ *
+ * Given a course_module object, this function returns any "extra" information that may be needed
+ * when printing this activity in a course listing.  See get_array_of_activities() in course/lib.php.
+ *
+ * @param stdClass $coursemodule The coursemodule object (record).
+ * @return cached_cm_info An object on information that the courses
+ *                        will know about (most noticeably, an icon).
+ */
+function rocketchat_get_coursemodule_info($coursemodule) {
+    global $DB;
+
+    $dbparams = ['id' => $coursemodule->instance];
+    $fields = 'id, name, intro, introformat';
+    if (!$rocketchat = $DB->get_record('rocketchat', $dbparams, $fields)) {
+        return false;
+    }
+
+    $result = new cached_cm_info();
+    $result->name = $rocketchat->name;
+    if ($coursemodule->showdescription) {
+        // Convert intro to html. Do not filter cached version, filters run at display time.
+        $result->content = format_module_intro('rocketchat', $rocketchat, $coursemodule->id, false);
+    }
+    // Not populate some other values.
+    $result->customdata = null;
+    return $result;
+}

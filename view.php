@@ -60,13 +60,16 @@ $PAGE->set_url('/mod/rocketchat/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
+$PAGE->add_body_class('limitedwidth');
 
 $config = get_config('mod_rocketchat');
 echo $OUTPUT->header();
 $rocketchatapiconfig = new \mod_rocketchat\api\manager\rocket_chat_api_config();
 $embbeded = $moduleinstance->embbeded;
 $link = mod_rocketchat_tools::get_group_link($moduleinstance->rocketchatid, $embbeded);
-
+echo html_writer::start_div('container-fluid tertiary-navigation');
+echo html_writer::start_div('row');
+echo html_writer::start_div('navitem');
 switch ($moduleinstance->displaytype) {
     case mod_rocketchat_tools::DISPLAY_POPUP:
         echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'),
@@ -74,14 +77,16 @@ switch ($moduleinstance->displaytype) {
                 'click',
                 $link,
                 'joinrocketchat',
-                array('height' => $moduleinstance->popupheight, 'width' => $moduleinstance->popupwidth)
-            )
+                array('height' => $moduleinstance->popupheight, 'width' => $moduleinstance->popupwidth),
+            ),
+            array('class' => 'btn btn-secondary')
         );
         break;
     case mod_rocketchat_tools::DISPLAY_CURRENT:
         echo $OUTPUT->action_link(
             $link,
-            get_string('joinrocketchat', 'mod_rocketchat')
+            get_string('joinrocketchat', 'mod_rocketchat'),
+            array('class' => 'btn btn-secondary')
         );
         break;
     default:
@@ -89,9 +94,12 @@ switch ($moduleinstance->displaytype) {
         echo html_writer::link(
             $link,
             get_string('joinrocketchat', 'mod_rocketchat'),
-            array('onclick' => 'this.target="_blank";')
+            array('onclick' => 'this.target="_blank";', 'class' => 'btn btn-secondary')
         );
         break;
 }
+echo html_writer::end_div();
+echo html_writer::end_div();
+echo html_writer::end_div();
 
 echo $OUTPUT->footer();
