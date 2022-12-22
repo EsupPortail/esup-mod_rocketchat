@@ -144,3 +144,5 @@ $string['error'] = 'Error !';
 $string['details'] = 'Details';
 $string['rocketchat_synchronise_task'] = 'Synchronise all rocketchat rooms';
 $string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods, Only token auth is now taken into acount.\nPlease change the Rocket.Chat plugin settings.';
+$string['replacementgroupnamecharacters'] = 'Characters to be replaced in groupname';
+$string['replacementgroupnamecharacters_desc'] = 'Put here the characters you would wan\'t to change in groupe name. characters couple separated by ";", one couple by line.';
