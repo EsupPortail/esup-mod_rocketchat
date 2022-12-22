@@ -187,6 +187,13 @@ if ($ADMIN->fulltree) {
         )
     );
     $settings->add(
+        new admin_setting_configtextarea('mod_rocketchat/replacementgroupnamecharacters',
+            get_string('replacementgroupnamecharacters', 'mod_rocketchat'),
+            get_string('replacementgroupnamecharacters_desc', 'mod_rocketchat'),
+            ''
+        )
+    );
+    $settings->add(
         new admin_setting_configcheckbox('mod_rocketchat/embedded_display_mode',
             get_string('embedded_display_mode_setting', 'mod_rocketchat'),
             get_string('embedded_display_mode_setting_desc', 'mod_rocketchat'),
