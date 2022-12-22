@@ -143,3 +143,5 @@ $string['error'] = 'Erreur !';
 $string['details'] = 'Details';
 $string['rocketchat_synchronise_task'] = 'Synchroniser tous les salons rocketchat';
 $string['warningapiauthchanges'] = 'Attention , le plugin moodle  Rocket.Chat a changé sont sa méthode d\'authentification . Seule l\'authentification par token est prise en charge.\nVeuillez s\'il vous plait changer le paramétrage du plugin.';
+$string['replacementgroupnamecharacters'] = 'Caractères à remplacer dans le nom des groupes';
+$string['replacementgroupnamecharacters_desc'] = 'Rentrez ici les couples caractères à remplacer/ caractère de remplacement, séparés par des ";". Un couple par ligne.';

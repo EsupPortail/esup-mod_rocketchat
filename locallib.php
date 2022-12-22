@@ -262,6 +262,23 @@ class mod_rocketchat_tools {
     public static function sanitize_groupname($groupname) {
         // Replace white spaces anyway.
         $groupname = preg_replace('/\/s/', '_', $groupname);
+        // Proceed to replacements if any
+        $replacementcouples = get_config('mod_rocketchat', 'replacementgroupnamecharacters');
+        if ($replacementcouples) {
+            $replacementcouples = preg_split ('/\R/', $replacementcouples);
+            foreach ($replacementcouples as $replacementcouple){
+                $replacementcouplearray = preg_split('/;/', $replacementcouple);
+                if (count($replacementcouplearray) != 2) {
+                    print_error(
+                        'replacementgroupnamecharacters setting is not well formed. Please contact administrator.'
+                    );
+                    debugging('replacementgroupnamecharacters setting is not well formed. Please contact administrator.',
+                        DEBUG_MINIMAL
+                    );
+                }
+                $groupname = preg_replace('/'.$replacementcouplearray[0].'/', $replacementcouplearray[1], $groupname);
+            }
+        }
         $groupname =
             preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupname);
         if (empty($groupname)) {
