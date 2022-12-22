@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 require_once($CFG->dirroot.'/mod/rocketchat/lib.php');
 
-class mod_rocketchat_moderator_and_user_roles_testcase extends advanced_testcase {
+class moderator_and_user_roles_test extends advanced_testcase {
     private $rocketchatapimanager;
     private $course;
     private $rocketchat;

@@ -38,7 +38,7 @@ use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
 require_once($CFG->libdir . '/tests/fixtures/events.php');
 
-class mod_rocketchat_privacy_testcase extends \core_privacy\tests\provider_testcase {
+class privacy_provider_test extends \core_privacy\tests\provider_testcase {
 
 
     private $course1;

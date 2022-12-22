@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 require_once($CFG->dirroot.'/enrol/manual/externallib.php');
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
-class mod_rocketchat_retention_testcase extends advanced_testcase{
+class retention_test extends advanced_testcase{
 
     private $userstudent1;
     private $rocketchat;

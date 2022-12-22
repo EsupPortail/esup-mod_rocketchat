@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 require_once($CFG->dirroot.'/enrol/manual/externallib.php');
 use \mod_rocketchat\api\manager\rocket_chat_api_manager;
 
-class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
+class recyclebin_test extends advanced_testcase{
 
     private $userstudent1;
     private $userstudent2;
@@ -45,12 +45,11 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
         $modulerecord->visible = 1;
         $DB->update_record('modules', $modulerecord);
         require($CFG->dirroot.'/mod/rocketchat/config-test.php');
-        $this->resetAfterTest();
-        $this->setAdminUser();
-
     }
 
     public function test_deletion_with_recyclebin() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -89,6 +88,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
     }
 
     public function test_deletion_without_recyclebin() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -112,6 +113,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
     }
 
     public function test_restoration_with_recyclebin() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -169,6 +172,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
     }
 
     public function test_restoration_with_recyclebin_with_background() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 1, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -231,6 +236,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
     }
 
     public function test_deletion_with_recyclebin_without_patch() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 0, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -270,6 +277,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
         $rocketchatmanager->delete_user($this->userstudent2->username);
     }
     public function test_deletion_without_recyclebin_without_patch() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 0, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -292,6 +301,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
 
     }
     public function test_restoration_with_recyclebin_without_patch() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         set_config('recyclebin_patch', 0, 'mod_rocketchat');
         // We want the category bin to be enabled.
@@ -332,6 +343,8 @@ class mod_rocketchat_recyclebin_testcase extends advanced_testcase{
     }
 
     protected function set_up_moodle_datas() {
+        $this->resetAfterTest();
+        $this->setAdminUser();
         global $DB;
         $generator = $this->getDataGenerator();
         $this->course = $generator->create_course();

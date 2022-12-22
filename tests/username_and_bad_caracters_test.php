@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 require_once($CFG->dirroot.'/mod/rocketchat/lib.php');
 
-class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testcase {
+class username_and_bad_caracters_test extends advanced_testcase {
     private $rocketchatapimanager;
     private $studentrole;
     private $editingteacherrole;
@@ -53,9 +53,6 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $this->editingteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
     }
 
-/**
- * @expectedException \RocketChat\RocketChatException
- */
     public function test_create_user_invalid_username() {
         $moodleuser = new stdClass();
         $moodleuser->username = 'belinda@purcell.com'.time();
@@ -63,6 +60,7 @@ class mod_rocketchat_username_and_bad_caracters_testcase extends advanced_testca
         $moodleuser->lastname = 'ThyHand';
         $domainmail = get_config('mod_rocketchat', 'domainmail');
         $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
+        $this->expectException(\RocketChat\RocketChatException::class);
         $rocketchatuser = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
         $this->assertNotEmpty($rocketchatuser);
         $this->assertTrue(property_exists($rocketchatuser, '_id'));

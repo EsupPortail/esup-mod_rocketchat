@@ -28,7 +28,7 @@ global $CFG;
 
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 
-class mod_rocketchat_background_enrolments_testcase extends advanced_testcase{
+class background_enrolments_test extends advanced_testcase{
     private $rocketchatapimanager;
     private $course;
     private $user;

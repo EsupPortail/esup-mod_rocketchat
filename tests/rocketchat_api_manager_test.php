@@ -28,7 +28,7 @@ global $CFG;
 
 require_once($CFG->dirroot.'/mod/rocketchat/vendor/autoload.php');
 
-class mod_rocketchat_api_manager_testcase extends advanced_testcase{
+class rocketchat_api_manager_test extends advanced_testcase{
     private $rocketchatapimanager;
 
     public function setUp() : void {
