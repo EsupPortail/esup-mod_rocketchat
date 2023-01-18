@@ -136,7 +136,7 @@ class rocket_chat_api_manager{
         } catch (RocketChatException $e) {
             self::moodle_debugging_message('', $e, DEBUG_ALL);
             if (!PHPUNIT_TEST) {
-                print_error(get_string('groupecreationerror', 'mod_rocketchat'));
+                throw new moodle_exception(get_string('groupecreationerror', 'mod_rocketchat'));
             }
         }
     }

@@ -67,16 +67,16 @@ class rocket_chat_api_config {
             }
             $config = get_config('mod_rocketchat');
             if (empty($config->instanceurl)) {
-                print_error('RocketChat instance url is empty');
+                throw new moodle_exception('RocketChat instance url is empty');
             }
             if (empty($config->restapiroot)) {
-                print_error('RocketChat rest api root is empty');
+                throw new moodle_exception('RocketChat rest api root is empty');
             }
             if (empty($config->apiuser)) {
-                print_error('RocketChat api user is empty');
+                throw new moodle_exception('RocketChat api user is empty');
             }
             if (empty($config->apitoken)) {
-                print_error('RocketChat api token is empty');
+                throw new moodle_exception('RocketChat api token is empty');
             }
             $this->instanceurl = $config->instanceurl;
             $this->restapiroot = $config->restapiroot;

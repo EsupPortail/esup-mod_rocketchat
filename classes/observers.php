@@ -257,7 +257,7 @@ class observers {
         global $DB;
         $user = $DB->get_record('user' , array('id' => $event->objectid));
         if (!$user) {
-            print_error('user not found on user_updated event in mod_rocketchat');
+            throw new moodle_exception('user not found on user_updated event in mod_rocketchat');
         }
         $backgrounduserupdate = get_config('mod_rocketchat', 'background_user_update');
         if ($user->suspended || $user->deleted) {

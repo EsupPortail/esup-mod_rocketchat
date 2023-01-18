@@ -173,7 +173,7 @@ class mod_rocketchat_tools {
             $rocketchatmoduleinstanceid = $rocketchatmoduleinstance;
             $rocketchatmoduleinstance = $DB->get_record('rocketchat', array('rocketchatid' => $rocketchatmoduleinstance));
             if (!$rocketchatmoduleinstance) {
-                print_error("can't load rocketchat instance $rocketchatmoduleinstanceid in moodle");
+                throw new moodle_exception("can't load rocketchat instance $rocketchatmoduleinstanceid in moodle");
             }
         }
         $courseid = $rocketchatmoduleinstance->course;
@@ -205,7 +205,7 @@ class mod_rocketchat_tools {
         global $DB;
         $course = $DB->get_record('course', array('id' => $courseid));
         if (!$course) {
-            print_error('course not found');
+            throw new moodle_exception('course not found');
         }
         $rocketchatmodules = get_coursemodules_in_course('rocketchat', $courseid, 'rocketchatid');
         foreach ($rocketchatmodules as $rocketchatmodule) {
@@ -220,7 +220,7 @@ class mod_rocketchat_tools {
             .' where cm.id=:cmid',
             array('cmid' => $cmid));
         if (!$rocketchat) {
-            print_error('the given cmid is not corresponding with a rocket.chat module');
+            throw new moodle_exception('the given cmid is not corresponding with a rocket.chat module');
         }
         self::synchronize_group_members($rocketchat->rocketchatid);
     }
@@ -250,7 +250,7 @@ class mod_rocketchat_tools {
             return $rocketchatmanager->get_instance_url() . '/group/' .$groupname.
                 (empty($embbeded) ? '' : '?layout=embedded');
         } catch (\RocketChat\RocketChatException $re) {
-            print_error(get_string('rcgrouperror', 'mod_rocketchat', $re->getCode()));
+            throw new moodle_exception(get_string('rcgrouperror', 'mod_rocketchat', $re->getCode()));
         }
     }
 
@@ -269,7 +269,7 @@ class mod_rocketchat_tools {
             foreach ($replacementcouples as $replacementcouple){
                 $replacementcouplearray = preg_split('/;/', $replacementcouple);
                 if (count($replacementcouplearray) != 2) {
-                    print_error(
+                    throw new moodle_exception(
                         'replacementgroupnamecharacters setting is not well formed. Please contact administrator.'
                     );
                     debugging('replacementgroupnamecharacters setting is not well formed. Please contact administrator.',
@@ -282,7 +282,7 @@ class mod_rocketchat_tools {
         $groupname =
             preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupname);
         if (empty($groupname)) {
-            print_error('sanitized Rocket.Chat groupname can\'t be empty');
+            throw new moodle_exception('sanitized Rocket.Chat groupname can\'t be empty');
         }
         return $groupname;
     }
@@ -292,7 +292,7 @@ class mod_rocketchat_tools {
         $user = $DB->get_record('user', array('id' => $userid));
         $rocketchatapimanager = new rocket_chat_api_manager();
         if (!$user) {
-            print_error("user $userid not found");
+            throw new moodle_exception("user $userid not found");
         }
         $courseenrolments = self::course_enrolments($userid);
         $rocketchatusername = self::rocketchat_username($user->username);
@@ -309,7 +309,7 @@ class mod_rocketchat_tools {
         $rocketchatapimanager = new rocket_chat_api_manager();
 
         if (!$user) {
-            print_error("user $userid not found");
+            throw new moodle_exception("user $userid not found");
         }
         // Due to the fact that userroles is a string and role_assignments is an int,
         // No possibility to make a sql query without specific sql functions linked to database language.

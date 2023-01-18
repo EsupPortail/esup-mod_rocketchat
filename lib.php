@@ -76,7 +76,7 @@ function rocketchat_add_instance($moduleinstance, $mform = null) {
     $rocketchatapimanager = new rocket_chat_api_manager();
     $moduleinstance->rocketchatid = $rocketchatapimanager->create_rocketchat_group($groupname);
     if (is_null($moduleinstance->rocketchatid)) {
-        print_error('an error occured while creating Rocket.Chat group');
+        throw new moodle_exception('an error occured while creating Rocket.Chat group');
     }
     if ((boolean)get_config('mod_rocketchat', 'retentionfeature')) {
         $retentionsettings = array(
