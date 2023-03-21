@@ -22,7 +22,6 @@
  * @author Céline Pervès<cperves@unistra.fr>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 set_config('instanceurl', 'https://rocketchat-server_url', 'mod_rocketchat');
 set_config('restapiroot', '/api/v1/', 'mod_rocketchat');
 set_config('apiuser', 'your_user_on_rocket.chat', 'mod_rocketchat');

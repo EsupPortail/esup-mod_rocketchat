@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 require_once($CFG->libdir.'/enrollib.php');
 // Make sure core is loaded.
 
-// Redefine the H5P admin menu entry to be expandable.
+// Redefine the RC admin menu entry to be expandable.
 $modrocketchatfolder = new admin_category('modrocketchatfolder',
     new lang_string('pluginname', 'mod_rocketchat'),
     $module->is_enabled() === false);
