@@ -25,6 +25,8 @@
 
 namespace mod_rocketchat\api\manager;
 
+use moodle_exception;
+
 class rocket_chat_api_config {
     private $instanceurl;
     private $restapiroot;
