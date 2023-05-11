@@ -17,6 +17,7 @@ class ComposerStaticInit957b461ba202c0a13f71e9a3d4ac8829
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'RocketChat\\Channel' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatChannel.php',
         'RocketChat\\Client' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatClient.php',
         'RocketChat\\Group' => __DIR__ . '/..' . '/esup-portail/rocket-chat-rest-client/src/RocketChatGroup.php',
