@@ -279,8 +279,11 @@ class mod_rocketchat_tools {
                 $groupname = preg_replace('/'.$replacementcouplearray[0].'/', $replacementcouplearray[1], $groupname);
             }
         }
-        $groupname =
-            preg_replace(get_config('mod_rocketchat', 'validationgroupnameregex'), '_', $groupname);
+        $validationgroupnameregex = get_config('mod_rocketchat', 'validationgroupnameregex');
+        if(!empty($validationgroupnameregex)) {
+            $groupname =
+                preg_replace($validationgroupnameregex, '_', $groupname);
+        }
         if (empty($groupname)) {
             throw new moodle_exception('sanitized Rocket.Chat groupname can\'t be empty');
         }
