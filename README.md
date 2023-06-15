@@ -31,6 +31,7 @@ Php 7.1 or 7.2 required
   * api-bypass-rate-limit
   * edit-room-retention-policy
   * create-personal-access-tokens
+  * view-joined-room (since 5.?.?)
 * Create an application user (local or CAS)
 * Activate user by checling Verified checkbox
 * Give the created user user and previous created role
