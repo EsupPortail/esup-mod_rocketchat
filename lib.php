@@ -35,24 +35,30 @@ use \mod_rocketchat\api\manager\rocket_chat_api_manager;
  * @return true | null True if the feature is supported, null otherwise.
  */
 function rocketchat_supports($feature) {
-    if (!$feature) {
-        return null;
+    switch ($feature) {
+        case FEATURE_GROUPS:
+            return true;
+        case FEATURE_GROUPINGS:
+            return true;
+        case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return true;
+        case FEATURE_GRADE_HAS_GRADE:
+            return true;
+        case FEATURE_GRADE_OUTCOMES:
+            return true;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
+        case FEATURE_MOD_PURPOSE:
+            return MOD_PURPOSE_COMMUNICATION;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        default:
+            return null;
     }
-    $features = array(
-        (string) FEATURE_IDNUMBER => true,
-        (string) FEATURE_GROUPS => true,
-        (string) FEATURE_GROUPINGS => true,
-        (string) FEATURE_MOD_INTRO => true,
-        (string) FEATURE_BACKUP_MOODLE2 => true,
-        (string) FEATURE_COMPLETION_TRACKS_VIEWS => true,
-        (string) FEATURE_GRADE_HAS_GRADE => false,
-        (string) FEATURE_GRADE_OUTCOMES => false,
-        (string) FEATURE_SHOW_DESCRIPTION => true,
-    );
-    if (isset($features[(string) $feature])) {
-        return $features[$feature];
-    }
-    return null;
 }
 
 /**
