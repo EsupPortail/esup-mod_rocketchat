@@ -255,7 +255,7 @@ class observers {
 
     public static function user_updated(\core\event\user_updated $event) {
         global $DB;
-        if (\mod_rocketchat_tools::rocketchat_enabled() {
+        if (\mod_rocketchat_tools::rocketchat_enabled()) {
             $user = $DB->get_record('user', array('id' => $event->objectid));
             if (!$user) {
                 throw new moodle_exception('user not found on user_updated event in mod_rocketchat');
