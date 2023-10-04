@@ -255,30 +255,32 @@ class observers {
 
     public static function user_updated(\core\event\user_updated $event) {
         global $DB;
-        $user = $DB->get_record('user' , array('id' => $event->objectid));
-        if (!$user) {
-            throw new moodle_exception('user not found on user_updated event in mod_rocketchat');
-        }
-        $backgrounduserupdate = get_config('mod_rocketchat', 'background_user_update');
-        if ($user->suspended || $user->deleted) {
-            if ($backgrounduserupdate) {
-                $taskunenrol = new \mod_rocketchat\task\unenrol_user_everywhere();
-                $taskunenrol->set_custom_data(
-                    array('userid' => $user->id)
-                );
-                \core\task\manager::queue_adhoc_task($taskunenrol);
-            } else {
-                \mod_rocketchat_tools::unenrol_user_everywhere($user->id);
+        if (\mod_rocketchat_tools::rocketchat_enabled() {
+            $user = $DB->get_record('user', array('id' => $event->objectid));
+            if (!$user) {
+                throw new moodle_exception('user not found on user_updated event in mod_rocketchat');
             }
-        } else {
-            if ($backgrounduserupdate) {
-                $taskenrol = new \mod_rocketchat\task\synchronize_user_everywhere();
-                $taskenrol->set_custom_data(
-                    array('userid' => $user->id)
-                );
-                \core\task\manager::queue_adhoc_task($taskenrol);
+            $backgrounduserupdate = get_config('mod_rocketchat', 'background_user_update');
+            if ($user->suspended || $user->deleted) {
+                if ($backgrounduserupdate) {
+                    $taskunenrol = new \mod_rocketchat\task\unenrol_user_everywhere();
+                    $taskunenrol->set_custom_data(
+                        array('userid' => $user->id)
+                    );
+                    \core\task\manager::queue_adhoc_task($taskunenrol);
+                } else {
+                    \mod_rocketchat_tools::unenrol_user_everywhere($user->id);
+                }
             } else {
-                \mod_rocketchat_tools::synchronize_user_enrolments($user->id);
+                if ($backgrounduserupdate) {
+                    $taskenrol = new \mod_rocketchat\task\synchronize_user_everywhere();
+                    $taskenrol->set_custom_data(
+                        array('userid' => $user->id)
+                    );
+                    \core\task\manager::queue_adhoc_task($taskenrol);
+                } else {
+                    \mod_rocketchat_tools::synchronize_user_enrolments($user->id);
+                }
             }
         }
     }
