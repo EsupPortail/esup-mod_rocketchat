@@ -34,7 +34,7 @@ require_course_login($course);
 $coursecontext = context_course::instance($course->id);
 
 $event = \mod_rocketchat\event\course_module_instance_list_viewed::create(array(
-    'context' => $modulecontext
+    'context' => $coursecontext
 ));
 $event->add_record_snapshot('course', $course);
 $event->trigger();
@@ -58,6 +58,8 @@ if (empty($rocketchats)) {
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
+$usesections = course_format_uses_sections($course->format);
+$strname        = get_string('name');
 if ($usesections) {
     $strsectionname = get_string('sectionname', 'format_'.$course->format);
     $table->head  = array ($strsectionname, $strname);
