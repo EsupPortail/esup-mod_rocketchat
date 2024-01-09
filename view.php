@@ -72,7 +72,9 @@ echo html_writer::start_div('row');
 echo html_writer::start_div('navitem');
 switch ($moduleinstance->displaytype) {
     case mod_rocketchat_tools::DISPLAY_POPUP:
-        echo $OUTPUT->action_link($link, get_string('joinrocketchat', 'mod_rocketchat'),
+        echo $OUTPUT->action_link(
+            $link,
+            get_string('joinrocketchat', 'mod_rocketchat'),
             new popup_action(
                 'click',
                 $link,
@@ -86,6 +88,7 @@ switch ($moduleinstance->displaytype) {
         echo $OUTPUT->action_link(
             $link,
             get_string('joinrocketchat', 'mod_rocketchat'),
+            null,
             array('class' => 'btn btn-secondary')
         );
         break;
