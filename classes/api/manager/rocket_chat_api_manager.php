@@ -381,6 +381,23 @@ class rocket_chat_api_manager{
         $rocketchatuserinfos->email = $moodleuser->email;
         $rocketchatuserinfos->username = $rocketchatusername;
         $rocketchatuserinfos->password = generate_password();
+        // Add options if necessary
+        $rocketchatconfig = get_config('mod_rocketchat');
+        $auths = explode(',', $rocketchatconfig->user_creation_adv_options_auth_methods);
+        if (in_array($moodleuser->auth, $auths)) {
+            if ($rocketchatconfig->user_creation_adv_options_requirePasswordChange) {
+                $rocketchatuserinfos->requirePasswordChange = "true";
+            }
+            if ($rocketchatconfig->user_creation_adv_options_setRandomPassword) {
+                $rocketchatuserinfos->setRandomPassword = "true";
+            }
+            if ($rocketchatconfig->user_creation_adv_options_sendWelcomeEmail) {
+                $rocketchatuserinfos->sendWelcomeEmail = "true";
+            }
+            if ($rocketchatconfig->user_creation_adv_options_verify) {
+                $rocketchatuserinfos->verified = "false";
+            }
+        }
         $user = $this->adminuser->create($rocketchatuserinfos);
         if (PHPUNIT_TEST) {
             $user->password = $rocketchatuserinfos->password;

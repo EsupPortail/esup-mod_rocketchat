@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/rocketchat/locallib.php');
 require_once($CFG->libdir.'/enrollib.php');
+require_once($CFG->dirroot.'/admin/tool/uploaduser/locallib.php');
 // Make sure core is loaded.
 
 // Redefine the RC admin menu entry to be expandable.
@@ -164,7 +165,6 @@ if ($ADMIN->fulltree) {
             $rolesoptions
         )
     );
-
     $settings->add(
         new admin_setting_configcheckbox('mod_rocketchat/create_user_account_if_not_exists',
             get_string('create_user_account_if_not_exists', 'mod_rocketchat'),
@@ -172,6 +172,44 @@ if ($ADMIN->fulltree) {
             1
         )
     );
+    $authplugins = uu_supported_auths();
+    $settings->add(
+        new admin_setting_configmultiselect( 'mod_rocketchat/user_creation_adv_options_auth_methods',
+            get_string('user_creation_adv_options_auth_methods', 'mod_rocketchat'),
+            get_string('user_creation_adv_options_auth_methods_desc', 'mod_rocketchat'),
+            array(),
+            $authplugins
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/user_creation_adv_options_requirePasswordChange',
+            get_string('user_creation_adv_options_requirePasswordChange', 'mod_rocketchat'),
+            get_string('user_creation_adv_options_requirePasswordChange_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/user_creation_adv_options_setRandomPassword',
+            get_string('user_creation_adv_options_setRandomPassword', 'mod_rocketchat'),
+            get_string('user_creation_adv_options_setRandomPassword_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/user_creation_adv_options_sendWelcomeEmail',
+            get_string('user_creation_adv_options_sendWelcomeEmail', 'mod_rocketchat'),
+            get_string('user_creation_adv_options_sendWelcomeEmail_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox('mod_rocketchat/user_creation_adv_options_verify',
+            get_string('user_creation_adv_options_verify', 'mod_rocketchat'),
+            get_string('user_creation_adv_options_verify_desc', 'mod_rocketchat'),
+            0
+        )
+    );
+
     $settings->add(
         new admin_setting_configcheckbox('mod_rocketchat/recyclebin_patch',
             get_string('recyclebin_patch', 'mod_rocketchat'),

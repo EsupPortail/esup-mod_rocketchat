@@ -146,3 +146,15 @@ $string['rocketchat_synchronise_task'] = 'Synchronise all rocketchat rooms';
 $string['warningapiauthchanges'] = 'Warning, Rocket.Chat moodle plugin changes in auth methods, Only token auth is now taken into acount.\nPlease change the Rocket.Chat plugin settings.';
 $string['replacementgroupnamecharacters'] = 'Characters to be replaced in groupname';
 $string['replacementgroupnamecharacters_desc'] = 'Put here the characters you would wan\'t to change in groupe name. characters couple separated by ";", one couple by line.';
+$string['user_creation_adv_options_auth_methods'] = 'Auth methods concerned by additional options on user creation.';
+$string['user_creation_adv_options_auth_methods_desc'] = 'Auth methods concerned by additional options such like send mail and/or password while creating user on Rocket.Chat.';
+$string['user_creation_adv_options_requirePasswordChange'] = 'Require password change after user creation';
+$string['user_creation_adv_options_requirePasswordChange_desc'] = 'Require password change after user creation';
+$string['user_creation_adv_options_setRandomPassword'] = 'Set random password on user creation';
+$string['user_creation_adv_options_setRandomPassword_desc'] = 'Set random password on user creation';
+$string['user_creation_adv_options_sendWelcomeEmail'] = 'Send welcome email on user creation';
+$string['user_creation_adv_options_sendWelcomeEmail_desc'] = 'Set send welcome email on user creation';
+$string['user_creation_adv_options_verify'] = 'Set Email verification on user creation';
+$string['user_creation_adv_options_verify_desc'] = 'Set whether the user\'s email address be verified on user creation';
+
+

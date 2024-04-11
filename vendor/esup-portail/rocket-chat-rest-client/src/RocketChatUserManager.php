@@ -96,18 +96,31 @@ class UserManager extends Client {
         try{
             $info = $this->info($user);
             if ($info and isset($info->user)){
-
-            } return $info->user;
+                return $info->user;
+            }
         } catch(RocketChatException $e){
             // No error trigger here
         }
+        $parameters = array(
+            'name' => $user->nickname,
+            'email' => $user->email,
+            'username' => $user->username,
+            'password' => $user->password,
+        );
+        if (property_exists($user, 'requirePasswordChange')) {
+            $parameters['requirePasswordChange'] =$user->requirePasswordChange;
+        }
+        if (property_exists($user, 'setRandomPassword')) {
+            $parameters['setRandomPassword'] =$user->setRandomPassword;
+        }
+        if (property_exists($user, 'sendWelcomeEmail')) {
+            $parameters['sendWelcomeEmail'] =$user->sendWelcomeEmail;
+        }
+        if (property_exists($user, 'verified')) {
+            $parameters['verified'] =$user->verified;
+        }
         $response = Request::post( $this->api . 'users.create' )
-            ->body(array(
-                'name' => $user->nickname,
-                'email' => $user->email,
-                'username' => $user->username,
-                'password' => $user->password,
-            ))
+            ->body($parameters)
             ->send();
 
         if( self::success($response) ) {

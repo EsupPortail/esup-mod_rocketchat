@@ -111,6 +111,30 @@ class rocketchat_api_manager_test extends advanced_testcase{
         $this->assertTrue($this->rocketchatapimanager->delete_user($moodleuser->username));
     }
 
+    public function test_create_user_if_not_exists_and_delete_with_options() {
+        $this->initiate_environment_and_connection();
+        $moodleuser = new stdClass();
+        $moodleuser->username = 'usertest'.time();
+        $moodleuser->firstname = 'moodleusertestF';
+        $moodleuser->lastname = 'moodleusertestL';
+        $moodleuser->auth = 'manual';
+        $domainmail = get_config('mod_rocketchat', 'domainmail');
+        $moodleuser->email = $moodleuser->username.'@'.(!empty($domainmail) ? $domainmail : 'moodle.test');
+        set_config('user_creation_adv_options_auth_methods','manual','mod_rocketchat');
+        set_config('user_creation_adv_options_requirePasswordChange',1,'mod_rocketchat');
+        set_config('user_creation_adv_options_setRandomPassword',1,'mod_rocketchat');
+        set_config('user_creation_adv_options_sendWelcomeEmail',1,'mod_rocketchat');
+        set_config('user_creation_adv_options_verify',1,'mod_rocketchat');
+        $rocketchatuser = $this->rocketchatapimanager->create_user_if_not_exists($moodleuser);
+        $this->assertTrue($this->rocketchatapimanager->user_exists($moodleuser->username));
+        $this->assertNotEmpty($rocketchatuser);
+        $this->assertTrue(property_exists($rocketchatuser, '_id'));
+        $this->assertTrue(property_exists($rocketchatuser, 'requirePasswordChange'));
+        $this->assertTrue($rocketchatuser->requirePasswordChange);
+        $this->assertFalse($rocketchatuser->emails[0]->verified);
+        $this->assertTrue($this->rocketchatapimanager->delete_user($moodleuser->username));
+    }
+
     public function test_create_group() {
         $this->initiate_environment_and_connection();
         $groupname = 'moodletestgroup'.time();
