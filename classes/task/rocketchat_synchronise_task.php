@@ -26,6 +26,7 @@
  * @license    http://www.cecill.info/licences/Licence_CeCILL_V2-en.html
  */
 namespace mod_rocketchat\task;
+require_once("$CFG->dirroot/mod/rocketchat/locallib.php");
 
 use mod_rocketchat_tools;
 
@@ -38,7 +39,10 @@ class rocketchat_synchronise_task extends \core\task\scheduled_task {
     }
 
     public function execute() {
-        global $CFG;
-        mod_rocketchat_tools::synchronize_group_members_for_module($id);
+        global $DB;
+        $courses = $DB->get_record_sql('select distinct course from {rocketchat}');
+        foreach ($courses as $course) {
+            mod_rocketchat_tools::synchronize_group_members_for_course($course);
+        }
     }
 }
