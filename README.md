@@ -13,6 +13,13 @@ Php 7.1 or 7.2 required
 ### Authentication
 * LDAP and CAS account fusion is adviced when moodle user account creation is activated
   for moodle Rocket.Chat account
+* Manual Moodle account are possible enabling in plugin settings user creation and advanced user creation options
+  * user_creation_adv_options_auth_methods choose "manual account" account method
+    * every choosen Moodle auth method selected will be concerned by following option on user creation for Rocket.Chat
+    * you can choose to activate each following setting depending of the desired bahaviour
+    * user_creation_adv_options_requirePasswordChange force password change while creation an account on Rocket.Chat
+    * user_creation_adv_options_setRandomPassword set a random password
+    * user_creation_adv_options_sendWelcomeEmail send a welcome mail
 
 ### Moodle API account creation
 * create a RocketChat local account
