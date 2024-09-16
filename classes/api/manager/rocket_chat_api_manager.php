@@ -384,7 +384,7 @@ class rocket_chat_api_manager{
         // Add options if necessary
         $rocketchatconfig = get_config('mod_rocketchat');
         $auths = explode(',', $rocketchatconfig->user_creation_adv_options_auth_methods);
-        if (in_array($moodleuser->auth, $auths)) {
+        if (property_exists($moodleuser, 'auth') && in_array($moodleuser->auth, $auths)) {
             if ($rocketchatconfig->user_creation_adv_options_requirePasswordChange) {
                 $rocketchatuserinfos->requirePasswordChange = "true";
             }
