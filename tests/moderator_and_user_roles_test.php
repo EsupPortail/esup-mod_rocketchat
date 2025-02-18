@@ -66,12 +66,13 @@ class moderator_and_user_roles_test extends advanced_testcase {
         $this->assertTrue($members[$this->teacher1->username]->ismoderator);
         $coursemodule = $DB->get_record('course_modules', array('instance' => $this->rocketchat->id));
         list($cm, , , $data, ) = get_moduleinfo_data($coursemodule, $this->course);
+        $litecm = get_coursemodule_from_id('rocketchat', $cm->id);
         $cm->modname = 'rocketchat';
         $data->moderatorroles = $this->teacherrole->id;
         $data->userroles = $this->guestrole->id;
         $mform = new simpleform();
         $mform->set_data($data);
-        update_moduleinfo($cm, $data, $this->course, $mform);
+        update_moduleinfo($litecm, $data, $this->course, $mform);
         $members = $this->rocketchatapimanager->get_enriched_group_members_with_moderators($this->rocketchat->rocketchatid);
         $this->assertCount(1, $members);
         $this->assertFalse(array_key_exists($this->student1->username, $members));
