@@ -22,7 +22,7 @@ Feature: mod_rocketchat
     And I log in as "admin"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I click on "Add an activity or resource" "button" in the "Topic 1" "section"
+    And I click on "Add an activity or resource" "button" in the "General" "section"
     And I click on "Add a new Rocket.Chat" "link" in the "Add an activity or resource" "dialogue"
     And I expand all fieldsets
     Then I should not see "Activate message retention"
@@ -35,7 +35,7 @@ Feature: mod_rocketchat
     And I log in as "admin"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I click on "Add an activity or resource" "button" in the "Topic 1" "section"
+    And I click on "Add an activity or resource" "button" in the "General" "section"
     And I click on "Add a new Rocket.Chat" "link" in the "Add an activity or resource" "dialogue"
     And I expand all fieldsets
     And "retentionenabled" "checkbox" should exist
@@ -56,7 +56,7 @@ Feature: mod_rocketchat
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I click on "Add an activity or resource" "button" in the "Topic 1" "section"
+    And I click on "Add an activity or resource" "button" in the "General" "section"
     And I click on "Add a new Rocket.Chat" "link" in the "Add an activity or resource" "dialogue"
     And I should not see "Message retention"
     And I should not see "Activate message retention"
@@ -72,7 +72,7 @@ Feature: mod_rocketchat
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I add a "Rocket.Chat" to section "1"
+    And I add a "rocketchat" activity to course "Course 1" section "1"
     And I wait until the page is ready
     Then I should see "Activate message retention"
     And I should not see "Prune files only, keep messages"
@@ -86,7 +86,7 @@ Feature: mod_rocketchat
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I click on "Add an activity or resource" "button" in the "Topic 1" "section"
+    And I click on "Add an activity or resource" "button" in the "General" "section"
     And I click on "Add a new Rocket.Chat" "link" in the "Add an activity or resource" "dialogue"
     And I should not see "Message retention"
     And I should not see "Activate message retention"
@@ -103,7 +103,7 @@ Feature: mod_rocketchat
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I add a "Rocket.Chat" to section "1"
+    And I add a "rocketchat" activity to course "Course 1" section "1"
     And I wait until the page is ready
     Then I should see "Activate message retention"
     And I should see "Prune files only, keep messages"

@@ -29,7 +29,7 @@ Feature: mod_rocketchat
     And I am on "Course 1" course homepage with editing mode on
     And I open "rocketchat activity" actions menu
     And I choose "Delete" in the open action menu
-    And I click on "Yes" "button"
+    And I click on "Delete" "button" in the "Delete activity?" "dialogue"
     Then I should not see "rocketchat activity"
 
   @javascript
@@ -44,7 +44,7 @@ Feature: mod_rocketchat
     And I am on "Course 1" course homepage with editing mode on
     And I open "rocketchat activity" actions menu
     And I choose "Delete" in the open action menu
-    And I click on "Yes" "button"
+    And I click on "Delete" "button" in the "Delete activity?" "dialogue"
     Then I should not see "rocketchat activity"
 
   @javascript
@@ -59,7 +59,7 @@ Feature: mod_rocketchat
     And I am on "Course 1" course homepage with editing mode on
     And I open "rocketchat activity" actions menu
     And I choose "Delete" in the open action menu
-    And I click on "Yes" "button"
+    And I click on "Delete" "button" in the "Delete activity?" "dialogue"
     Then I should not see "rocketchat activity"
 
 
